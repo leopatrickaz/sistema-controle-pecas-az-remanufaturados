@@ -285,9 +285,10 @@ tr:hover td{background:rgba(0,0,0,0.015)}
       <div id="vendaEmpresaField" class="form-field"><label class="form-label">Empresa *</label><select id="vendaEmpresaId"></select></div>
       <div class="form-field">
         <label class="form-label">Produto *</label>
-        <div class="input-wrap" style="margin-bottom:8px"><input placeholder="Buscar por nome, modelo, código..." id="produtoPickerSearch" oninput="filterProdutoPicker()" /></div>
-        <div id="produtoPickerPreview" style="display:none" class="produto-selected-preview"></div>
-        <div class="produto-list" id="produtoPickerList"></div>
+        <button type="button" id="produtoBtnSelect" onclick="openProdutoPicker()" style="width:100%;height:var(--input-h);border:1px solid var(--border);border-radius:var(--radius);background:#fff;text-align:left;padding:0 12px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
+          <span id="produtoBtnLabel" style="color:#9ca3af">Selecione o produto...</span>
+          <span style="font-size:11px;color:var(--muted)">▼</span>
+        </button>
       </div>
       <div class="form-field"><label class="form-label">Marca</label><input id="vendaMarca" placeholder="Ex: Bosch, Delco, Denso..." /></div>
       <div class="form-grid2">
