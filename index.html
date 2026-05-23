@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>AZ Remanufaturados</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.x/tabler-icons.min.css" />
+
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -180,7 +180,7 @@ tr:hover td{background:rgba(0,0,0,0.015)}
 <div id="loginPage" class="login-page">
   <div class="login-card">
     <div class="login-logo">
-      <div class="login-logo-icon"><i class="ti ti-tool"></i></div>
+      <div class="login-logo-icon">⚙</div>
       <div><div class="login-title">AZ Remanufaturados</div><div class="login-sub">Painel interno de gestão</div></div>
     </div>
     <div class="login-form-title">Entrar</div>
@@ -188,7 +188,7 @@ tr:hover td{background:rgba(0,0,0,0.015)}
     <div id="loginError" class="error-msg"></div>
     <div class="form-field"><label class="form-label">Usuário</label><input type="text" id="loginUser" placeholder="sistemaaz" autocomplete="username" /></div>
     <div class="form-field"><label class="form-label">Senha</label><input type="password" id="loginPassword" placeholder="••••••" autocomplete="current-password" /></div>
-    <button class="btn btn-primary btn-lg" style="margin-top:8px" onclick="doLogin()"><i class="ti ti-login"></i> Entrar</button>
+    <button class="btn btn-primary btn-lg" style="margin-top:8px" onclick="doLogin()">Entrar</button>
   </div>
 </div>
 
@@ -196,41 +196,41 @@ tr:hover td{background:rgba(0,0,0,0.015)}
 <div id="mainApp" class="app" style="display:none">
   <aside class="sidebar">
     <div class="sidebar-logo">
-      <div class="logo-icon"><i class="ti ti-tool"></i></div>
+      <div class="logo-icon">⚙</div>
       <div class="logo-text"><div class="logo-title">AZ</div><div class="logo-sub">Remanufaturados</div></div>
     </div>
-    <button class="nav-link" id="nav-dashboard" onclick="navigate('dashboard')"><i class="ti ti-layout-dashboard"></i> Início</button>
-    <button class="nav-link" id="nav-empresas" onclick="navigate('empresas')"><i class="ti ti-building"></i> Empresas</button>
-    <button class="nav-link" id="nav-produtos" onclick="navigate('produtos')"><i class="ti ti-package"></i> Produtos</button>
-    <button class="nav-link" id="nav-vendas" onclick="navigate('vendas')"><i class="ti ti-receipt"></i> Vendas</button>
+    <button class="nav-link" id="nav-dashboard" onclick="navigate('dashboard')"> Início</button>
+    <button class="nav-link" id="nav-empresas" onclick="navigate('empresas')"> Empresas</button>
+    <button class="nav-link" id="nav-produtos" onclick="navigate('produtos')"> Produtos</button>
+    <button class="nav-link" id="nav-vendas" onclick="navigate('vendas')"> Vendas</button>
     <div class="sidebar-footer">
-      <div class="sidebar-user"><i class="ti ti-user" style="font-size:12px"></i> sistemaaz</div>
-      <button class="logout-btn" onclick="doLogout()"><i class="ti ti-logout"></i> Sair</button>
+      <div class="sidebar-user"> sistemaaz</div>
+      <button class="logout-btn" onclick="doLogout()">→ Sair</button>
     </div>
   </aside>
 
   <div class="main">
     <div class="topbar" id="topbar">
-      <div class="topbar-logo"><i class="ti ti-tool"></i> AZ Remanufaturados</div>
-      <button class="menu-btn" onclick="toggleMobileMenu()"><i class="ti ti-menu-2"></i></button>
+      <div class="topbar-logo">⚙ AZ Remanufaturados</div>
+      <button class="menu-btn" onclick="toggleMobileMenu()"></button>
     </div>
     <div class="mobile-nav" id="mobileNav">
-      <button class="nav-link" onclick="navigate('dashboard');closeMobileMenu()"><i class="ti ti-layout-dashboard"></i> Início</button>
-      <button class="nav-link" onclick="navigate('empresas');closeMobileMenu()"><i class="ti ti-building"></i> Empresas</button>
-      <button class="nav-link" onclick="navigate('produtos');closeMobileMenu()"><i class="ti ti-package"></i> Produtos</button>
-      <button class="nav-link" onclick="navigate('vendas');closeMobileMenu()"><i class="ti ti-receipt"></i> Vendas</button>
-      <button class="nav-link" onclick="doLogout()"><i class="ti ti-logout"></i> Sair</button>
+      <button class="nav-link" onclick="navigate('dashboard');closeMobileMenu()"> Início</button>
+      <button class="nav-link" onclick="navigate('empresas');closeMobileMenu()"> Empresas</button>
+      <button class="nav-link" onclick="navigate('produtos');closeMobileMenu()"> Produtos</button>
+      <button class="nav-link" onclick="navigate('vendas');closeMobileMenu()"> Vendas</button>
+      <button class="nav-link" onclick="doLogout()">→ Sair</button>
     </div>
     <div class="content">
       <div class="page" id="page-dashboard">
         <div class="page-header"><div class="page-title">Início</div><div class="page-sub">Registre uma nova venda ou consulte o histórico.</div></div>
-        <button class="btn btn-primary btn-lg" style="margin-bottom:14px" onclick="openVendaModal()"><i class="ti ti-plus"></i> Adicionar venda</button>
+        <button class="btn btn-primary btn-lg" style="margin-bottom:14px" onclick="openVendaModal()">+ Adicionar venda</button>
         <div class="flex-row" style="margin-bottom:14px">
-          <button class="btn btn-outline" style="flex:1" onclick="openProdutoModal()"><i class="ti ti-plus"></i> Adicionar produto</button>
-          <button class="btn btn-outline" style="flex:1" onclick="openEmpresaModal()"><i class="ti ti-plus"></i> Adicionar empresa</button>
+          <button class="btn btn-outline" style="flex:1" onclick="openProdutoModal()">+ Adicionar produto</button>
+          <button class="btn btn-outline" style="flex:1" onclick="openEmpresaModal()">+ Adicionar empresa</button>
         </div>
         <div style="display:flex;justify-content:center;margin-bottom:20px">
-          <button class="btn btn-ghost btn-sm" onclick="navigate('produtos')"><i class="ti ti-package"></i> Ver todos os produtos</button>
+          <button class="btn btn-ghost btn-sm" onclick="navigate('produtos')"> Ver todos os produtos</button>
         </div>
         <div class="grid2" id="dashStats"></div>
         <div class="card"><div class="card-header" style="padding:16px 20px 12px"><span class="card-title">Últimas vendas</span></div><div class="card-body-p0 divide-y" id="dashVendas"></div></div>
@@ -239,9 +239,9 @@ tr:hover td{background:rgba(0,0,0,0.015)}
         <button class="back-btn" onclick="navigate('dashboard')">← Início</button>
         <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
           <div><div class="page-title">Empresas</div><div class="page-sub" id="empresasCount"></div></div>
-          <button class="btn btn-primary" onclick="openEmpresaModal()"><i class="ti ti-plus"></i> Nova empresa</button>
+          <button class="btn btn-primary" onclick="openEmpresaModal()">+ Nova empresa</button>
         </div>
-        <div class="filter-bar"><div class="input-wrap" style="flex:1;min-width:200px"><i class="ti ti-search search-icon"></i><input placeholder="Buscar por nome, CNPJ, cidade..." id="empresaSearch" oninput="renderEmpresas()" /></div></div>
+        <div class="filter-bar"><div class="input-wrap" style="flex:1;min-width:200px"><input placeholder="Buscar por nome, CNPJ, cidade..." id="empresaSearch" oninput="renderEmpresas()" /></div></div>
         <div class="card"><div class="card-body-p0" id="empresasTable"></div></div>
       </div>
       <div class="page" id="page-empresa-detail">
@@ -252,9 +252,9 @@ tr:hover td{background:rgba(0,0,0,0.015)}
         <button class="back-btn" onclick="navigate('dashboard')">← Início</button>
         <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
           <div><div class="page-title">Produtos</div><div class="page-sub" id="produtosCount"></div></div>
-          <button class="btn btn-primary" onclick="openProdutoModal()"><i class="ti ti-plus"></i> Novo produto</button>
+          <button class="btn btn-primary" onclick="openProdutoModal()">+ Novo produto</button>
         </div>
-        <div class="filter-bar"><div class="input-wrap" style="flex:1;min-width:200px;max-width:500px"><i class="ti ti-search search-icon"></i><input placeholder="Buscar por nome, modelo, código..." id="produtoSearch" oninput="renderProdutos()" /></div></div>
+        <div class="filter-bar"><div class="input-wrap" style="flex:1;min-width:200px;max-width:500px"><input placeholder="Buscar por nome, modelo, código..." id="produtoSearch" oninput="renderProdutos()" /></div></div>
         <div class="card"><div class="card-body-p0" id="produtosTable"></div></div>
       </div>
       <div class="page" id="page-vendas">
@@ -262,12 +262,12 @@ tr:hover td{background:rgba(0,0,0,0.015)}
         <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
           <div><div class="page-title">Vendas</div><div class="page-sub" id="vendasStats"></div></div>
           <div class="flex-row">
-            <button class="btn btn-outline btn-sm" onclick="exportVendas()"><i class="ti ti-download"></i> Exportar</button>
-            <button class="btn btn-primary btn-sm" onclick="openVendaModal()"><i class="ti ti-plus"></i> Nova venda</button>
+            <button class="btn btn-outline btn-sm" onclick="exportVendas()">↓ Exportar</button>
+            <button class="btn btn-primary btn-sm" onclick="openVendaModal()">+ Nova venda</button>
           </div>
         </div>
         <div class="vendas-filter">
-          <div class="input-wrap"><i class="ti ti-search search-icon"></i><input placeholder="Buscar empresa, produto, modelo..." id="vendaSearch" oninput="renderVendas()" /></div>
+          <div class="input-wrap"><input placeholder="Buscar empresa, produto, modelo..." id="vendaSearch" oninput="renderVendas()" /></div>
           <input type="date" id="vendaFrom" oninput="renderVendas()" style="color:var(--muted)" />
         </div>
         <div class="card"><div class="card-body-p0" id="vendasList"></div></div>
@@ -279,13 +279,13 @@ tr:hover td{background:rgba(0,0,0,0.015)}
 <!-- MODAL VENDA -->
 <div class="overlay" id="vendaOverlay">
   <div class="modal">
-    <div class="modal-header"><span class="modal-title" id="vendaModalTitle">Novo serviço / venda</span><button class="modal-close" onclick="closeVendaModal()"><i class="ti ti-x"></i></button></div>
+    <div class="modal-header"><span class="modal-title" id="vendaModalTitle">Novo serviço / venda</span><button class="modal-close" onclick="closeVendaModal()">✕</button></div>
     <div class="modal-body">
       <input type="hidden" id="vendaId" />
       <div id="vendaEmpresaField" class="form-field"><label class="form-label">Empresa *</label><select id="vendaEmpresaId"></select></div>
       <div class="form-field">
         <label class="form-label">Produto *</label>
-        <div class="input-wrap" style="margin-bottom:8px"><i class="ti ti-search search-icon"></i><input placeholder="Buscar por nome, modelo, código..." id="produtoPickerSearch" oninput="filterProdutoPicker()" /></div>
+        <div class="input-wrap" style="margin-bottom:8px"><input placeholder="Buscar por nome, modelo, código..." id="produtoPickerSearch" oninput="filterProdutoPicker()" /></div>
         <div id="produtoPickerPreview" style="display:none" class="produto-selected-preview"></div>
         <div class="produto-list" id="produtoPickerList"></div>
       </div>
@@ -307,7 +307,7 @@ tr:hover td{background:rgba(0,0,0,0.015)}
 <!-- MODAL PRODUTO -->
 <div class="overlay" id="produtoOverlay">
   <div class="modal">
-    <div class="modal-header"><span class="modal-title" id="produtoModalTitle">Novo produto</span><button class="modal-close" onclick="closeProdutoModal()"><i class="ti ti-x"></i></button></div>
+    <div class="modal-header"><span class="modal-title" id="produtoModalTitle">Novo produto</span><button class="modal-close" onclick="closeProdutoModal()">✕</button></div>
     <div class="modal-body">
       <input type="hidden" id="produtoId" />
       <div class="form-field"><label class="form-label">Nome do produto *</label><input id="produtoNome" placeholder="Nome" /></div>
@@ -327,7 +327,7 @@ tr:hover td{background:rgba(0,0,0,0.015)}
 <!-- MODAL EMPRESA -->
 <div class="overlay" id="empresaOverlay">
   <div class="modal">
-    <div class="modal-header"><span class="modal-title" id="empresaModalTitle">Nova empresa</span><button class="modal-close" onclick="closeEmpresaModal()"><i class="ti ti-x"></i></button></div>
+    <div class="modal-header"><span class="modal-title" id="empresaModalTitle">Nova empresa</span><button class="modal-close" onclick="closeEmpresaModal()">✕</button></div>
     <div class="modal-body">
       <input type="hidden" id="empresaId" />
       <div class="form-field"><label class="form-label">Nome *</label><input id="empresaNome" placeholder="Razão social ou nome fantasia" /></div>
@@ -466,8 +466,8 @@ function selectServico(val) { servicoValue=val; document.getElementById('svcRema
 
 function renderDashboard() {
   document.getElementById('dashStats').innerHTML=`
-    <div class="stat-card"><div class="stat-icon blue"><i class="ti ti-building"></i></div><div class="stat-label">Empresas cadastradas</div><div class="stat-val">${_empresas.length}</div><div class="stat-link" onclick="navigate('empresas')">Ver empresas <i class="ti ti-arrow-right" style="font-size:12px"></i></div></div>
-    <div class="stat-card"><div class="stat-icon green"><i class="ti ti-receipt"></i></div><div class="stat-label">Vendas registradas</div><div class="stat-val">${_vendas.length}</div><div class="stat-link" onclick="navigate('vendas')">Ver vendas <i class="ti ti-arrow-right" style="font-size:12px"></i></div></div>`;
+    <div class="stat-card"><div class="stat-icon blue"></div><div class="stat-label">Empresas cadastradas</div><div class="stat-val">${_empresas.length}</div><div class="stat-link" onclick="navigate('empresas')">Ver empresas →</div></div>
+    <div class="stat-card"><div class="stat-icon green"></div><div class="stat-label">Vendas registradas</div><div class="stat-val">${_vendas.length}</div><div class="stat-link" onclick="navigate('vendas')">Ver vendas →</div></div>`;
   const ultimas = _vendas.slice(0,8);
   document.getElementById('dashVendas').innerHTML = ultimas.length ? ultimas.map(v => {
     const e=_empresas.find(x=>x.id===v.empresa_id), p=_produtos.find(x=>x.id===v.produto_id);
@@ -479,7 +479,7 @@ function renderEmpresas() {
   const q = (document.getElementById('empresaSearch')||{}).value||'';
   const filtered = q ? _empresas.filter(e=>[e.nome,e.cnpj,e.cidade,e.contato].filter(Boolean).join(' ').toLowerCase().includes(q.toLowerCase())) : _empresas;
   document.getElementById('empresasCount').textContent = `${_empresas.length} empresa(s) cadastrada(s)`;
-  document.getElementById('empresasTable').innerHTML = filtered.length ? `<div class="table-wrap"><table><thead><tr><th>Empresa</th><th>CNPJ</th><th>Contato</th><th>Cidade</th><th>Cadastro</th></tr></thead><tbody>${filtered.map(e=>`<tr><td><span class="link-primary" onclick="navigate('empresa-detail','${e.id}')">${esc(e.nome)}</span></td><td style="color:var(--muted)">${e.cnpj||'—'}</td><td>${e.contato||'—'}${e.telefone?`<br><small style="color:var(--muted)">${esc(e.telefone)}</small>`:''}</td><td>${[e.cidade,e.estado].filter(Boolean).join(' / ')||'—'}</td><td style="color:var(--muted)">${fmtDate(e.created_at)}</td></tr>`).join('')}</tbody></table></div>` : '<div class="empty-state"><i class="ti ti-building"></i>Nenhuma empresa encontrada.</div>';
+  document.getElementById('empresasTable').innerHTML = filtered.length ? `<div class="table-wrap"><table><thead><tr><th>Empresa</th><th>CNPJ</th><th>Contato</th><th>Cidade</th><th>Cadastro</th></tr></thead><tbody>${filtered.map(e=>`<tr><td><span class="link-primary" onclick="navigate('empresa-detail','${e.id}')">${esc(e.nome)}</span></td><td style="color:var(--muted)">${e.cnpj||'—'}</td><td>${e.contato||'—'}${e.telefone?`<br><small style="color:var(--muted)">${esc(e.telefone)}</small>`:''}</td><td>${[e.cidade,e.estado].filter(Boolean).join(' / ')||'—'}</td><td style="color:var(--muted)">${fmtDate(e.created_at)}</td></tr>`).join('')}</tbody></table></div>` : '<div class="empty-state">Nenhuma empresa encontrada.</div>';
 }
 
 function renderEmpresaDetail(id) {
@@ -491,32 +491,32 @@ function renderEmpresaDetail(id) {
     <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:20px">
       <div><div class="page-title">${esc(emp.nome)}</div>${emp.cnpj?`<div class="page-sub">CNPJ: ${esc(emp.cnpj)}</div>`:''}</div>
       <div class="flex-row">
-        <button class="btn btn-outline btn-sm" onclick="openEmpresaModal('${id}')"><i class="ti ti-pencil"></i> Editar</button>
-        <button class="btn btn-outline btn-sm" style="color:var(--destructive)" onclick="openConfirm('Excluir empresa?','Todas as vendas vinculadas serão excluídas.',()=>{deleteEmpresa('${id}')})"><i class="ti ti-trash"></i></button>
+        <button class="btn btn-outline btn-sm" onclick="openEmpresaModal('${id}')">Editar</button>
+        <button class="btn btn-outline btn-sm" style="color:var(--destructive)" onclick="openConfirm('Excluir empresa?','Todas as vendas vinculadas serão excluídas.',()=>{deleteEmpresa('${id}')})">✕</button>
       </div>
     </div>
     <div class="card" style="margin-bottom:16px">
       <div class="card-header"><span class="card-title" style="font-size:13px">Dados da empresa</span></div>
       <div class="card-body"><div class="info-grid">
-        <div class="info-item"><i class="ti ti-user"></i><div><div class="info-key">Contato</div><div class="info-val">${esc(emp.contato||'—')}</div></div></div>
-        <div class="info-item"><i class="ti ti-phone"></i><div><div class="info-key">Telefone</div><div class="info-val">${esc(emp.telefone||'—')}</div></div></div>
-        <div class="info-item"><i class="ti ti-mail"></i><div><div class="info-key">E-mail</div><div class="info-val">${esc(emp.email||'—')}</div></div></div>
-        <div class="info-item"><i class="ti ti-map-pin"></i><div><div class="info-key">Localização</div><div class="info-val">${[emp.cidade,emp.estado].filter(Boolean).join(' / ')||'—'}</div></div></div>
-        ${emp.observacoes?`<div class="info-item" style="grid-column:1/-1"><i class="ti ti-notes"></i><div><div class="info-key">Observações</div><div class="info-val" style="white-space:pre-wrap">${esc(emp.observacoes)}</div></div></div>`:''}
+        <div class="info-item"><div><div class="info-key">Contato</div><div class="info-val">${esc(emp.contato||'—')}</div></div></div>
+        <div class="info-item"><div><div class="info-key">Telefone</div><div class="info-val">${esc(emp.telefone||'—')}</div></div></div>
+        <div class="info-item"><div><div class="info-key">E-mail</div><div class="info-val">${esc(emp.email||'—')}</div></div></div>
+        <div class="info-item"><div><div class="info-key">Localização</div><div class="info-val">${[emp.cidade,emp.estado].filter(Boolean).join(' / ')||'—'}</div></div></div>
+        ${emp.observacoes?`<div class="info-item" style="grid-column:1/-1"><div><div class="info-key">Observações</div><div class="info-val" style="white-space:pre-wrap">${esc(emp.observacoes)}</div></div></div>`:''}
       </div></div>
     </div>
     <div class="card">
       <div class="card-header">
         <div><span class="card-title">Histórico de serviços</span><div style="font-size:12px;color:var(--muted);margin-top:2px">${vendas.length} registro(s) · Total: <strong>${brl(total)}</strong></div></div>
         <div class="flex-row">
-          ${vendas.length?`<button class="btn btn-outline btn-sm" onclick="exportVendasEmpresa('${id}')"><i class="ti ti-download"></i> Exportar</button>`:''}
-          <button class="btn btn-primary btn-sm" onclick="openVendaModal(null,'${id}')"><i class="ti ti-plus"></i> Adicionar serviço</button>
+          ${vendas.length?`<button class="btn btn-outline btn-sm" onclick="exportVendasEmpresa('${id}')">↓ Exportar</button>`:''}
+          <button class="btn btn-primary btn-sm" onclick="openVendaModal(null,'${id}')">+ Adicionar serviço</button>
         </div>
       </div>
       <div class="card-body-p0">${vendas.length?'<div class="divide-y">'+vendas.map(v=>{
         const p=_produtos.find(x=>x.id===v.produto_id), nome=p?p.nome:v.modelo||'Produto';
         const modelo=p&&p.modelo?p.modelo:v.modelo, codigo=p&&p.codigo?p.codigo:v.codigo;
-        return `<div class="item-row"><div style="min-width:0;flex:1"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="item-name">${esc(nome)}</span><span class="badge badge-blue">${tipoLabel(v.tipo)}</span></div><div class="item-meta">${[modelo?'Modelo: '+modelo:'',codigo?'Cód: '+codigo:''].filter(Boolean).join(' · ')}</div>${v.observacoes?`<div style="font-size:12px;font-style:italic;color:var(--muted);margin-top:2px">${esc(v.observacoes)}</div>`:''}<div class="item-meta">${fmtDate(v.data_venda)}${v.pedido?' · '+pedidoLabel(v.pedido):''}${v.servico?' · '+v.servico:''}</div></div><div style="text-align:right;flex-shrink:0"><div class="item-val">${brl(v.valor_total)}</div><div class="item-actions"><button class="btn btn-ghost btn-sm btn-icon" onclick="openVendaModal('${v.id}','${id}')"><i class="ti ti-pencil"></i></button><button class="btn btn-danger-ghost btn-sm btn-icon" onclick="openConfirm('Excluir serviço?','Esta ação não pode ser desfeita.',()=>{deleteVenda('${v.id}')})"><i class="ti ti-trash"></i></button></div></div></div>`;
+        return `<div class="item-row"><div style="min-width:0;flex:1"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="item-name">${esc(nome)}</span><span class="badge badge-blue">${tipoLabel(v.tipo)}</span></div><div class="item-meta">${[modelo?'Modelo: '+modelo:'',codigo?'Cód: '+codigo:''].filter(Boolean).join(' · ')}</div>${v.observacoes?`<div style="font-size:12px;font-style:italic;color:var(--muted);margin-top:2px">${esc(v.observacoes)}</div>`:''}<div class="item-meta">${fmtDate(v.data_venda)}${v.pedido?' · '+pedidoLabel(v.pedido):''}${v.servico?' · '+v.servico:''}</div></div><div style="text-align:right;flex-shrink:0"><div class="item-val">${brl(v.valor_total)}</div><div class="item-actions"><button class="btn btn-ghost btn-sm btn-icon" onclick="openVendaModal('${v.id}','${id}')">✎</button><button class="btn btn-danger-ghost btn-sm btn-icon" onclick="openConfirm('Excluir serviço?','Esta ação não pode ser desfeita.',()=>{deleteVenda('${v.id}')})">✕</button></div></div></div>`;
       }).join('')+'</div>':'<div class="empty-state">Nenhum serviço registrado.</div>'}</div>
     </div>`;
 }
@@ -525,7 +525,7 @@ function renderProdutos() {
   const q = (document.getElementById('produtoSearch')||{}).value||'';
   const filtered = q ? _produtos.filter(p=>[p.nome,p.modelo,p.codigo,p.aplicacao,tipoLabel(p.tipo)].filter(Boolean).join(' ').toLowerCase().includes(q.toLowerCase())) : _produtos;
   document.getElementById('produtosCount').textContent = `${_produtos.length} produto(s) cadastrado(s)`;
-  document.getElementById('produtosTable').innerHTML = filtered.length ? `<div class="table-wrap"><table><thead><tr><th>Produto</th><th>Tipo</th><th>Modelo</th><th>Código</th><th>Aplicação</th><th></th></tr></thead><tbody>${filtered.map(p=>`<tr><td style="font-weight:500">${esc(p.nome)}</td><td><span class="badge badge-blue">${tipoLabel(p.tipo)}</span></td><td style="color:var(--muted)">${p.modelo||'—'}</td><td style="color:var(--muted)">${p.codigo||'—'}</td><td style="color:var(--muted)">${p.aplicacao||'—'}</td><td><div class="flex-row" style="justify-content:flex-end"><button class="btn btn-ghost btn-sm btn-icon" onclick="openProdutoModal('${p.id}')"><i class="ti ti-pencil"></i></button><button class="btn btn-danger-ghost btn-sm btn-icon" onclick="openConfirm('Excluir produto?','Esta ação não pode ser desfeita.',()=>{deleteProduto('${p.id}')})"><i class="ti ti-trash"></i></button></div></td></tr>`).join('')}</tbody></table></div>` : '<div class="empty-state"><i class="ti ti-package"></i>Nenhum produto encontrado.</div>';
+  document.getElementById('produtosTable').innerHTML = filtered.length ? `<div class="table-wrap"><table><thead><tr><th>Produto</th><th>Tipo</th><th>Modelo</th><th>Código</th><th>Aplicação</th><th></th></tr></thead><tbody>${filtered.map(p=>`<tr><td style="font-weight:500">${esc(p.nome)}</td><td><span class="badge badge-blue">${tipoLabel(p.tipo)}</span></td><td style="color:var(--muted)">${p.modelo||'—'}</td><td style="color:var(--muted)">${p.codigo||'—'}</td><td style="color:var(--muted)">${p.aplicacao||'—'}</td><td><div class="flex-row" style="justify-content:flex-end"><button class="btn btn-ghost btn-sm btn-icon" onclick="openProdutoModal('${p.id}')">✎</button><button class="btn btn-danger-ghost btn-sm btn-icon" onclick="openConfirm('Excluir produto?','Esta ação não pode ser desfeita.',()=>{deleteProduto('${p.id}')})">✕</button></div></td></tr>`).join('')}</tbody></table></div>` : '<div class="empty-state">Nenhum produto encontrado.</div>';
 }
 
 function renderVendas() {
@@ -542,7 +542,7 @@ function renderVendas() {
   document.getElementById('vendasList').innerHTML = filtered.length ? '<div class="divide-y">'+filtered.map(v=>{
     const e=_empresas.find(x=>x.id===v.empresa_id), p=_produtos.find(x=>x.id===v.produto_id);
     const nome=p?p.nome:v.modelo||'Produto', modelo=p&&p.modelo?p.modelo:v.modelo;
-    return `<div class="item-row"><div style="min-width:0;flex:1"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="item-name">${esc(nome)}</span><span class="badge badge-blue">${tipoLabel(v.tipo)}</span></div><div class="item-meta">${e?`<a onclick="navigate('empresa-detail','${e.id}')">${esc(e.nome)}</a>`:'—'}${modelo?' · '+esc(modelo):''} · ${fmtDate(v.data_venda)}</div></div><div style="text-align:right;flex-shrink:0"><div class="item-val">${brl(v.valor_total)}</div><div class="item-actions"><button class="btn btn-ghost btn-sm btn-icon" onclick="openVendaModal('${v.id}')"><i class="ti ti-pencil"></i></button><button class="btn btn-danger-ghost btn-sm btn-icon" onclick="openConfirm('Excluir venda?','Esta ação não pode ser desfeita.',()=>{deleteVenda('${v.id}')})"><i class="ti ti-trash"></i></button></div></div></div>`;
+    return `<div class="item-row"><div style="min-width:0;flex:1"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="item-name">${esc(nome)}</span><span class="badge badge-blue">${tipoLabel(v.tipo)}</span></div><div class="item-meta">${e?`<a onclick="navigate('empresa-detail','${e.id}')">${esc(e.nome)}</a>`:'—'}${modelo?' · '+esc(modelo):''} · ${fmtDate(v.data_venda)}</div></div><div style="text-align:right;flex-shrink:0"><div class="item-val">${brl(v.valor_total)}</div><div class="item-actions"><button class="btn btn-ghost btn-sm btn-icon" onclick="openVendaModal('${v.id}')">✎</button><button class="btn btn-danger-ghost btn-sm btn-icon" onclick="openConfirm('Excluir venda?','Esta ação não pode ser desfeita.',()=>{deleteVenda('${v.id}')})">✕</button></div></div></div>`;
   }).join('')+'</div>' : '<div class="empty-state">Nenhuma venda encontrada.</div>';
 }
 
