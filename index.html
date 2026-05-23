@@ -289,6 +289,7 @@ tr:hover td{background:rgba(0,0,0,0.015)}
         <div id="produtoPickerPreview" style="display:none" class="produto-selected-preview"></div>
         <div class="produto-list" id="produtoPickerList"></div>
       </div>
+      <div class="form-field"><label class="form-label">Marca</label><input id="vendaMarca" placeholder="Ex: Bosch, Delco, Denso..." /></div>
       <div class="form-grid2">
         <div class="form-field"><label class="form-label">Valor cobrado (R$) *</label><input type="number" id="vendaValor" placeholder="0,00" min="0" step="0.01" /></div>
         <div class="form-field"><label class="form-label">Data *</label><input type="date" id="vendaData" /></div>
@@ -637,7 +638,7 @@ function openVendaModal(vendaId, fixedEmpId) {
   document.getElementById('vendaPedido').value = venda?venda.pedido||'':'';
   btValue = venda ? !!venda.bt : true; selectBT(btValue);
   servicoValue = venda ? venda.servico||'remanufatura' : 'remanufatura'; selectServico(servicoValue);
-  document.getElementById('vendaObs').value = venda?venda.observacoes||'':'';
+  document.getElementById('vendaMarca').value = venda?venda.marca||'':''; document.getElementById('vendaObs').value = venda?venda.observacoes||'':'';
   selectedProdutoId = venda?venda.produto_id:null;
   renderProdutoPicker(selectedProdutoId);
   document.getElementById('vendaOverlay').classList.add('open');
@@ -664,7 +665,7 @@ async function saveVenda() {
   if (!valor||valor<=0) { showToast('Informe um valor válido','error'); return; }
   const produto = _produtos.find(p=>p.id===selectedProdutoId);
   if (!produto) { showToast('Produto inválido','error'); return; }
-  const obj = { empresa_id, produto_id:selectedProdutoId, tipo:produto.tipo, modelo:produto.modelo||produto.nome, codigo:produto.codigo||null, aplicacao:produto.aplicacao||null, quantidade:1, valor_unitario:valor, valor_total:valor, data_venda:document.getElementById('vendaData').value, pedido:document.getElementById('vendaPedido').value||null, bt:btValue, servico:servicoValue, observacoes:document.getElementById('vendaObs').value.trim()||null, created_at:Date.now() };
+  const obj = { empresa_id, produto_id:selectedProdutoId, tipo:produto.tipo, modelo:produto.modelo||produto.nome, codigo:produto.codigo||null, aplicacao:produto.aplicacao||null, quantidade:1, valor_unitario:valor, valor_total:valor, data_venda:document.getElementById('vendaData').value, pedido:document.getElementById('vendaPedido').value||null, bt:btValue, servico:servicoValue, marca:document.getElementById('vendaMarca').value.trim()||null, observacoes:document.getElementById('vendaObs').value.trim()||null, created_at:Date.now() };
   loading(true);
   try {
     if (id) { await sb('az_vendas','PATCH',obj,`?id=eq.${id}`); const i=_vendas.findIndex(v=>v.id===id); _vendas[i]={..._vendas[i],...obj}; showToast('Serviço atualizado'); }
