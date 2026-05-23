@@ -638,7 +638,8 @@ async function deleteProduto(id) {
 }
 
 function openProdutoPicker() {
-  filterProdutoPicker();
+  document.getElementById('produtoPickerSearch').value = '';
+  renderProdutoPicker(selectedProdutoId);
   document.getElementById('produtoPickerOverlay').classList.add('open');
   setTimeout(() => document.getElementById('produtoPickerSearch').focus(), 100);
 }
@@ -658,7 +659,6 @@ function openVendaModal(vendaId, fixedEmpId) {
     const sel = document.getElementById('vendaEmpresaId');
     sel.innerHTML = '<option value="">Selecione a empresa...</option>' + _empresas.map(e=>`<option value="${e.id}"${venda&&venda.empresa_id===e.id?' selected':''}>${esc(e.nome)}</option>`).join('');
   }
-  document.getElementById('produtoPickerSearch').value = '';
   document.getElementById('vendaValor').value = venda?venda.valor_unitario:'';
   document.getElementById('vendaData').value = venda?venda.data_venda:today();
   document.getElementById('vendaPedido').value = venda?venda.pedido||'':'';
