@@ -348,6 +348,23 @@ tr:hover td{background:rgba(0,0,0,0.015)}
   </div>
 </div>
 
+
+<!-- PRODUTO PICKER OVERLAY -->
+<div class="overlay" id="produtoPickerOverlay" style="z-index:200">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-header">
+      <span class="modal-title">Selecionar produto</span>
+      <button class="modal-close" onclick="closeProdutoPicker()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:16px">
+      <div class="input-wrap" style="margin-bottom:12px">
+        <span class="search-icon" style="font-size:14px;color:#9ca3af;position:absolute;left:11px;top:50%;transform:translateY(-50%)">🔍</span>
+        <input placeholder="Buscar por nome, modelo, código..." id="produtoPickerSearch" oninput="filterProdutoPicker()" style="padding-left:34px" />
+      </div>
+      <div class="produto-list" id="produtoPickerList" style="max-height:320px"></div>
+    </div>
+  </div>
+</div>
 <!-- CONFIRM -->
 <div class="confirm-overlay" id="confirmOverlay">
   <div class="confirm-box">
@@ -620,6 +637,15 @@ async function deleteProduto(id) {
   catch(e) { showToast('Erro ao excluir','error'); } finally { loading(false); }
 }
 
+function openProdutoPicker() {
+  filterProdutoPicker();
+  document.getElementById('produtoPickerOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('produtoPickerSearch').focus(), 100);
+}
+function closeProdutoPicker() {
+  document.getElementById('produtoPickerOverlay').classList.remove('open');
+  document.getElementById('produtoPickerSearch').value = '';
+}
 function openVendaModal(vendaId, fixedEmpId) {
   vendaFixedEmpresaId = fixedEmpId||null; selectedProdutoId = null;
   const venda = vendaId ? _vendas.find(v=>v.id===vendaId) : null;
@@ -640,21 +666,29 @@ function openVendaModal(vendaId, fixedEmpId) {
   servicoValue = venda ? venda.servico||'remanufatura' : 'remanufatura'; selectServico(servicoValue);
   document.getElementById('vendaMarca').value = venda?venda.marca||'':''; document.getElementById('vendaObs').value = venda?venda.observacoes||'':'';
   selectedProdutoId = venda?venda.produto_id:null;
-  renderProdutoPicker(selectedProdutoId);
+  const selP = selectedProdutoId ? _produtos.find(p=>p.id===selectedProdutoId) : null;
+  const btn = document.getElementById('produtoBtnLabel');
+  if (selP) { btn.textContent = selP.nome + (selP.modelo?' · '+selP.modelo:''); btn.style.color='var(--text)'; }
+  else { btn.textContent = 'Selecione o produto...'; btn.style.color='#9ca3af'; }
   document.getElementById('vendaOverlay').classList.add('open');
 }
 function closeVendaModal() { document.getElementById('vendaOverlay').classList.remove('open'); }
 function filterProdutoPicker() { renderProdutoPicker(selectedProdutoId); }
 function renderProdutoPicker(selId) {
-  const q = document.getElementById('produtoPickerSearch').value.toLowerCase();
-  const list = q ? _produtos.filter(p=>[p.nome,p.modelo,p.codigo,p.aplicacao,tipoLabel(p.tipo)].filter(Boolean).join(' ').toLowerCase().includes(q)) : _produtos.slice(0,20);
-  const sel = _produtos.find(p=>p.id===selId);
-  const preview = document.getElementById('produtoPickerPreview');
-  if (sel) { preview.style.display='block'; preview.innerHTML=`<strong>${esc(sel.nome)}</strong><div style="font-size:12px;color:var(--muted)">${tipoLabel(sel.tipo)}${sel.modelo?' · '+esc(sel.modelo):''}${sel.codigo?' · '+esc(sel.codigo):''}</div>`; }
-  else preview.style.display='none';
+  const q = (document.getElementById('produtoPickerSearch')||{}).value||'';
+  const ql = q.toLowerCase();
+  const list = ql ? _produtos.filter(p=>[p.nome,p.modelo,p.codigo,p.aplicacao,tipoLabel(p.tipo)].filter(Boolean).join(' ').toLowerCase().includes(ql)) : _produtos;
   document.getElementById('produtoPickerList').innerHTML = list.length ? list.map(p=>`<div class="produto-option${p.id===selId?' selected':''}" onclick="selectProduto('${p.id}')"><strong>${esc(p.nome)}</strong><div style="font-size:11px;color:var(--muted)">${tipoLabel(p.tipo)}${p.modelo?' · '+esc(p.modelo):''}${p.codigo?' · '+esc(p.codigo):''}${p.aplicacao?' · '+esc(p.aplicacao):''}</div></div>`).join('') : `<div style="padding:12px;text-align:center;color:var(--muted);font-size:13px">Nenhum produto encontrado.</div>`;
 }
-function selectProduto(id) { selectedProdutoId=id; renderProdutoPicker(id); }
+function selectProduto(id) {
+  selectedProdutoId = id;
+  const p = _produtos.find(x => x.id === id);
+  if (p) {
+    document.getElementById('produtoBtnLabel').textContent = p.nome + (p.modelo ? ' · ' + p.modelo : '');
+    document.getElementById('produtoBtnLabel').style.color = 'var(--text)';
+  }
+  closeProdutoPicker();
+}
 
 async function saveVenda() {
   const id = document.getElementById('vendaId').value;
