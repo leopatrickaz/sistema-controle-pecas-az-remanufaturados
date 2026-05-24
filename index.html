@@ -201,7 +201,7 @@ tr:hover td{background:rgba(0,0,0,0.015)}
 <!-- APP -->
 
 <!-- HOME MENU -->
-<div id="homePage" style="display:none;background:#f4f5f7;min-height:100vh">
+<div id="homePage" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#f4f5f7;overflow-y:auto;z-index:1">
   <div style="background:#1e2434;padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
     <div style="display:flex;align-items:center;gap:10px">
       <span style="font-size:20px">⚙</span>
@@ -581,23 +581,21 @@ async function bootApp() {
 }
 
 function showHomePage() {
-  document.getElementById('homePage').style.display = 'block';
   document.getElementById('mainApp').style.display = 'none';
+  document.getElementById('homePage').style.display = 'block';
+  document.getElementById('homePage').scrollTop = 0;
 }
 
 function goHome() {
   document.getElementById('mainApp').style.display = 'none';
   document.getElementById('homePage').style.display = 'block';
-  window.scrollTo(0,0);
+  document.getElementById('homePage').scrollTop = 0;
 }
 
 function openModule(module) {
-  // Hide homePage completely - use visibility trick to prevent scroll
-  const home = document.getElementById('homePage');
-  home.style.display = 'none';
+  document.getElementById('homePage').style.display = 'none';
   document.getElementById('mainApp').style.display = 'flex';
-  // Force scroll to top
-  setTimeout(function() { window.scrollTo(0,0); }, 10);
+  window.scrollTo(0,0);
   document.getElementById('homePage').style.display = 'none';
   document.getElementById('mainApp').style.display = 'flex';
   navigate(module);
@@ -622,6 +620,7 @@ async function loadAll() {
 
 function navigate(page, extraId) {
   window.scrollTo(0,0);
+  document.body.scrollTop = 0;
   currentPage = page;
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
