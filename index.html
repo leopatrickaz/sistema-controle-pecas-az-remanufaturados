@@ -375,10 +375,8 @@ tr:hover td{background:rgba(0,0,0,0.015)}
         </button>
       </div>
       <div class="form-field"><label class="form-label">Marca</label><input id="vendaMarca" placeholder="Ex: Bosch, Delco, Denso..." /></div>
-      <div class="form-grid2">
-        <div class="form-field"><label class="form-label">Valor cobrado (R$) *</label><input type="number" id="vendaValor" placeholder="0,00" min="0" step="0.01" /></div>
-        <div class="form-field"><label class="form-label">Data *</label><input type="date" id="vendaData" /></div>
-      </div>
+      <div class="form-field"><label class="form-label">Valor cobrado (R$) *</label><input type="number" id="vendaValor" placeholder="0,00" min="0" step="0.01" /></div>
+      <div class="form-field"><label class="form-label">Data *</label><input type="date" id="vendaData" style="width:100%;display:block" /></div>
       <div class="form-grid2">
         <div class="form-field"><label class="form-label">Pedido</label><select id="vendaPedido"><option value="">Selecione...</option><option value="verbal">Verbal</option><option value="email">E-mail</option><option value="whatsapp">WhatsApp</option></select></div>
         <div class="form-field"><label class="form-label">BT</label><div class="toggle-group"><button type="button" class="toggle-opt on" id="btSim" onclick="selectBT(true)">Sim</button><button type="button" class="toggle-opt" id="btNao" onclick="selectBT(false)">Não</button></div></div>
@@ -435,7 +433,7 @@ tr:hover td{background:rgba(0,0,0,0.015)}
 
 
 <!-- ORCAMENTOS PAGE -->
-<div id="page-orcamentos" class="page" style="padding-top:0">
+<div id="page-orcamentos" class="page">
   <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
     <div><div class="page-title">Orçamentos</div><div class="page-sub">Crie e baixe orçamentos em PDF</div></div>
     <button class="btn btn-primary" onclick="openOrcamentoModal()">+ Novo orçamento</button>
@@ -453,10 +451,8 @@ tr:hover td{background:rgba(0,0,0,0.015)}
       <button class="modal-close" onclick="closeOrcamentoModal()">&#x2715;</button>
     </div>
     <div class="modal-body">
-      <div class="form-grid2">
-        <div class="form-field"><label class="form-label">Cliente *</label><input id="orcCliente" placeholder="Nome do cliente" /></div>
-        <div class="form-field"><label class="form-label">Data *</label><input type="date" id="orcData" /></div>
-      </div>
+      <div class="form-field"><label class="form-label">Cliente *</label><input id="orcCliente" placeholder="Nome do cliente" /></div>
+      <div class="form-field"><label class="form-label">Data *</label><input type="date" id="orcData" style="width:100%;display:block" /></div>
       <div class="form-field">
         <label class="form-label">Itens</label>
         <div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
@@ -594,6 +590,7 @@ function goHome() {
 }
 
 function openModule(module) {
+  window.scrollTo(0, 0);
   document.getElementById('homePage').style.display = 'none';
   document.getElementById('mainApp').style.display = 'flex';
   navigate(module);
@@ -617,6 +614,7 @@ async function loadAll() {
 }
 
 function navigate(page, extraId) {
+  window.scrollTo(0, 0);
   currentPage = page;
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
