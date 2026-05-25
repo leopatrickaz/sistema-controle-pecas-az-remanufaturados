@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Controle de Vendas — AZ Remanufaturados</title>
+  <link rel="stylesheet" href="/shared/styles.css" />
+</head>
+<body>
+
+<div class="loading-overlay" id="az-loading"><div class="spinner"></div> Carregando...</div>
+
+<div class="app" id="mainApp">
+
+  <!-- SIDEBAR DESKTOP -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">⚙</div>
+      <div class="logo-text">
+        <div class="logo-title">AZ</div>
+        <div class="logo-sub">Remanufaturados</div>
+      </div>
+    </div>
+    <button class="nav-link" id="nav-dashboard" onclick="navigate('dashboard')">Início</button>
+    <button class="nav-link" id="nav-empresas"  onclick="navigate('empresas')">Empresas</button>
+    <button class="nav-link" id="nav-produtos"  onclick="navigate('produtos')">Produtos</button>
+    <button class="nav-link" id="nav-vendas"    onclick="navigate('vendas')">Vendas</button>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">sistemaaz</div>
+      <button class="logout-btn" onclick="AZ_AUTH.logout()">→ Sair</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TOPBAR MOBILE -->
+    <div class="topbar" id="topbar">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button onclick="openModulesSidebar()" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:4px;line-height:1">☰</button>
+        <span style="font-weight:700;font-size:14px">AZ Remanufaturados</span>
+      </div>
+      <button onclick="goHome()" style="background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:12px;cursor:pointer;padding:6px 12px;border-radius:8px;font-weight:500">⌂ Menu</button>
+    </div>
+
+    <!-- NAV MOBILE -->
+    <div class="mobile-nav" id="mobileNav">
+      <button class="nav-link" onclick="navigate('dashboard');closeMobileMenu()">Início</button>
+      <button class="nav-link" onclick="navigate('empresas');closeMobileMenu()">Empresas</button>
+      <button class="nav-link" onclick="navigate('produtos');closeMobileMenu()">Produtos</button>
+      <button class="nav-link" onclick="navigate('vendas');closeMobileMenu()">Vendas</button>
+      <button class="nav-link" onclick="AZ_AUTH.logout()">→ Sair</button>
+    </div>
+
+    <!-- SIDEBAR MOBILE DESLIZANTE -->
+    <div id="modulesSidebar" style="display:none;position:fixed;inset:0;z-index:500">
+      <div onclick="closeModulesSidebar()" style="position:absolute;inset:0;background:rgba(0,0,0,0.45)"></div>
+      <div style="position:absolute;left:0;top:0;bottom:0;width:280px;background:#1e2434;display:flex;flex-direction:column;box-shadow:4px 0 20px rgba(0,0,0,0.3)">
+        <div style="padding:20px;border-bottom:1px solid rgba(255,255,255,0.1)">
+          <div style="color:#fff;font-weight:700;font-size:15px">⚙ AZ Remanufaturados</div>
+          <div style="color:rgba(255,255,255,0.5);font-size:11px;margin-top:2px">Módulos do sistema</div>
+        </div>
+        <div style="padding:12px;flex:1;overflow-y:auto" id="sidebarModulosList"></div>
+        <div style="padding:16px;border-top:1px solid rgba(255,255,255,0.1)">
+          <button onclick="goHome()" style="width:100%;background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.7);padding:10px;border-radius:8px;cursor:pointer;font-size:13px;text-align:left;margin-bottom:6px">⌂ Tela inicial</button>
+          <button onclick="AZ_AUTH.logout()" style="width:100%;background:none;border:none;color:rgba(255,255,255,0.5);padding:10px;border-radius:8px;cursor:pointer;font-size:13px;text-align:left">→ Sair</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTEÚDO -->
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="page" id="page-dashboard">
+        <div class="page-header">
+          <div class="page-title">Início</div>
+          <div class="page-sub">Registre uma nova venda ou consulte o histórico.</div>
+        </div>
+        <button class="btn btn-primary btn-lg" style="margin-bottom:14px" onclick="openVendaModal()">+ Adicionar venda</button>
+        <div class="flex-row" style="margin-bottom:14px">
+          <button class="btn btn-outline" style="flex:1" onclick="openProdutoModal()">+ Adicionar produto</button>
+          <button class="btn btn-outline" style="flex:1" onclick="openEmpresaModal()">+ Adicionar empresa</button>
+        </div>
+        <div style="display:flex;justify-content:center;margin-bottom:20px">
+          <button class="btn btn-ghost btn-sm" onclick="navigate('produtos')">Ver todos os produtos</button>
+        </div>
+        <div class="grid2" id="dashStats"></div>
+        <div class="card">
+          <div class="card-header" style="padding:16px 20px 12px"><span class="card-title">Últimas vendas</span></div>
+          <div class="card-body-p0 divide-y" id="dashVendas"></div>
+        </div>
+      </div>
+
+      <!-- EMPRESAS -->
+      <div class="page" id="page-empresas">
+        <button class="back-btn" onclick="navigate('dashboard')">← Início</button>
+        <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
+          <div><div class="page-title">Empresas</div><div class="page-sub" id="empresasCount"></div></div>
+          <button class="btn btn-primary" onclick="openEmpresaModal()">+ Nova empresa</button>
+        </div>
+        <div class="filter-bar">
+          <div class="input-wrap" style="flex:1;min-width:200px">
+            <input placeholder="Buscar por nome, CNPJ, cidade..." id="empresaSearch" oninput="renderEmpresas()" />
+          </div>
+        </div>
+        <div class="card"><div class="card-body-p0" id="empresasTable"></div></div>
+      </div>
+
+      <!-- EMPRESA DETALHE -->
+      <div class="page" id="page-empresa-detail">
+        <button class="back-btn" onclick="navigate('empresas')">← Empresas</button>
+        <div id="empresaDetailContent"></div>
+      </div>
+
+      <!-- PRODUTOS -->
+      <div class="page" id="page-produtos">
+        <button class="back-btn" onclick="navigate('dashboard')">← Início</button>
+        <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
+          <div><div class="page-title">Produtos</div><div class="page-sub" id="produtosCount"></div></div>
+          <button class="btn btn-primary" onclick="openProdutoModal()">+ Novo produto</button>
+        </div>
+        <div class="filter-bar">
+          <div class="input-wrap" style="flex:1;min-width:200px;max-width:500px">
+            <input placeholder="Buscar por nome, modelo, código..." id="produtoSearch" oninput="renderProdutos()" />
+          </div>
+        </div>
+        <div class="card"><div class="card-body-p0" id="produtosTable"></div></div>
+      </div>
+
+      <!-- VENDAS -->
+      <div class="page" id="page-vendas">
+        <button class="back-btn" onclick="navigate('dashboard')">← Início</button>
+        <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
+          <div><div class="page-title">Vendas</div><div class="page-sub" id="vendasStats"></div></div>
+          <div class="flex-row">
+            <button class="btn btn-outline btn-sm" onclick="exportVendas()">↓ Exportar</button>
+            <button class="btn btn-primary btn-sm" onclick="openVendaModal()">+ Nova venda</button>
+          </div>
+        </div>
+        <div class="vendas-filter">
+          <div class="input-wrap"><input placeholder="Buscar empresa, produto, modelo..." id="vendaSearch" oninput="renderVendas()" /></div>
+          <input type="date" id="vendaFrom" oninput="renderVendas()" style="color:var(--muted)" />
+        </div>
+        <div class="card"><div class="card-body-p0" id="vendasList"></div></div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+
+<!-- ═══════════════════════════════════════════
+     MODAIS
+════════════════════════════════════════════ -->
+
+<!-- MODAL VENDA -->
+<div class="overlay" id="vendaOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="vendaModalTitle">Novo serviço / venda</span>
+      <button class="modal-close" onclick="closeVendaModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="vendaId" />
+      <div id="vendaEmpresaField" class="form-field">
+        <label class="form-label">Empresa *</label>
+        <select id="vendaEmpresaId"></select>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Produto *</label>
+        <button type="button" id="produtoBtnSelect" onclick="openProdutoPicker()" style="width:100%;height:var(--input-h);border:1px solid var(--border);border-radius:var(--radius);background:#fff;text-align:left;padding:0 12px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
+          <span id="produtoBtnLabel" style="color:#9ca3af">Selecione o produto...</span>
+          <span style="font-size:11px;color:var(--muted)">▼</span>
+        </button>
+      </div>
+      <div class="form-field"><label class="form-label">Marca</label><input id="vendaMarca" placeholder="Ex: Bosch, Delco, Denso..." /></div>
+      <div class="form-grid2">
+        <div class="form-field"><label class="form-label">Valor cobrado (R$) *</label><input type="number" id="vendaValor" placeholder="0,00" min="0" step="0.01" /></div>
+        <div class="form-field"><label class="form-label">Data *</label><input type="date" id="vendaData" /></div>
+      </div>
+      <div class="form-grid2">
+        <div class="form-field">
+          <label class="form-label">Pedido</label>
+          <select id="vendaPedido">
+            <option value="">Selecione...</option>
+            <option value="verbal">Verbal</option>
+            <option value="email">E-mail</option>
+            <option value="whatsapp">WhatsApp</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">BT</label>
+          <div class="toggle-group">
+            <button type="button" class="toggle-opt on" id="btSim" onclick="selectBT(true)">Sim</button>
+            <button type="button" class="toggle-opt"    id="btNao" onclick="selectBT(false)">Não</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Serviço</label>
+        <div class="toggle-group">
+          <button type="button" class="toggle-opt on" id="svcReman" onclick="selectServico('remanufatura')">Remanufatura</button>
+          <button type="button" class="toggle-opt"    id="svcNovo"  onclick="selectServico('novo')">Novo</button>
+        </div>
+      </div>
+      <div class="form-field"><label class="form-label">Observações</label><textarea rows="2" id="vendaObs"></textarea></div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="closeVendaModal()">Cancelar</button>
+        <button class="btn btn-save"  onclick="saveVenda()">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PRODUTO -->
+<div class="overlay" id="produtoOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="produtoModalTitle">Novo produto</span>
+      <button class="modal-close" onclick="closeProdutoModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="produtoId" />
+      <div class="form-field"><label class="form-label">Nome do produto *</label><input id="produtoNome" placeholder="Nome" /></div>
+      <div class="form-grid2">
+        <div class="form-field">
+          <label class="form-label">Tipo *</label>
+          <select id="produtoTipo">
+            <option value="motor_partida">Motor de partida</option>
+            <option value="alternador">Alternador</option>
+          </select>
+        </div>
+        <div class="form-field"><label class="form-label">Modelo</label><input id="produtoModelo" placeholder="Modelo" /></div>
+      </div>
+      <div class="form-field"><label class="form-label">Código / Referência</label><input id="produtoCodigo" placeholder="Código" /></div>
+      <div class="form-field"><label class="form-label">Aplicação / Veículo</label><input id="produtoAplicacao" /></div>
+      <div class="form-field"><label class="form-label">Especificações</label><textarea rows="2" id="produtoEspec"></textarea></div>
+      <div class="form-field"><label class="form-label">Observações</label><textarea rows="2" id="produtoObs"></textarea></div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="closeProdutoModal()">Cancelar</button>
+        <button class="btn btn-save"  onclick="saveProduto()">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EMPRESA -->
+<div class="overlay" id="empresaOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="empresaModalTitle">Nova empresa</span>
+      <button class="modal-close" onclick="closeEmpresaModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="empresaId" />
+      <div class="form-field"><label class="form-label">Nome *</label><input id="empresaNome" placeholder="Razão social ou nome fantasia" /></div>
+      <div class="form-grid2">
+        <div class="form-field"><label class="form-label">CNPJ</label><input id="empresaCnpj" placeholder="00.000.000/0001-00" /></div>
+        <div class="form-field"><label class="form-label">Telefone</label><input id="empresaTelefone" placeholder="(00) 00000-0000" /></div>
+      </div>
+      <div class="form-field"><label class="form-label">E-mail</label><input type="email" id="empresaEmail" placeholder="contato@empresa.com" /></div>
+      <div class="form-field"><label class="form-label">Nome do contato</label><input id="empresaContato" placeholder="Nome do responsável" /></div>
+      <div class="form-grid-auto">
+        <div class="form-field"><label class="form-label">Cidade</label><input id="empresaCidade" placeholder="Cidade" /></div>
+        <div class="form-field"><label class="form-label">UF</label><input id="empresaEstado" placeholder="PR" maxlength="2" style="text-transform:uppercase" /></div>
+      </div>
+      <div class="form-field"><label class="form-label">Observações</label><textarea rows="3" id="empresaObs"></textarea></div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="closeEmpresaModal()">Cancelar</button>
+        <button class="btn btn-save"  onclick="saveEmpresa()">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUTO PICKER -->
+<div class="overlay" id="produtoPickerOverlay" style="z-index:200">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-header">
+      <span class="modal-title">Selecionar produto</span>
+      <button class="modal-close" onclick="closeProdutoPicker()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:16px">
+      <div class="input-wrap" style="margin-bottom:12px">
+        <span class="search-icon" style="font-size:14px;color:#9ca3af;position:absolute;left:11px;top:50%;transform:translateY(-50%)">🔍</span>
+        <input placeholder="Buscar por nome, modelo, código..." id="produtoPickerSearch" oninput="filterProdutoPicker()" style="padding-left:34px" />
+      </div>
+      <div class="produto-list" id="produtoPickerList" style="max-height:320px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-title" id="confirmTitle"></div>
+    <div class="confirm-desc"  id="confirmDesc"></div>
+    <div class="confirm-actions">
+      <button class="btn btn-outline" onclick="closeConfirm()">Cancelar</button>
+      <button class="btn" style="background:var(--destructive);color:#fff;border-color:var(--destructive)" onclick="executeConfirm()">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="az-toast"></div>
+
+
+<!-- ═══════════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════════ -->
+<script src="/shared/config.js"></script>
+<script src="/shared/db.js"></script>
+<script src="/shared/auth.js"></script>
+<script src="/shared/components.js"></script>
+<script>
+
+// ── Verificação de autenticação ──────────────────────────────
+if (!AZ_AUTH.requireAuth()) { /* requireAuth já redireciona */ }
+
+// ── Estado local do módulo ───────────────────────────────────
+let currentPage = 'dashboard';
+let currentEmpresaDetailId = null;
+let selectedProdutoId = null;
+let vendaFixedEmpresaId = null;
+let btValue = true;
+let servicoValue = 'remanufatura';
+let _empresas = [], _produtos = [], _vendas = [];
+
+// ── Inicialização ────────────────────────────────────────────
+(async function init() {
+  showLoading(true);
+  try {
+    await loadAll();
+    renderSidebarModulos('vendas');
+    navigate('dashboard');
+  } catch(e) {
+    showToast('Erro ao carregar dados', 'error');
+  } finally {
+    showLoading(false);
+  }
+})();
+
+async function loadAll() {
+  const [e, p, v] = await Promise.all([
+    AZ_DB.get('az_empresas', '?select=*&order=nome'),
+    AZ_DB.get('az_produtos', '?select=*&order=nome'),
+    AZ_DB.get('az_vendas',   '?select=*&order=data_venda.desc')
+  ]);
+  _empresas = e || [];
+  _produtos = p || [];
+  _vendas   = v || [];
+}
+
+// ── Navegação interna ────────────────────────────────────────
+function navigate(page, extraId) {
+  currentPage = page;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+
+  const pageId = page === 'empresa-detail' ? 'empresa-detail' : page;
+  const el = document.getElementById('page-' + pageId);
+  if (el) el.classList.add('active');
+
+  const navId = page === 'empresa-detail' ? 'empresas' : page;
+  const navEl = document.getElementById('nav-' + navId);
+  if (navEl) navEl.classList.add('active');
+
+  if (page === 'dashboard')       renderDashboard();
+  else if (page === 'empresas')   renderEmpresas();
+  else if (page === 'empresa-detail') { currentEmpresaDetailId = extraId; renderEmpresaDetail(extraId); }
+  else if (page === 'produtos')   renderProdutos();
+  else if (page === 'vendas')     renderVendas();
+}
+
+// ── Toggle BT / Serviço ──────────────────────────────────────
+function selectBT(sim) {
+  btValue = sim;
+  document.getElementById('btSim').classList.toggle('on', sim);
+  document.getElementById('btNao').classList.toggle('on', !sim);
+}
+
+function selectServico(val) {
+  servicoValue = val;
+  document.getElementById('svcReman').classList.toggle('on', val === 'remanufatura');
+  document.getElementById('svcNovo').classList.toggle('on', val === 'novo');
+}
+
+// ── Renders ──────────────────────────────────────────────────
+function renderDashboard() {
+  document.getElementById('dashStats').innerHTML = `
+    <div class="stat-card"><div class="stat-icon blue">🏢</div><div class="stat-label">Empresas cadastradas</div><div class="stat-val">${_empresas.length}</div><div class="stat-link" onclick="navigate('empresas')">Ver empresas →</div></div>
+    <div class="stat-card"><div class="stat-icon green">🧾</div><div class="stat-label">Vendas registradas</div><div class="stat-val">${_vendas.length}</div><div class="stat-link" onclick="navigate('vendas')">Ver vendas →</div></div>`;
+
+  const ultimas = _vendas.slice(0, 8);
+  document.getElementById('dashVendas').innerHTML = ultimas.length
+    ? ultimas.map(v => {
+        const e = _empresas.find(x => x.id === v.empresa_id);
+        const p = _produtos.find(x => x.id === v.produto_id);
+        return `<div class="item-row">
+          <div style="min-width:0;flex:1">
+            <div class="item-name">${esc(p ? p.nome : v.modelo || 'Produto')}</div>
+            <div class="item-meta">${e ? `<a onclick="navigate('empresa-detail','${e.id}')">${esc(e.nome)}</a>` : '—'} · ${fmtDate(v.data_venda)}</div>
+            <div class="item-meta" style="margin-top:3px">${badgeBT(v.bt)} ${badgeServico(v.servico)}</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div class="item-val">${brl(v.valor_total)}</div>
+            <span class="badge badge-blue">${tipoLabel(v.tipo)}</span>
+          </div>
+        </div>`;
+      }).join('')
+    : '<div class="empty-state">Nenhuma venda registrada ainda.</div>';
+}
+
+function renderEmpresas() {
+  const q = (document.getElementById('empresaSearch') || {}).value || '';
+  const filtered = q
+    ? _empresas.filter(e => [e.nome, e.cnpj, e.cidade, e.contato].filter(Boolean).join(' ').toLowerCase().includes(q.toLowerCase()))
+    : _empresas;
+  document.getElementById('empresasCount').textContent = `${_empresas.length} empresa(s) cadastrada(s)`;
+  document.getElementById('empresasTable').innerHTML = filtered.length
+    ? `<div class="table-wrap"><table><thead><tr><th>Empresa</th><th>CNPJ</th><th>Contato</th><th>Cidade</th><th>Cadastro</th></tr></thead><tbody>
+        ${filtered.map(e => `<tr>
+          <td><span class="link-primary" onclick="navigate('empresa-detail','${e.id}')">${esc(e.nome)}</span></td>
+          <td style="color:var(--muted)">${e.cnpj || '—'}</td>
+          <td>${e.contato || '—'}${e.telefone ? `<br><small style="color:var(--muted)">${esc(e.telefone)}</small>` : ''}</td>
+          <td>${[e.cidade, e.estado].filter(Boolean).join(' / ') || '—'}</td>
+          <td style="color:var(--muted)">${fmtDate(e.created_at)}</td>
+        </tr>`).join('')}
+      </tbody></table></div>`
+    : '<div class="empty-state">Nenhuma empresa encontrada.</div>';
+}
+
+function renderEmpresaDetail(id) {
+  const emp = _empresas.find(e => e.id === id);
+  if (!emp) { document.getElementById('empresaDetailContent').innerHTML = '<p>Empresa não encontrada.</p>'; return; }
+  const vendas = _vendas.filter(v => v.empresa_id === id);
+  const total  = vendas.reduce((s, v) => s + Number(v.valor_total), 0);
+
+  document.getElementById('empresaDetailContent').innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+      <div>
+        <div class="page-title">${esc(emp.nome)}</div>
+        ${emp.cnpj ? `<div class="page-sub">CNPJ: ${esc(emp.cnpj)}</div>` : ''}
+      </div>
+      <div class="flex-row">
+        <button class="btn btn-outline btn-sm" onclick="openEmpresaModal('${id}')">Editar</button>
+        <button class="btn btn-outline btn-sm" style="color:var(--destructive)" onclick="openConfirm('Excluir empresa?','Todas as vendas vinculadas serão excluídas.',()=>{deleteEmpresa('${id}')})">✕</button>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-header"><span class="card-title" style="font-size:13px">Dados da empresa</span></div>
+      <div class="card-body"><div class="info-grid">
+        <div class="info-item"><div><div class="info-key">Contato</div><div class="info-val">${esc(emp.contato || '—')}</div></div></div>
+        <div class="info-item"><div><div class="info-key">Telefone</div><div class="info-val">${esc(emp.telefone || '—')}</div></div></div>
+        <div class="info-item"><div><div class="info-key">E-mail</div><div class="info-val">${esc(emp.email || '—')}</div></div></div>
+        <div class="info-item"><div><div class="info-key">Localização</div><div class="info-val">${[emp.cidade, emp.estado].filter(Boolean).join(' / ') || '—'}</div></div></div>
+        ${emp.observacoes ? `<div class="info-item" style="grid-column:1/-1"><div><div class="info-key">Observações</div><div class="info-val" style="white-space:pre-wrap">${esc(emp.observacoes)}</div></div></div>` : ''}
+      </div></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <span class="card-title">Histórico de serviços</span>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">${vendas.length} registro(s) · Total: <strong>${brl(total)}</strong></div>
+        </div>
+        <div class="flex-row">
+          ${vendas.length ? `<button class="btn btn-outline btn-sm" onclick="exportVendasEmpresa('${id}')">↓ Exportar</button>` : ''}
+          <button class="btn btn-primary btn-sm" onclick="openVendaModal(null,'${id}')">+ Adicionar serviço</button>
+        </div>
+      </div>
+      <div class="card-body-p0">
+        ${vendas.length
+          ? '<div class="divide-y">' + vendas.map(v => {
+              const p     = _produtos.find(x => x.id === v.produto_id);
+              const nome  = p ? p.nome : v.modelo || 'Produto';
+              const modelo = p && p.modelo ? p.modelo : v.modelo;
+              const codigo = p && p.codigo ? p.codigo : v.codigo;
+              return `<div class="item-row">
+                <div style="min-width:0;flex:1">
+                  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                    <span class="item-name">${esc(nome)}</span>
+                    <span class="badge badge-blue">${tipoLabel(v.tipo)}</span>
+                  </div>
+                  <div class="item-meta">${[modelo ? 'Modelo: ' + modelo : '', codigo ? 'Cód: ' + codigo : ''].filter(Boolean).join(' · ')}</div>
+                  ${v.observacoes ? `<div style="font-size:12px;font-style:italic;color:var(--muted);margin-top:2px">${esc(v.observacoes)}</div>` : ''}
+                  <div class="item-meta">${fmtDate(v.data_venda)}${v.pedido ? ' · ' + pedidoLabel(v.pedido) : ''}</div>
+                  <div class="item-meta" style="margin-top:3px">${badgeBT(v.bt)} ${badgeServico(v.servico)}</div>
+                </div>
+                <div style="text-align:right;flex-shrink:0">
+                  <div class="item-val">${brl(v.valor_total)}</div>
+                  <div class="item-actions">
+                    <button class="btn btn-ghost btn-sm btn-icon" onclick="openVendaModal('${v.id}','${id}')">✎</button>
+                    <button class="btn btn-danger-ghost btn-sm btn-icon" onclick="openConfirm('Excluir serviço?','Esta ação não pode ser desfeita.',()=>{deleteVenda('${v.id}')})">✕</button>
+                  </div>
+                </div>
+              </div>`;
+            }).join('') + '</div>'
+          : '<div class="empty-state">Nenhum serviço registrado.</div>'
+        }
+      </div>
+    </div>`;
+}
+
+function renderProdutos() {
+  const q = (document.getElementById('produtoSearch') || {}).value || '';
+  const filtered = q
+    ? _produtos.filter(p => [p.nome, p.modelo, p.codigo, p.aplicacao, tipoLabel(p.tipo)].filter(Boolean).join(' ').toLowerCase().includes(q.toLowerCase()))
+    : _produtos;
+  document.getElementById('produtosCount').textContent = `${_produtos.length} produto(s) cadastrado(s)`;
+  document.getElementById('produtosTable').innerHTML = filtered.length
+    ? `<div class="table-wrap"><table><thead><tr><th>Produto</th><th>Tipo</th><th>Modelo</th><th>Código</th><th>Aplicação</th><th></th></tr></thead><tbody>
+        ${filtered.map(p => `<tr>
+          <td style="font-weight:500">${esc(p.nome)}</td>
+          <td><span class="badge badge-blue">${tipoLabel(p.tipo)}</span></td>
+          <td style="color:var(--muted)">${p.modelo || '—'}</td>
+          <td style="color:var(--muted)">${p.codigo || '—'}</td>
+          <td style="color:var(--muted)">${p.aplicacao || '—'}</td>
+          <td><div class="flex-row" style="justify-content:flex-end">
+            <button class="btn btn-ghost btn-sm btn-icon" onclick="openProdutoModal('${p.id}')">✎</button>
+            <button class="btn btn-danger-ghost btn-sm btn-icon" onclick="openConfirm('Excluir produto?','Esta ação não pode ser desfeita.',()=>{deleteProduto('${p.id}')})">✕</button>
+          </div></td>
+        </tr>`).join('')}
+      </tbody></table></div>`
+    : '<div class="empty-state">Nenhum produto encontrado.</div>';
+}
+
+function renderVendas() {
+  const q    = (document.getElementById('vendaSearch') || {}).value || '';
+  const from = (document.getElementById('vendaFrom')   || {}).value || '';
+  let filtered = _vendas.filter(v => {
+    if (from && v.data_venda !== from) return false;
+    if (q) {
+      const e = _empresas.find(x => x.id === v.empresa_id);
+      const p = _produtos.find(x => x.id === v.produto_id);
+      if (![e && e.nome, p && p.nome, p && p.modelo, p && p.codigo, v.modelo, v.codigo].filter(Boolean).join(' ').toLowerCase().includes(q.toLowerCase())) return false;
+    }
+    return true;
+  });
+  const total = filtered.reduce((s, v) => s + Number(v.valor_total), 0);
+  document.getElementById('vendasStats').textContent = `${filtered.length} venda(s) · Total: ${brl(total)}`;
+  document.getElementById('vendasList').innerHTML = filtered.length
+    ? '<div class="divide-y">' + filtered.map(v => {
+        const e     = _empresas.find(x => x.id === v.empresa_id);
+        const p     = _produtos.find(x => x.id === v.produto_id);
+        const nome  = p ? p.nome : v.modelo || 'Produto';
+        const modelo = p && p.modelo ? p.modelo : v.modelo;
+        return `<div class="item-row">
+          <div style="min-width:0;flex:1">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <span class="item-name">${esc(nome)}</span>
+              <span class="badge badge-blue">${tipoLabel(v.tipo)}</span>
+            </div>
+            <div class="item-meta">${e ? `<a onclick="navigate('empresa-detail','${e.id}')">${esc(e.nome)}</a>` : '—'}${modelo ? ' · ' + esc(modelo) : ''} · ${fmtDate(v.data_venda)}</div>
+            <div class="item-meta" style="margin-top:3px">${badgeBT(v.bt)} ${badgeServico(v.servico)}</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div class="item-val">${brl(v.valor_total)}</div>
+            <div class="item-actions">
+              <button class="btn btn-ghost btn-sm btn-icon" onclick="openVendaModal('${v.id}')">✎</button>
+              <button class="btn btn-danger-ghost btn-sm btn-icon" onclick="openConfirm('Excluir venda?','Esta ação não pode ser desfeita.',()=>{deleteVenda('${v.id}')})">✕</button>
+            </div>
+          </div>
+        </div>`;
+      }).join('') + '</div>'
+    : '<div class="empty-state">Nenhuma venda encontrada.</div>';
+}
+
+// ── Badges helpers ───────────────────────────────────────────
+function badgeBT(bt) {
+  return bt
+    ? '<span style="background:#fef9c3;color:#92400e;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:500">BT: Sim</span>'
+    : '<span style="background:#f3f4f6;color:#6b7280;padding:1px 7px;border-radius:999px;font-size:11px">BT: Não</span>';
+}
+function badgeServico(s) {
+  return s === 'novo'
+    ? '<span style="background:#dcfce7;color:#166534;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:500">Novo</span>'
+    : '<span style="background:#e0f2fe;color:#075985;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:500">Remanufatura</span>';
+}
+
+// ── Modal Empresa ────────────────────────────────────────────
+function openEmpresaModal(id) {
+  const emp = id ? _empresas.find(e => e.id === id) : null;
+  document.getElementById('empresaModalTitle').textContent = emp ? 'Editar empresa' : 'Nova empresa';
+  document.getElementById('empresaId').value        = id || '';
+  document.getElementById('empresaNome').value      = emp ? emp.nome : '';
+  document.getElementById('empresaCnpj').value      = emp ? emp.cnpj || '' : '';
+  document.getElementById('empresaTelefone').value  = emp ? emp.telefone || '' : '';
+  document.getElementById('empresaEmail').value     = emp ? emp.email || '' : '';
+  document.getElementById('empresaContato').value   = emp ? emp.contato || '' : '';
+  document.getElementById('empresaCidade').value    = emp ? emp.cidade || '' : '';
+  document.getElementById('empresaEstado').value    = emp ? emp.estado || '' : '';
+  document.getElementById('empresaObs').value       = emp ? emp.observacoes || '' : '';
+  document.getElementById('empresaOverlay').classList.add('open');
+}
+function closeEmpresaModal() { document.getElementById('empresaOverlay').classList.remove('open'); }
+
+async function saveEmpresa() {
+  const nome = document.getElementById('empresaNome').value.trim();
+  if (!nome) { showToast('Nome é obrigatório', 'error'); return; }
+  const id  = document.getElementById('empresaId').value;
+  const obj = {
+    nome,
+    cnpj:        document.getElementById('empresaCnpj').value.trim() || null,
+    telefone:    document.getElementById('empresaTelefone').value.trim() || null,
+    email:       document.getElementById('empresaEmail').value.trim() || null,
+    contato:     document.getElementById('empresaContato').value.trim() || null,
+    cidade:      document.getElementById('empresaCidade').value.trim() || null,
+    estado:      document.getElementById('empresaEstado').value.trim().toUpperCase() || null,
+    observacoes: document.getElementById('empresaObs').value.trim() || null
+  };
+  showLoading(true);
+  try {
+    if (id) {
+      await AZ_DB.update('az_empresas', id, obj);
+      const i = _empresas.findIndex(e => e.id === id);
+      _empresas[i] = { ..._empresas[i], ...obj };
+      showToast('Empresa atualizada');
+    } else {
+      obj.id = uid(); obj.created_at = today();
+      const r = await AZ_DB.insert('az_empresas', obj);
+      _empresas.push(r[0] || obj);
+      _empresas.sort((a, b) => a.nome.localeCompare(b.nome));
+      showToast('Empresa cadastrada');
+    }
+    closeEmpresaModal();
+    if (currentPage === 'empresas') renderEmpresas();
+    else if (currentPage === 'empresa-detail') renderEmpresaDetail(currentEmpresaDetailId);
+    else renderDashboard();
+  } catch(e) { showToast('Erro ao salvar', 'error'); }
+  finally { showLoading(false); }
+}
+
+async function deleteEmpresa(id) {
+  showLoading(true);
+  try {
+    await AZ_DB.remove('az_empresas', id);
+    _empresas = _empresas.filter(e => e.id !== id);
+    _vendas   = _vendas.filter(v => v.empresa_id !== id);
+    showToast('Empresa excluída');
+    navigate('empresas');
+  } catch(e) { showToast('Erro ao excluir', 'error'); }
+  finally { showLoading(false); }
+}
+
+// ── Modal Produto ────────────────────────────────────────────
+function openProdutoModal(id) {
+  const prod = id ? _produtos.find(p => p.id === id) : null;
+  document.getElementById('produtoModalTitle').textContent = prod ? 'Editar produto' : 'Novo produto';
+  document.getElementById('produtoId').value        = id || '';
+  document.getElementById('produtoNome').value      = prod ? prod.nome : '';
+  document.getElementById('produtoTipo').value      = prod ? prod.tipo : 'motor_partida';
+  document.getElementById('produtoModelo').value    = prod ? prod.modelo || '' : '';
+  document.getElementById('produtoCodigo').value    = prod ? prod.codigo || '' : '';
+  document.getElementById('produtoAplicacao').value = prod ? prod.aplicacao || '' : '';
+  document.getElementById('produtoEspec').value     = prod ? prod.especificacoes || '' : '';
+  document.getElementById('produtoObs').value       = prod ? prod.observacoes || '' : '';
+  document.getElementById('produtoOverlay').classList.add('open');
+}
+function closeProdutoModal() { document.getElementById('produtoOverlay').classList.remove('open'); }
+
+async function saveProduto() {
+  const nome = document.getElementById('produtoNome').value.trim();
+  if (!nome) { showToast('Nome é obrigatório', 'error'); return; }
+  const id  = document.getElementById('produtoId').value;
+  const obj = {
+    nome,
+    tipo:           document.getElementById('produtoTipo').value,
+    modelo:         document.getElementById('produtoModelo').value.trim() || null,
+    codigo:         document.getElementById('produtoCodigo').value.trim() || null,
+    aplicacao:      document.getElementById('produtoAplicacao').value.trim() || null,
+    especificacoes: document.getElementById('produtoEspec').value.trim() || null,
+    observacoes:    document.getElementById('produtoObs').value.trim() || null
+  };
+  showLoading(true);
+  try {
+    if (id) {
+      await AZ_DB.update('az_produtos', id, obj);
+      const i = _produtos.findIndex(p => p.id === id);
+      _produtos[i] = { ..._produtos[i], ...obj };
+      showToast('Produto atualizado');
+    } else {
+      obj.id = uid();
+      const r = await AZ_DB.insert('az_produtos', obj);
+      _produtos.push(r[0] || obj);
+      _produtos.sort((a, b) => a.nome.localeCompare(b.nome));
+      showToast('Produto cadastrado');
+    }
+    closeProdutoModal();
+    if (currentPage === 'produtos') renderProdutos();
+    else renderDashboard();
+  } catch(e) { showToast('Erro ao salvar', 'error'); }
+  finally { showLoading(false); }
+}
+
+async function deleteProduto(id) {
+  showLoading(true);
+  try {
+    await AZ_DB.remove('az_produtos', id);
+    _produtos = _produtos.filter(p => p.id !== id);
+    showToast('Produto excluído');
+    renderProdutos();
+  } catch(e) { showToast('Erro ao excluir', 'error'); }
+  finally { showLoading(false); }
+}
+
+// ── Modal Venda ──────────────────────────────────────────────
+function openVendaModal(id, empresaId) {
+  vendaFixedEmpresaId = empresaId || null;
+  const v = id ? _vendas.find(x => x.id === id) : null;
+
+  document.getElementById('vendaModalTitle').textContent = v ? 'Editar serviço' : 'Novo serviço / venda';
+  document.getElementById('vendaId').value    = id || '';
+  document.getElementById('vendaMarca').value = v ? v.marca || '' : '';
+  document.getElementById('vendaValor').value = v ? v.valor_total : '';
+  document.getElementById('vendaData').value  = v ? v.data_venda : today();
+  document.getElementById('vendaPedido').value = v ? v.pedido || '' : '';
+  document.getElementById('vendaObs').value   = v ? v.observacoes || '' : '';
+
+  // Produto selecionado
+  selectedProdutoId = v ? v.produto_id : null;
+  const prod = selectedProdutoId ? _produtos.find(p => p.id === selectedProdutoId) : null;
+  document.getElementById('produtoBtnLabel').textContent = prod ? prod.nome : 'Selecione o produto...';
+  document.getElementById('produtoBtnLabel').style.color = prod ? 'var(--text)' : '#9ca3af';
+
+  // BT e Serviço
+  selectBT(v ? !!v.bt : true);
+  selectServico(v ? v.servico || 'remanufatura' : 'remanufatura');
+
+  // Empresa
+  const sel = document.getElementById('vendaEmpresaId');
+  sel.innerHTML = _empresas.map(e =>
+    `<option value="${e.id}" ${(empresaId || (v && v.empresa_id)) === e.id ? 'selected' : ''}>${esc(e.nome)}</option>`
+  ).join('');
+
+  document.getElementById('vendaEmpresaField').style.display = vendaFixedEmpresaId ? 'none' : '';
+  document.getElementById('vendaOverlay').classList.add('open');
+}
+function closeVendaModal() { document.getElementById('vendaOverlay').classList.remove('open'); }
+
+async function saveVenda() {
+  if (!selectedProdutoId) { showToast('Selecione um produto', 'error'); return; }
+  const valor = parseFloat(document.getElementById('vendaValor').value);
+  if (!valor || valor <= 0) { showToast('Informe o valor', 'error'); return; }
+  const data = document.getElementById('vendaData').value;
+  if (!data) { showToast('Informe a data', 'error'); return; }
+
+  const id         = document.getElementById('vendaId').value;
+  const empresaId  = vendaFixedEmpresaId || document.getElementById('vendaEmpresaId').value;
+  const prod       = _produtos.find(p => p.id === selectedProdutoId);
+
+  const obj = {
+    empresa_id:  empresaId,
+    produto_id:  selectedProdutoId,
+    tipo:        prod ? prod.tipo : 'motor_partida',
+    modelo:      prod ? prod.modelo || null : null,
+    codigo:      prod ? prod.codigo || null : null,
+    marca:       document.getElementById('vendaMarca').value.trim() || null,
+    valor_total: valor,
+    data_venda:  data,
+    pedido:      document.getElementById('vendaPedido').value || null,
+    bt:          btValue,
+    servico:     servicoValue,
+    observacoes: document.getElementById('vendaObs').value.trim() || null
+  };
+
+  showLoading(true);
+  try {
+    if (id) {
+      await AZ_DB.update('az_vendas', id, obj);
+      const i = _vendas.findIndex(v => v.id === id);
+      _vendas[i] = { ..._vendas[i], ...obj };
+      showToast('Venda atualizada');
+    } else {
+      obj.id = uid(); obj.created_at = today();
+      const r = await AZ_DB.insert('az_vendas', obj);
+      _vendas.unshift(r[0] || obj);
+      showToast('Venda registrada');
+    }
+    closeVendaModal();
+    if (currentPage === 'empresa-detail') renderEmpresaDetail(currentEmpresaDetailId);
+    else if (currentPage === 'vendas') renderVendas();
+    else renderDashboard();
+  } catch(e) { showToast('Erro ao salvar', 'error'); }
+  finally { showLoading(false); }
+}
+
+async function deleteVenda(id) {
+  showLoading(true);
+  try {
+    await AZ_DB.remove('az_vendas', id);
+    _vendas = _vendas.filter(v => v.id !== id);
+    showToast('Venda excluída');
+    if (currentPage === 'empresa-detail') renderEmpresaDetail(currentEmpresaDetailId);
+    else if (currentPage === 'vendas') renderVendas();
+    else renderDashboard();
+  } catch(e) { showToast('Erro ao excluir', 'error'); }
+  finally { showLoading(false); }
+}
+
+// ── Produto Picker ───────────────────────────────────────────
+function openProdutoPicker() {
+  document.getElementById('produtoPickerSearch').value = '';
+  filterProdutoPicker();
+  document.getElementById('produtoPickerOverlay').classList.add('open');
+}
+function closeProdutoPicker() { document.getElementById('produtoPickerOverlay').classList.remove('open'); }
+
+function filterProdutoPicker() {
+  const q = document.getElementById('produtoPickerSearch').value.toLowerCase();
+  const filtered = q
+    ? _produtos.filter(p => [p.nome, p.modelo, p.codigo, tipoLabel(p.tipo)].filter(Boolean).join(' ').toLowerCase().includes(q))
+    : _produtos;
+  document.getElementById('produtoPickerList').innerHTML = filtered.length
+    ? filtered.map(p => `
+        <div class="produto-option ${selectedProdutoId === p.id ? 'selected' : ''}" onclick="selectProduto('${p.id}')">
+          <div style="font-weight:500">${esc(p.nome)}</div>
+          <div style="font-size:12px;color:var(--muted)">${tipoLabel(p.tipo)}${p.modelo ? ' · ' + esc(p.modelo) : ''}${p.codigo ? ' · ' + esc(p.codigo) : ''}</div>
+        </div>`).join('')
+    : '<div style="padding:16px;text-align:center;color:var(--muted);font-size:13px">Nenhum produto encontrado.</div>';
+}
+
+function selectProduto(id) {
+  selectedProdutoId = id;
+  const prod = _produtos.find(p => p.id === id);
+  document.getElementById('produtoBtnLabel').textContent = prod ? prod.nome : '';
+  document.getElementById('produtoBtnLabel').style.color = 'var(--text)';
+  closeProdutoPicker();
+}
+
+// ── Exportar CSV ─────────────────────────────────────────────
+function exportVendas() {
+  exportCSV(_vendas, 'vendas');
+}
+function exportVendasEmpresa(empresaId) {
+  exportCSV(_vendas.filter(v => v.empresa_id === empresaId), 'vendas_empresa');
+}
+function exportCSV(dados, nome) {
+  const headers = ['Data','Empresa','Produto','Tipo','Modelo','Código','Marca','Valor','BT','Serviço','Pedido','Obs'];
+  const rows = dados.map(v => {
+    const e = _empresas.find(x => x.id === v.empresa_id);
+    const p = _produtos.find(x => x.id === v.produto_id);
+    return [
+      fmtDate(v.data_venda),
+      e ? e.nome : '',
+      p ? p.nome : '',
+      tipoLabel(v.tipo),
+      v.modelo || '',
+      v.codigo || '',
+      v.marca  || '',
+      String(v.valor_total || '').replace('.', ','),
+      v.bt ? 'Sim' : 'Não',
+      v.servico || '',
+      pedidoLabel(v.pedido),
+      v.observacoes || ''
+    ].map(c => `"${String(c).replace(/"/g, '""')}"`).join(';');
+  });
+  const csv  = '\uFEFF' + [headers.join(';'), ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = `${nome}_${today()}.csv`; a.click();
+  URL.revokeObjectURL(url);
+}
+
+</script>
+</body>
+</html>
