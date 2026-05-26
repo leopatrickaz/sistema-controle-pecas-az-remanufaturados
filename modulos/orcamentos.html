@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Orçamentos — AZ Remanufaturados</title>
+  <link rel="stylesheet" href="/shared/styles.css" />
+</head>
+<body>
+
+<div class="loading-overlay" id="az-loading"><div class="spinner"></div> Carregando...</div>
+
+<div class="app" id="mainApp">
+
+  <!-- SIDEBAR DESKTOP -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">⚙</div>
+      <div class="logo-text">
+        <div class="logo-title">AZ</div>
+        <div class="logo-sub">Remanufaturados</div>
+      </div>
+    </div>
+    <div id="sidebarModulosList"></div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">sistemaaz</div>
+      <button class="logout-btn" onclick="AZ_AUTH.logout()">→ Sair</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TOPBAR MOBILE -->
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button onclick="openModulesSidebar()" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:4px;line-height:1">☰</button>
+        <span style="font-weight:700;font-size:14px">AZ Remanufaturados</span>
+      </div>
+      <button onclick="goHome()" style="background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:12px;cursor:pointer;padding:6px 12px;border-radius:8px;font-weight:500">⌂ Menu</button>
+    </div>
+
+    <!-- SIDEBAR MOBILE DESLIZANTE -->
+    <div id="modulesSidebar" style="display:none;position:fixed;inset:0;z-index:500">
+      <div onclick="closeModulesSidebar()" style="position:absolute;inset:0;background:rgba(0,0,0,0.45)"></div>
+      <div style="position:absolute;left:0;top:0;bottom:0;width:280px;background:#1e2434;display:flex;flex-direction:column;box-shadow:4px 0 20px rgba(0,0,0,0.3)">
+        <div style="padding:20px;border-bottom:1px solid rgba(255,255,255,0.1)">
+          <div style="color:#fff;font-weight:700;font-size:15px">⚙ AZ Remanufaturados</div>
+          <div style="color:rgba(255,255,255,0.5);font-size:11px;margin-top:2px">Módulos do sistema</div>
+        </div>
+        <div style="padding:12px;flex:1;overflow-y:auto" id="sidebarModulosListMobile"></div>
+        <div style="padding:16px;border-top:1px solid rgba(255,255,255,0.1)">
+          <button onclick="goHome()" style="width:100%;background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.7);padding:10px;border-radius:8px;cursor:pointer;font-size:13px;text-align:left;margin-bottom:6px">⌂ Tela inicial</button>
+          <button onclick="AZ_AUTH.logout()" style="width:100%;background:none;border:none;color:rgba(255,255,255,0.5);padding:10px;border-radius:8px;cursor:pointer;font-size:13px;text-align:left">→ Sair</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTEÚDO -->
+    <div class="content">
+      <div class="page active">
+
+        <div class="page-header">
+          <div class="page-title">📋 Orçamentos</div>
+          <div class="page-sub">Gere orçamentos em PDF para seus clientes</div>
+        </div>
+
+        <button class="btn btn-primary btn-lg" style="margin-bottom:24px" onclick="openOrcamentoModal()">+ Novo orçamento</button>
+
+        <div class="card">
+          <div class="card-body" style="text-align:center;padding:48px 24px">
+            <div style="font-size:48px;margin-bottom:12px">📋</div>
+            <div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px">Gere um orçamento</div>
+            <div style="font-size:13px;color:var(--muted);max-width:360px;margin:0 auto;line-height:1.6">
+              Preencha os dados do cliente e os itens para gerar o PDF do orçamento.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     MODAL ORÇAMENTO
+════════════════════════════════════════════ -->
+<div class="overlay" id="orcamentoOverlay">
+  <div class="modal" style="max-width:620px">
+    <div class="modal-header">
+      <span class="modal-title">Novo orçamento</span>
+      <button class="modal-close" onclick="closeOrcamentoModal()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="form-grid2">
+        <div class="form-field">
+          <label class="form-label">Cliente *</label>
+          <input id="orcCliente" placeholder="Nome do cliente" />
+        </div>
+        <div class="form-field">
+          <label class="form-label">Data *</label>
+          <input type="date" id="orcData" />
+        </div>
+      </div>
+
+      <!-- cabeçalho da tabela de itens -->
+      <div style="display:grid;grid-template-columns:1fr 60px 100px 32px;gap:6px;padding:6px 10px;background:#f9fafb;border-radius:6px;margin-bottom:4px">
+        <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase">Descrição</div>
+        <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;text-align:center">Qtd</div>
+        <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;text-align:right">Valor (R$)</div>
+        <div></div>
+      </div>
+
+      <div id="orcItens"></div>
+
+      <button type="button" class="btn btn-outline btn-sm" style="margin-top:8px;width:100%" onclick="addOrcItem()">+ Adicionar item</button>
+
+      <div class="form-grid2" style="margin-top:14px">
+        <div class="form-field">
+          <label class="form-label">Observações</label>
+          <input id="orcObs" placeholder="Validade, condições, etc." />
+        </div>
+        <div class="form-field">
+          <label class="form-label">Total</label>
+          <input id="orcTotal" readonly style="font-weight:700;background:#f9fafb" placeholder="R$ 0,00" />
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="closeOrcamentoModal()">Cancelar</button>
+        <button class="btn btn-primary" onclick="gerarOrcamentoPDF()">Gerar PDF</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-title" id="confirmTitle"></div>
+    <div class="confirm-desc"  id="confirmDesc"></div>
+    <div class="confirm-actions">
+      <button class="btn btn-outline" onclick="closeConfirm()">Cancelar</button>
+      <button class="btn" style="background:var(--destructive);color:#fff;border-color:var(--destructive)" onclick="executeConfirm()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="az-toast"></div>
+
+
+<!-- ═══════════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════════ -->
+<script src="/shared/config.js"></script>
+<script src="/shared/db.js"></script>
+<script src="/shared/auth.js"></script>
+<script src="/shared/components.js"></script>
+<script>
+
+// ── Verificação de autenticação ──────────────────────────────
+if (!AZ_AUTH.requireAuth()) { /* requireAuth já redireciona */ }
+
+// ── Inicialização ────────────────────────────────────────────
+renderSidebarModulos('orcamentos');
+const mobile = document.getElementById('sidebarModulosListMobile');
+if (mobile) mobile.innerHTML = document.getElementById('sidebarModulosList').innerHTML;
+
+// ── Logo da empresa em base64 ────────────────────────────────
+const LOGO_DATA = 'data:image/jpeg;base64,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rfNLNJdSD/AGVG0fqzV6v8ONBg8L+FbHQ7eVphbId0pGPMdiWZsduSeB6YrA8W/DPwx4o1mTV9XXUJLp0VMx3RRQqjAAGOK2hByp6dT5zMM0oUM1jOrtBLT17foT/Bv4W+HvBNmLm3jN7rM67Z764AyB3RP7q/+hd8dK7+vNLD4O6FZWcNpBrPiSO3hQJGiakwCqOABxW4/w40KbULfULiTUbm4tXDxSz3ryEMOhGTzWlqUNup5sa2OxfvSuk/lFfh/wDWpKWikajaCgUUAFFFFAC0UCigBKWiigAooooAKBRQKAEpaKKAEpaBRQAtFFFAC5ooooAQUUtJQAtJRRQAUUUUAFIaWkoAWiiigAooooASilooASloooAO1ApKWgAooooAKSlpKAFopKWgBKWkpaACiiigAooNJmgBaKSloASilooASlHWiigA7UlKabQAtFFFABRRRQAopaSjNAAaSlpKAAUtJJS0AFJRRQAUUUUALRRSUAFGKKWgBM0tIKWgApDS0UAFFFFABRRRQAUCiigApMUtU9b1XTtE0m41XVruO0srZN8srnhR6e5PQAck8UAXKKSlzQAUUUUAFJRRQAtFJS0AFJSmkoAKUUlLQAUUlKKAA0UUUAFFFFABRRmgUAFFFFACUc0tFACUUYooAM0tJRQApoopKAFpKWigBKKXFJQAtFFFACUUUooASilNJQAUtJRQAUUtJQAUUUUAFBoooAKKBRQAUhopaAEpaSloASilpKAFFJk0UZoAKKKKACilpKAFooooAKM0UlAC0lFGKAFFLSUUAFJS0UAJRS0UAJRS0lABS0lFAC0lFFABRRQaAClpKWgAFFFIaAFooFFACUtJS0AFJQaKAFooooAMUmPalpKACloooAKSlpKAFopKWgBKWkpaACiiigAooNJmgBaKSloASilooASlHWiigA7UlKabQAtFJRQAtFFGaACiiigApRSUUAB4o70lFAC0UUUAFAoFFABSYpaSgBaKKKADtRRRQAUUUUAFFFFABRRRQAlFLSUALRRRQAUUUUAFFHeigAFFAoNABRRRQAUvakpaAEpaKKACikoFABRS0lABRS0lABRRRQAUUUUAFLSUUAFFFFACUtFFAAaKUUlAC0lFFABRRRQAUlOpKAEFLmiigAoooNABSZpaMUAJS0CigAopRRQAlFLSUAFLSUUALSUooNACUUUUAFFFFABSGnUhoAKKBS0AJRS0UAJRRRQAUUUUALRRSUAFFFFAC0lFKKAEoopaAEoopaBCUUUUAFLSUUAFLSUUAGaBRRQAUlGaKAFpKKKAClpKKAFooooASijFLQAlFFFABRRRQAUtBooAKKKKACiiigBKWiigBKKDRQAoooooAMUUUUAFFFFAC0lFFABRQKKAA0lLSUAKKKSlzQAUUUUAFFJRQAtFJS0AFJSmkoAKUUlLQAUUlKKAA0UUUAFFFFABRRmgUAFFFFACUc0tFACUUYooAM0tJRQApoopKAFpKWigBKKXFJQAtFFFACUUUooASilNJQAUtJRQAUUtJQAUUUUAFBoooAKKBRQAUhopaAEpaSloASilpKAFFJk0UZoAKKKKACilpKAFooooAKM0UlAC0lFGKAFFLSUUAFJS0UAJRS0UAJRS0lABS0lFAC0lFFABRRQaAClpKWgAFFFIaAFooFFACUtJS0AFJQaKAFooooAMUmPalpKACloooAKSlpKAFopKWgBKWkpaACiiigAooNJmgBaKSloASilooASlHWiigA7UlKabQAtFFFABRRRQAopaSjNAAaSlpKAAUtJJS0AFJRRQAUUUUALRRSUAFGKKWgBKWkBp1ABRRRQAUUUUAFFFFABRRRQAUlOooASilpKAFooooAKKKKAA0UUUAFBooFABSGiloASilpKAFFFJQAtFJS0AFFFIaACloooAKSlpKAFopKWgBKWkpaAEoopQKAEopKWgAooooAKKKKAA0UUUAFFFFABRRS0AJRRRQAtFFJQAtFFBpAFLSUUAFLSUUAHajvSUUALRRRQAUCiigBKMUUlAC0UUUAFFFFABRRRQAUUUUAJRS0lAC0UUUAFFFFAAaKKKAAUUCigAooooAKKKKAFpKWkoAKWkooAO1ApKWgAooooAKSlpKAFopKWgBKWkpaAEoooFABRRRQAooNJmgBaKSloASilooASlHWiigA7UlKabQAtFFFABRRRQAopaSjNAAaSlpKAAUtJJS0AFJRRQAUUUUALRRSUAFGKKWgBM0tIKWgApDS0UAFFFFABRRRQAUCiigApMUtU9b1XTtE0m41XVruO0srZN8srnhR6e5PQAck8UAXKKSlzQAUUUUAFFJRQAtFJS0AFJSmkoAKUUlLQAUUlKKAA0UUUAFFFFABRRmgUAFFFFACUc0tFACUUYooAM0tJRQApoopKAFpKWigBKKXFJQAtFFFACUUUooASilNJQAUtJRQAUUtJQAUUUUAFBoooAKKBRQAUhopaAEpaSloASilpKAFFJk0UZoAKKKKACilpKAFooooAKM0UlAC0lFGKAFFLSUUAFJS0UAJRS0UAJRS0lABS0lFAC0lFFABRRQaAClpKWgAFFFIaAFooFFACUtJS0AFJQaKAFooooAMUmPalpKACloooAKSlpKAFopKWgBKWkpaACiiigAooNJmgBaKSloASilooASlHWiigAzSUtJQAtFFFABRRRQAUUUUAFFFFABRRRQAUlLRQAlFLSUALRRRQAUUUUAFFHaigAFFAoNABRRRQAUvakpaAEoopQKACiipbW1ub2fydPhkuJedojXcQPfFADKKvf8ACO+JEBaXS7uNR1JgcD9a1NT0a+8O+F11W+tZbKK/l2W6zKUfI5JKnnoOPx9KAOX570UUUALRSd6KAFzSUUlABRRRQAUUUUAFFFFABRRRQAUlLSUALRRRQAUUUUAFFFFABRRRQAlFLSUALRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAf/9k=';
+
+// ── Modal Orçamento ──────────────────────────────────────────
+let _orcItemCount = 0;
+
+function openOrcamentoModal() {
+  _orcItemCount = 0;
+  document.getElementById('orcCliente').value = '';
+  document.getElementById('orcData').value = new Date().toISOString().slice(0, 10);
+  document.getElementById('orcObs').value = '';
+  document.getElementById('orcTotal').value = '';
+  document.getElementById('orcItens').innerHTML = '';
+  addOrcItem();
+  addOrcItem();
+  addOrcItem();
+  document.getElementById('orcamentoOverlay').classList.add('open');
+}
+
+function closeOrcamentoModal() {
+  document.getElementById('orcamentoOverlay').classList.remove('open');
+}
+
+function addOrcItem() {
+  const id = ++_orcItemCount;
+  const row = document.createElement('div');
+  row.id = 'orc-row-' + id;
+  row.style.cssText = 'display:grid;grid-template-columns:1fr 60px 100px 32px;gap:6px;padding:6px 10px;border-top:1px solid #f0f0f0;align-items:center';
+  row.innerHTML =
+    '<input placeholder="Descrição" style="height:32px;font-size:12px;border:1px solid #e2e5ec;border-radius:6px;padding:0 8px;width:100%" oninput="calcOrcTotal()" id="orc-desc-' + id + '" />' +
+    '<input type="number" placeholder="1" min="1" style="height:32px;font-size:12px;border:1px solid #e2e5ec;border-radius:6px;padding:0 6px;text-align:center;width:100%" oninput="calcOrcTotal()" id="orc-qtd-' + id + '" />' +
+    '<input type="number" placeholder="0.00" min="0" step="0.01" style="height:32px;font-size:12px;border:1px solid #e2e5ec;border-radius:6px;padding:0 6px;text-align:right;width:100%" oninput="calcOrcTotal()" id="orc-val-' + id + '" />' +
+    '<button type="button" onclick="removeOrcItem(' + id + ')" style="width:28px;height:28px;background:none;border:1px solid #fee2e2;border-radius:6px;color:#ef4444;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center">✕</button>';
+  document.getElementById('orcItens').appendChild(row);
+}
+
+function removeOrcItem(id) {
+  const el = document.getElementById('orc-row-' + id);
+  if (el) el.remove();
+  calcOrcTotal();
+}
+
+function calcOrcTotal() {
+  let total = 0;
+  for (let i = 1; i <= _orcItemCount; i++) {
+    const qtd = parseFloat(document.getElementById('orc-qtd-' + i)?.value) || 0;
+    const val = parseFloat(document.getElementById('orc-val-' + i)?.value) || 0;
+    total += qtd * val;
+  }
+  document.getElementById('orcTotal').value = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  return total;
+}
+
+function gerarOrcamentoPDF() {
+  const cliente = document.getElementById('orcCliente').value.trim();
+  if (!cliente) { showToast('Informe o nome do cliente', 'error'); return; }
+
+  const dp = document.getElementById('orcData').value.split('-');
+  const dataFmt = dp.length === 3 ? dp[2] + '/' + dp[1] + '/' + dp[0] : document.getElementById('orcData').value;
+  const obs   = document.getElementById('orcObs').value.trim();
+  const total = calcOrcTotal();
+  const totalFmt = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  const brl2 = v => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+  const itens = [];
+  for (let i = 1; i <= _orcItemCount; i++) {
+    const desc = document.getElementById('orc-desc-' + i)?.value.trim();
+    const qtd  = parseFloat(document.getElementById('orc-qtd-' + i)?.value) || 0;
+    const val  = parseFloat(document.getElementById('orc-val-' + i)?.value) || 0;
+    if (desc) itens.push({ desc, qtd, val, sub: qtd * val });
+  }
+  if (!itens.length) { showToast('Adicione pelo menos um item', 'error'); return; }
+
+  let rows = '';
+  for (let i = 0; i < 8; i++) {
+    const it = itens[i] || null;
+    const bg = i % 2 === 0 ? '#fff5f5' : '#ffffff';
+    rows += '<tr style="background:' + bg + '">'
+      + '<td style="padding:10px 12px;font-size:12px;border-bottom:1px solid #e5e7eb;border-right:1px solid #ccc">' + (it ? it.desc : '') + '</td>'
+      + '<td style="padding:10px 8px;font-size:12px;text-align:center;border-bottom:1px solid #e5e7eb;border-right:1px solid #ccc;width:70px">' + (it ? it.qtd : '') + '</td>'
+      + '<td style="padding:10px 12px;font-size:12px;text-align:right;border-bottom:1px solid #e5e7eb;width:120px">' + (it ? brl2(it.sub) : '') + '</td>'
+      + '</tr>';
+  }
+
+  const html = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/>'
+    + '<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;font-size:13px;color:#1a1a1a;background:#fff;padding:32px}'
+    + '.hbar{background:#1a1a1a;color:#fff;text-align:center;padding:14px;font-size:20px;font-weight:700;letter-spacing:2px;margin-bottom:24px}'
+    + '.top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #ccc}'
+    + '.ci{font-size:12px;line-height:1.9}.ci b{font-size:14px}.logo{width:130px}'
+    + '.crow{display:flex;gap:40px;margin-bottom:20px}'
+    + '.fl{font-weight:700;font-size:13px;margin-right:6px}'
+    + '.fv{border-bottom:1.5px solid #333;display:inline-block;min-width:180px;padding-bottom:2px;font-size:13px}'
+    + 'table{width:100%;border-collapse:collapse;border:1px solid #ccc;margin-bottom:20px}'
+    + 'thead tr{background:#1a1a1a;color:#fff}'
+    + 'thead th{padding:10px 12px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}'
+    + '.foot{display:flex;justify-content:space-between;align-items:center}'
+    + '</style></head><body>'
+    + '<div class="hbar">ORÇAMENTO</div>'
+    + '<div class="top"><div class="ci"><b>AZ REMANUFATURADOS</b><br>Razão Social: ANTONIO ANDERLE PRANTE ME<br>CNPJ: 23.454.801/0001-22<br>IE: 9070624491<br>Serviços: Remanufatura / Motores de Partida e Alternadores<br>E-mail: az@azremanufaturados.com.br<br>Fone: (41) 98414-4940 / 3016-9263<br>Endereço: Rua Iapó 782</div>'
+    + '<img src="' + LOGO_DATA + '" class="logo" /></div>'
+    + '<div class="crow"><div><span class="fl">CLIENTE:</span><span class="fv">' + cliente + '</span></div><div><span class="fl">DATA:</span><span class="fv">' + dataFmt + '</span></div></div>'
+    + '<table><thead><tr><th style="text-align:left">DESCRIÇÃO</th><th style="text-align:center;width:70px">QTD</th><th style="text-align:right;width:120px;padding-right:12px">VALOR</th></tr></thead><tbody>' + rows + '</tbody></table>'
+    + '<div class="foot"><div><span class="fl">OBSERVAÇÕES:</span><span class="fv" style="min-width:220px">' + obs + '</span></div><div style="font-weight:700;font-size:14px">TOTAL: <span style="border-bottom:1.5px solid #333;display:inline-block;min-width:140px;padding-bottom:2px">' + totalFmt + '</span></div></div>'
+    + '</body></html>';
+
+  const w = window.open('', '_blank', 'width=794,height=1123');
+  w.document.write(html);
+  w.document.close();
+  w.focus();
+  setTimeout(() => { w.print(); }, 700);
+
+  closeOrcamentoModal();
+  showToast('Orçamento gerado!');
+}
+
+// ── Fechar overlay ao clicar fora ────────────────────────────
+document.querySelectorAll('.overlay').forEach(o => {
+  o.addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+});
+
+</script>
+</body>
+</html>
