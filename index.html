@@ -4,924 +4,162 @@
 <meta charset="UTF-8" />
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" /><!-- v2 -->
+<meta http-equiv="Expires" content="0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>AZ Remanufaturados</title>
-
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#f4f5f7;--surface:#fff;--sidebar:#1e2434;--sidebar-fg:#e8eaf0;
-  --sidebar-active:#3d5afe;--sidebar-hover:rgba(255,255,255,0.08);
-  --primary:#3d5afe;--primary-light:#e8eeff;
-  --success:#22c55e;--success-light:#dcfce7;
-  --destructive:#ef4444;--destructive-light:#fee2e2;
-  --border:#e2e5ec;--text:#1a1d2e;--muted:#6b7280;--card:#fff;
-  --radius:8px;--input-h:38px;
-}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;color:var(--text);background:var(--bg);min-height:100vh;overflow-x:hidden}
-.app{display:flex;min-height:100%;width:100%;overflow-x:hidden}
-.sidebar{width:240px;background:var(--sidebar);color:var(--sidebar-fg);display:flex;flex-direction:column;padding:16px;flex-shrink:0;height:100%;overflow-y:auto}
-.sidebar-logo{display:flex;align-items:center;gap:10px;padding:12px 8px 20px;margin-bottom:8px}
-.logo-icon{width:40px;height:40px;background:var(--sidebar-active);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.logo-text{line-height:1.2}
-.logo-title{font-weight:700;font-size:15px}
-.logo-sub{font-size:11px;opacity:0.6}
-.nav-link{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius);cursor:pointer;font-size:13px;color:var(--sidebar-fg);transition:background 0.15s;margin-bottom:2px;border:none;background:none;width:100%;text-align:left}
-.nav-link:hover{background:var(--sidebar-hover)}
-.nav-link.active{background:var(--sidebar-active);color:#fff;font-weight:500}
-.nav-link i{font-size:16px;width:18px;flex-shrink:0}
-.sidebar-footer{margin-top:auto;padding-top:12px;border-top:1px solid rgba(255,255,255,0.1)}
-.sidebar-user{font-size:12px;opacity:0.7;margin-bottom:8px;font-weight:500}
-.logout-btn{display:flex;align-items:center;gap:8px;font-size:12px;opacity:0.7;cursor:pointer;background:none;border:none;color:var(--sidebar-fg);padding:4px 0}
-.logout-btn:hover{opacity:1}
-.main{flex:1;min-width:0;display:flex;flex-direction:column;overflow-y:auto}
-.topbar{display:none;background:var(--sidebar);color:var(--sidebar-fg);padding:0 16px;height:52px;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-sizing:border-box;width:100%}
-.topbar-logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
-.menu-btn{background:none;border:none;color:var(--sidebar-fg);cursor:pointer;font-size:20px;display:flex;align-items:center}
-.mobile-nav{background:#fff;color:var(--text);padding:8px 16px 12px;display:none;border-bottom:1px solid var(--border)}
-.mobile-nav .nav-link{color:var(--text)}
-.mobile-nav .nav-link:hover{background:var(--bg)}
-.mobile-nav .nav-link.active{background:var(--primary-light);color:var(--primary)}
-.mobile-nav.open{display:block}
-.content{flex:1;padding:24px 32px;max-width:900px;width:100%}
-.page{display:none}
-.page.active{display:block}
-.page-header{margin-bottom:20px}
-.page-title{font-size:24px;font-weight:700;letter-spacing:-0.5px}
-.page-sub{font-size:13px;color:var(--muted);margin-top:2px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:12px}
-.card-header{padding:16px 20px 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
-.card-title{font-size:15px;font-weight:600}
-.card-body{padding:20px}
-.card-body-p0{padding:0}
-.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
-.stat-icon{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:17px}
-.stat-icon.blue{background:var(--primary-light);color:var(--primary)}
-.stat-icon.green{background:var(--success-light);color:var(--success)}
-.stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px}
-.stat-val{font-size:18px;font-weight:700;margin-top:2px;line-height:1}
-.stat-link{font-size:12px;color:var(--primary);cursor:pointer;margin-top:6px;display:inline-flex;align-items:center;gap:3px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:0 14px;height:var(--input-h);border-radius:var(--radius);font-size:13px;font-weight:500;cursor:pointer;border:1px solid transparent;transition:all 0.15s;white-space:nowrap}
-.btn-primary{background:var(--primary);color:#fff;border-color:var(--primary)}
-.btn-primary:hover{filter:brightness(1.1)}
-.btn-outline{background:#fff;color:var(--text);border-color:var(--border)}
-.btn-outline:hover{background:var(--bg)}
-.btn-ghost{background:transparent;color:var(--muted);border-color:transparent}
-.btn-ghost:hover{background:var(--bg);color:var(--text)}
-.btn-danger-ghost{background:transparent;color:var(--destructive);border-color:transparent}
-.btn-danger-ghost:hover{background:var(--destructive-light)}
-.btn-save{background:#fff;color:var(--text);border-color:var(--border);font-weight:500}
-.btn-save:hover{background:var(--bg)}
-.btn-sm{height:32px;padding:0 10px;font-size:12px}
-.btn-lg{height:50px;padding:0 20px;font-size:15px;width:100%;justify-content:center;max-width:100%}
-.btn-icon{width:32px;height:32px;padding:0;flex-shrink:0}
-.flex-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:500;background:var(--bg);color:var(--muted);border:1px solid var(--border)}
-.badge-blue{background:var(--primary-light);color:var(--primary);border-color:transparent}
-.divide-y>*+*{border-top:1px solid var(--border)}
-.item-row{padding:14px 20px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.item-row:hover{background:rgba(0,0,0,0.02)}
-.item-name{font-weight:500;font-size:14px}
-.item-meta{font-size:12px;color:var(--muted);margin-top:2px}
-.item-meta a{color:var(--primary);cursor:pointer}
-.item-val{font-weight:600;text-align:right;font-size:14px}
-.item-actions{display:flex;gap:4px;margin-top:4px;justify-content:flex-end}
-.empty-state{padding:48px 24px;text-align:center;color:var(--muted)}
-.empty-state i{font-size:40px;margin-bottom:10px;display:block;opacity:0.4}
-.input-wrap{position:relative;display:flex;align-items:center;width:100%}
-.input-wrap .search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:#9ca3af;font-size:14px;pointer-events:none;z-index:1;line-height:1}
-.input-wrap input{padding-left:34px;width:100%}
-input,select,textarea{height:var(--input-h);border:1px solid var(--border);border-radius:var(--radius);padding:0 12px;font-size:13px;color:var(--text);background:#fff;width:100%;outline:none;font-family:inherit;line-height:1.4;vertical-align:middle;}
-input::placeholder{color:#9ca3af;font-size:13px;font-weight:400}
-input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(61,90,254,0.1)}
-textarea{height:auto;padding:8px 12px;resize:vertical;line-height:1.5}
-select{padding:0 32px 0 12px;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:12px;text-overflow:ellipsis;}
-.form-field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
-.form-label{font-size:12px;font-weight:500;color:var(--muted)}
-.form-grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}.form-grid2 .form-field{margin-bottom:0}
-.form-grid-auto{display:grid;grid-template-columns:1fr 80px;gap:12px;margin-bottom:14px}.form-grid-auto .form-field{margin-bottom:0}
-.form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
-.toggle-group{display:flex;height:var(--input-h);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#fff}
-.toggle-opt{flex:1;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--muted);cursor:pointer;transition:all 0.15s;user-select:none;font-weight:400;border:none;background:none;padding:0}
-.toggle-opt+.toggle-opt{border-left:1px solid var(--border)}
-.toggle-opt.on{background:var(--primary-light);color:var(--primary);font-weight:500}
-.toggle-opt:hover:not(.on){background:#f9fafb}
-.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:#fff;cursor:pointer;margin-bottom:16px;background:var(--primary);border:none;padding:0 14px;height:36px;border-radius:var(--radius)}
-.back-btn:hover{filter:brightness(1.1)}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:13px;min-width:0}
-thead tr{border-bottom:1px solid var(--border)}
-th{padding:10px 16px;text-align:left;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px;font-weight:500;white-space:nowrap}
-td{padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:middle}
-tr:last-child td{border-bottom:none}
-tr:hover td{background:rgba(0,0,0,0.015)}
-.link-primary{color:var(--primary);cursor:pointer}
-.link-primary:hover{text-decoration:underline}
-.filter-bar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
-.vendas-filter{display:grid;grid-template-columns:1fr 160px;gap:10px;margin-bottom:16px;align-items:center}
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:flex-start;justify-content:center;padding:32px 16px;overflow-y:auto}
-.overlay.open{display:flex}
-.modal{background:#fff;border-radius:14px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,0.18);margin:auto}
-.modal-header{padding:18px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
-.modal-title{font-size:15px;font-weight:600;color:var(--text)}
-.modal-close{background:none;border:none;cursor:pointer;color:var(--muted);font-size:18px;display:flex;align-items:center;padding:2px}
-.modal-close:hover{color:var(--text)}
-.modal-body{padding:20px}
-.produto-list{max-height:180px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius);background:#fff}
-.produto-option{padding:9px 12px;cursor:pointer;border-bottom:1px solid var(--border);font-size:13px;line-height:1.4}
-.produto-option:last-child{border-bottom:none}
-.produto-option:hover,.produto-option.selected{background:var(--primary-light)}
-.produto-selected-preview{background:rgba(61,90,254,0.05);border:1px solid var(--primary-light);border-radius:var(--radius);padding:8px 12px;font-size:13px;margin-bottom:8px;line-height:1.4}
-.confirm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;align-items:center;justify-content:center;padding:16px}
-.confirm-overlay.open{display:flex}
-.confirm-box{background:#fff;border-radius:14px;width:100%;max-width:380px;padding:24px}
-.confirm-title{font-weight:600;font-size:15px;margin-bottom:6px}
-.confirm-desc{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.5}
-.confirm-actions{display:flex;gap:8px;justify-content:flex-end}
-.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13px}
-.info-item{display:flex;gap:8px;align-items:flex-start}
-.info-item i{font-size:15px;color:var(--muted);margin-top:1px;flex-shrink:0}
-.info-key{font-size:11px;color:var(--muted);margin-bottom:1px}
-.info-val{font-weight:500;font-size:13px}
-.toast{position:fixed;bottom:20px;right:20px;background:#1e2434;color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;z-index:9999;transform:translateY(100px);transition:transform 0.3s;max-width:300px}
-.toast.show{transform:translateY(0)}
-.toast.success::before{content:'✓  ';color:#22c55e}
-.toast.error::before{content:'✗  ';color:#ef4444}
-.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#e8eeff 0%,#f4f5f7 50%,#e8eeff 100%);padding:20px}
-.login-card{background:#fff;border-radius:16px;padding:32px;width:100%;max-width:400px;box-shadow:0 8px 32px rgba(61,90,254,0.1);border:1px solid var(--border)}
-.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:24px;justify-content:center}
-.login-logo-icon{width:48px;height:48px;background:var(--primary);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff}
-.login-title{font-size:20px;font-weight:700}
-.login-sub{font-size:12px;color:var(--muted)}
-.login-form-title{font-size:18px;font-weight:600;margin-bottom:4px}
-.login-form-sub{font-size:13px;color:var(--muted);margin-bottom:20px}
-.error-msg{background:var(--destructive-light);color:var(--destructive);border-radius:var(--radius);padding:8px 12px;font-size:12px;margin-bottom:12px;display:none}
-.loading-overlay{display:none;position:fixed;inset:0;background:rgba(255,255,255,0.8);z-index:9998;align-items:center;justify-content:center;font-size:13px;color:var(--muted);gap:10px}
-.loading-overlay.show{display:flex}
-.spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 0.6s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-@media(max-width:768px){
-  .sidebar{display:none}
-  .topbar{display:flex}
-  .app{overflow-x:hidden;width:100vw}
-  .main{width:100vw;overflow-x:hidden}
-  .content{padding:12px;width:100%;overflow-x:hidden}
-  .vendas-filter{grid-template-columns:1fr}
-  .form-grid2,.info-grid{grid-template-columns:1fr}
-  .form-grid-auto{grid-template-columns:1fr 70px}
-}
-</style>
+<link rel="stylesheet" href="/shared/styles.css" />
 </head>
 <body>
 
-<div class="loading-overlay" id="loadingOverlay"><div class="spinner"></div> Carregando...</div>
+<div class="loading-overlay" id="az-loading"><div class="spinner"></div> Carregando...</div>
 
-<!-- LOGIN -->
+<!-- ═══════════════════════════
+     TELA DE LOGIN
+════════════════════════════ -->
 <div id="loginPage" class="login-page">
   <div class="login-card">
     <div class="login-logo">
       <div class="login-logo-icon">⚙</div>
-      <div><div class="login-title">AZ Remanufaturados</div><div class="login-sub">Painel interno de gestão</div></div>
+      <div>
+        <div class="login-title">AZ Remanufaturados</div>
+        <div class="login-sub">Painel interno de gestão</div>
+      </div>
     </div>
     <div class="login-form-title">Entrar</div>
     <div class="login-form-sub">Acesse com seu usuário e senha.</div>
     <div id="loginError" class="error-msg"></div>
-    <div class="form-field"><label class="form-label">Usuário</label><input type="text" id="loginUser" placeholder="sistemaaz" autocomplete="username" /></div>
-    <div class="form-field"><label class="form-label">Senha</label><input type="password" id="loginPassword" placeholder="••••••" autocomplete="current-password" /></div>
+    <div class="form-field">
+      <label class="form-label">Usuário</label>
+      <input type="text" id="loginUser" placeholder="sistemaaz" autocomplete="username" />
+    </div>
+    <div class="form-field">
+      <label class="form-label">Senha</label>
+      <input type="password" id="loginPassword" placeholder="••••••" autocomplete="current-password" />
+    </div>
     <button class="btn btn-primary btn-lg" style="margin-top:8px" onclick="doLogin()">Entrar</button>
   </div>
 </div>
 
-<!-- APP -->
+<!-- ═══════════════════════════
+     TELA HOME (SELEÇÃO DE MÓDULOS)
+════════════════════════════ -->
+<div id="homePage" style="display:none;min-height:100vh;background:#f4f5f7">
 
-<div id="homePage" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#f4f5f7;overflow-y:auto;z-index:50">
-  <div style="background:#1e2434;padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
+  <!-- Topbar -->
+  <div style="background:#1e2434;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50">
     <div style="display:flex;align-items:center;gap:10px">
       <span style="font-size:20px">⚙</span>
       <span style="color:#fff;font-weight:700;font-size:16px">AZ Remanufaturados</span>
     </div>
-    <button onclick="doLogout()" style="background:none;border:none;color:rgba(255,255,255,0.6);font-size:12px;cursor:pointer">→ Sair</button>
+    <button onclick="doLogout()" style="background:none;border:none;color:rgba(255,255,255,0.6);font-size:12px;cursor:pointer;padding:4px 8px">→ Sair</button>
   </div>
-  <div style="padding:24px 20px">
-    <div style="font-size:13px;color:#6b7280;margin-bottom:6px">Bem-vindo, sistemaaz</div>
+
+  <!-- Conteúdo -->
+  <div style="padding:28px 20px;max-width:600px;margin:0 auto">
+    <div style="font-size:13px;color:#6b7280;margin-bottom:4px">Bem-vindo, sistemaaz</div>
     <div style="font-size:22px;font-weight:700;color:#1a1d2e;margin-bottom:24px">Selecione um módulo</div>
-    <div style="display:flex;flex-direction:column;gap:14px">
-      <div onclick="openModule('dashboard')" style="background:#fff;border:1px solid #e2e5ec;border-radius:16px;padding:20px 22px;cursor:pointer;display:flex;align-items:center;gap:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05)">
-        <div style="width:52px;height:52px;background:#e8eeff;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">🧾</div>
-        <div style="flex:1"><div style="font-weight:700;font-size:16px;color:#1a1d2e">Controle de Vendas</div><div style="font-size:13px;color:#6b7280;margin-top:3px">Empresas, produtos e vendas</div></div>
-        <div style="color:#3d5afe;font-size:20px">›</div>
-      </div>
-      <div onclick="openModule('orcamentos')" style="background:#fff;border:1px solid #e2e5ec;border-radius:16px;padding:20px 22px;cursor:pointer;display:flex;align-items:center;gap:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05)">
-        <div style="width:52px;height:52px;background:#fef9c3;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">📋</div>
-        <div style="flex:1"><div style="font-weight:700;font-size:16px;color:#1a1d2e">Orçamentos</div><div style="font-size:13px;color:#6b7280;margin-top:3px">Gerar orçamentos em PDF</div></div>
-        <div style="color:#3d5afe;font-size:20px">›</div>
-      </div>
+
+    <!-- Grade de módulos (gerada pelo JS) -->
+    <div id="modulosGrid" style="display:flex;flex-direction:column;gap:12px"></div>
+
+    <!-- Rodapé -->
+    <div style="margin-top:40px;text-align:center;font-size:11px;color:#9ca3af">
+      AZ Remanufaturados · Sistema interno de gestão
     </div>
   </div>
 </div>
 
-<div id="modulesSidebar" style="display:none;position:fixed;inset:0;z-index:500">
-  <div onclick="closeModulesSidebar()" style="position:absolute;inset:0;background:rgba(0,0,0,0.45)"></div>
-  <div style="position:absolute;left:0;top:0;bottom:0;width:280px;background:#1e2434;display:flex;flex-direction:column;box-shadow:4px 0 20px rgba(0,0,0,0.3)">
-    <div style="padding:20px;border-bottom:1px solid rgba(255,255,255,0.1)"><div style="color:#fff;font-weight:700;font-size:15px">⚙ AZ Remanufaturados</div><div style="color:rgba(255,255,255,0.5);font-size:11px;margin-top:2px">Módulos do sistema</div></div>
-    <div style="padding:12px;flex:1">
-      <div style="color:rgba(255,255,255,0.4);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;padding:8px 12px 6px">Módulos</div>
-      <div onclick="openModule('dashboard');closeModulesSidebar()" style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:8px;cursor:pointer;color:#fff;margin-bottom:4px">
-        <span style="font-size:20px">🧾</span><div><div style="font-weight:600;font-size:14px">Controle de Vendas</div><div style="font-size:11px;color:rgba(255,255,255,0.5)">Empresas, produtos e vendas</div></div>
-      </div>
-      <div onclick="openModule('orcamentos');closeModulesSidebar()" style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:8px;cursor:pointer;color:#fff;margin-bottom:4px">
-        <span style="font-size:20px">📋</span><div><div style="font-weight:600;font-size:14px">Orçamentos</div><div style="font-size:11px;color:rgba(255,255,255,0.5)">Gerar orçamentos em PDF</div></div>
-      </div>
-    </div>
-    <div style="padding:16px;border-top:1px solid rgba(255,255,255,0.1)">
-      <button onclick="goHome()" style="width:100%;background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.7);padding:10px;border-radius:8px;cursor:pointer;font-size:13px;text-align:left;margin-bottom:6px">⌂ Tela inicial</button>
-      <button onclick="doLogout()" style="width:100%;background:none;border:none;color:rgba(255,255,255,0.5);padding:10px;border-radius:8px;cursor:pointer;font-size:13px;text-align:left">→ Sair</button>
-    </div>
-  </div>
-</div>
-<div id="mainApp" class="app" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;overflow-y:auto">
-  <aside class="sidebar">
-    <div class="sidebar-logo">
-      <div class="logo-icon">⚙</div>
-      <div class="logo-text"><div class="logo-title">AZ</div><div class="logo-sub">Remanufaturados</div></div>
-    </div>
-    <button class="nav-link" id="nav-dashboard" onclick="navigate('dashboard')"> Início</button>
-    <button class="nav-link" id="nav-empresas" onclick="navigate('empresas')"> Empresas</button>
-    <button class="nav-link" id="nav-produtos" onclick="navigate('produtos')"> Produtos</button>
-    <button class="nav-link" id="nav-vendas" onclick="navigate('vendas')"> Vendas</button>
-    <div class="sidebar-footer">
-      <div class="sidebar-user"> sistemaaz</div>
-      <button class="logout-btn" onclick="doLogout()">→ Sair</button>
-    </div>
-  </aside>
-
-  <div class="main">
-    <div class="topbar" id="topbar">
-      <div style="display:flex;align-items:center;gap:10px">
-        <button onclick="openModulesSidebar()" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:4px;line-height:1">☰</button>
-        <span style="font-weight:700;font-size:14px">AZ Remanufaturados</span>
-      </div>
-      <button onclick="goHome()" style="background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:12px;cursor:pointer;padding:6px 12px;border-radius:8px;font-weight:500">⌂ Menu</button>
-    </div>
-    <div class="mobile-nav" id="mobileNav">
-      <button class="nav-link" onclick="navigate('dashboard');closeMobileMenu()"> Início</button>
-      <button class="nav-link" onclick="navigate('empresas');closeMobileMenu()"> Empresas</button>
-      <button class="nav-link" onclick="navigate('produtos');closeMobileMenu()"> Produtos</button>
-      <button class="nav-link" onclick="navigate('vendas');closeMobileMenu()"> Vendas</button>
-      <button class="nav-link" onclick="doLogout()">→ Sair</button>
-    </div>
-    <div class="content">
-      <div class="page" id="page-dashboard">
-        <div class="page-header"><div class="page-title">Início</div><div class="page-sub">Registre uma nova venda ou consulte o histórico.</div></div>
-        <button class="btn btn-primary btn-lg" style="margin-bottom:14px" onclick="openVendaModal()">+ Adicionar venda</button>
-        <div class="flex-row" style="margin-bottom:14px">
-          <button class="btn btn-outline" style="flex:1" onclick="openProdutoModal()">+ Adicionar produto</button>
-          <button class="btn btn-outline" style="flex:1" onclick="openEmpresaModal()">+ Adicionar empresa</button>
-        </div>
-        <div style="display:flex;justify-content:center;margin-bottom:20px">
-          <button class="btn btn-ghost btn-sm" onclick="navigate('produtos')"> Ver todos os produtos</button>
-        </div>
-        <div class="grid2" id="dashStats"></div>
-        <div class="card"><div class="card-header" style="padding:16px 20px 12px"><span class="card-title">Últimas vendas</span></div><div class="card-body-p0 divide-y" id="dashVendas"></div></div>
-      </div>
-      <div class="page" id="page-empresas">
-        <button class="back-btn" onclick="navigate('dashboard')">← Início</button>
-        <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
-          <div><div class="page-title">Empresas</div><div class="page-sub" id="empresasCount"></div></div>
-          <button class="btn btn-primary" onclick="openEmpresaModal()">+ Nova empresa</button>
-        </div>
-        <div class="filter-bar"><div class="input-wrap" style="flex:1;min-width:200px"><input placeholder="Buscar por nome, CNPJ, cidade..." id="empresaSearch" oninput="renderEmpresas()" /></div></div>
-        <div class="card"><div class="card-body-p0" id="empresasTable"></div></div>
-      </div>
-      <div class="page" id="page-empresa-detail">
-        <button class="back-btn" onclick="navigate('empresas')">← Empresas</button>
-        <div id="empresaDetailContent"></div>
-      </div>
-      <div class="page" id="page-produtos">
-        <button class="back-btn" onclick="navigate('dashboard')">← Início</button>
-        <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
-          <div><div class="page-title">Produtos</div><div class="page-sub" id="produtosCount"></div></div>
-          <button class="btn btn-primary" onclick="openProdutoModal()">+ Novo produto</button>
-        </div>
-        <div class="filter-bar"><div class="input-wrap" style="flex:1;min-width:200px;max-width:500px"><input placeholder="Buscar por nome, modelo, código..." id="produtoSearch" oninput="renderProdutos()" /></div></div>
-        <div class="card"><div class="card-body-p0" id="produtosTable"></div></div>
-      </div>
-      <div class="page" id="page-vendas">
-        <button class="back-btn" onclick="navigate('dashboard')">← Início</button>
-        <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
-          <div><div class="page-title">Vendas</div><div class="page-sub" id="vendasStats"></div></div>
-          <div class="flex-row">
-            <button class="btn btn-outline btn-sm" onclick="exportVendas()">↓ Exportar</button>
-            <button class="btn btn-primary btn-sm" onclick="openVendaModal()">+ Nova venda</button>
-          </div>
-        </div>
-        <div class="vendas-filter">
-          <div class="input-wrap"><input placeholder="Buscar empresa, produto, modelo..." id="vendaSearch" oninput="renderVendas()" /></div>
-          <input type="date" id="vendaFrom" oninput="renderVendas()" style="color:var(--muted)" />
-        </div>
-        <div class="card"><div class="card-body-p0" id="vendasList"></div></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL VENDA -->
-<div class="overlay" id="vendaOverlay">
-  <div class="modal">
-    <div class="modal-header"><span class="modal-title" id="vendaModalTitle">Novo serviço / venda</span><button class="modal-close" onclick="closeVendaModal()">✕</button></div>
-    <div class="modal-body">
-      <input type="hidden" id="vendaId" />
-      <div id="vendaEmpresaField" class="form-field"><label class="form-label">Empresa *</label><select id="vendaEmpresaId"></select></div>
-      <div class="form-field">
-        <label class="form-label">Produto *</label>
-        <button type="button" id="produtoBtnSelect" onclick="openProdutoPicker()" style="width:100%;height:var(--input-h);border:1px solid var(--border);border-radius:var(--radius);background:#fff;text-align:left;padding:0 12px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
-          <span id="produtoBtnLabel" style="color:#9ca3af">Selecione o produto...</span>
-          <span style="font-size:11px;color:var(--muted)">▼</span>
-        </button>
-      </div>
-      <div class="form-field"><label class="form-label">Marca</label><input id="vendaMarca" placeholder="Ex: Bosch, Delco, Denso..." /></div>
-      <div class="form-grid2">
-        <div class="form-field"><label class="form-label">Valor cobrado (R$) *</label><input type="number" id="vendaValor" placeholder="0,00" min="0" step="0.01" /></div>
-        <div class="form-field"><label class="form-label">Data *</label><input type="date" id="vendaData" /></div>
-      </div>
-      <div class="form-grid2">
-        <div class="form-field"><label class="form-label">Pedido</label><select id="vendaPedido"><option value="">Selecione...</option><option value="verbal">Verbal</option><option value="email">E-mail</option><option value="whatsapp">WhatsApp</option></select></div>
-        <div class="form-field"><label class="form-label">BT</label><div class="toggle-group"><button type="button" class="toggle-opt on" id="btSim" onclick="selectBT(true)">Sim</button><button type="button" class="toggle-opt" id="btNao" onclick="selectBT(false)">Não</button></div></div>
-      </div>
-      <div class="form-field"><label class="form-label">Serviço</label><div class="toggle-group"><button type="button" class="toggle-opt on" id="svcReman" onclick="selectServico('remanufatura')">Remanufatura</button><button type="button" class="toggle-opt" id="svcNovo" onclick="selectServico('novo')">Novo</button></div></div>
-      <div class="form-field"><label class="form-label">Observações</label><textarea rows="2" id="vendaObs"></textarea></div>
-      <div class="form-actions"><button class="btn btn-ghost" onclick="closeVendaModal()">Cancelar</button><button class="btn btn-save" onclick="saveVenda()">Salvar</button></div>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL PRODUTO -->
-<div class="overlay" id="produtoOverlay">
-  <div class="modal">
-    <div class="modal-header"><span class="modal-title" id="produtoModalTitle">Novo produto</span><button class="modal-close" onclick="closeProdutoModal()">✕</button></div>
-    <div class="modal-body">
-      <input type="hidden" id="produtoId" />
-      <div class="form-field"><label class="form-label">Nome do produto *</label><input id="produtoNome" placeholder="Nome" /></div>
-      <div class="form-grid2">
-        <div class="form-field"><label class="form-label">Tipo *</label><select id="produtoTipo"><option value="motor_partida">Motor de partida</option><option value="alternador">Alternador</option></select></div>
-        <div class="form-field"><label class="form-label">Modelo</label><input id="produtoModelo" placeholder="Modelo" /></div>
-      </div>
-      <div class="form-field"><label class="form-label">Código / Referência</label><input id="produtoCodigo" placeholder="Código" /></div>
-      <div class="form-field"><label class="form-label">Aplicação / Veículo</label><input id="produtoAplicacao" placeholder="" /></div>
-      <div class="form-field"><label class="form-label">Especificações</label><textarea rows="2" id="produtoEspec"></textarea></div>
-      <div class="form-field"><label class="form-label">Observações</label><textarea rows="2" id="produtoObs"></textarea></div>
-      <div class="form-actions"><button class="btn btn-ghost" onclick="closeProdutoModal()">Cancelar</button><button class="btn btn-save" onclick="saveProduto()">Salvar</button></div>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL EMPRESA -->
-<div class="overlay" id="empresaOverlay">
-  <div class="modal">
-    <div class="modal-header"><span class="modal-title" id="empresaModalTitle">Nova empresa</span><button class="modal-close" onclick="closeEmpresaModal()">✕</button></div>
-    <div class="modal-body">
-      <input type="hidden" id="empresaId" />
-      <div class="form-field"><label class="form-label">Nome *</label><input id="empresaNome" placeholder="Razão social ou nome fantasia" /></div>
-      <div class="form-grid2">
-        <div class="form-field"><label class="form-label">CNPJ</label><input id="empresaCnpj" placeholder="00.000.000/0001-00" /></div>
-        <div class="form-field"><label class="form-label">Telefone</label><input id="empresaTelefone" placeholder="(00) 00000-0000" /></div>
-      </div>
-      <div class="form-field"><label class="form-label">E-mail</label><input type="email" id="empresaEmail" placeholder="contato@empresa.com" /></div>
-      <div class="form-field"><label class="form-label">Nome do contato</label><input id="empresaContato" placeholder="Nome do responsável" /></div>
-      <div class="form-grid-auto">
-        <div class="form-field"><label class="form-label">Cidade</label><input id="empresaCidade" placeholder="Cidade" /></div>
-        <div class="form-field"><label class="form-label">UF</label><input id="empresaEstado" placeholder="PR" maxlength="2" style="text-transform:uppercase" /></div>
-      </div>
-      <div class="form-field"><label class="form-label">Observações</label><textarea rows="3" id="empresaObs"></textarea></div>
-      <div class="form-actions"><button class="btn btn-ghost" onclick="closeEmpresaModal()">Cancelar</button><button class="btn btn-save" onclick="saveEmpresa()">Salvar</button></div>
-    </div>
-  </div>
-</div>
-
-
-<!-- PRODUTO PICKER OVERLAY -->
-<div class="overlay" id="produtoPickerOverlay" style="z-index:200">
-  <div class="modal" style="max-width:440px">
-    <div class="modal-header">
-      <span class="modal-title">Selecionar produto</span>
-      <button class="modal-close" onclick="closeProdutoPicker()">✕</button>
-    </div>
-    <div class="modal-body" style="padding:16px">
-      <div class="input-wrap" style="margin-bottom:12px">
-        <span class="search-icon" style="font-size:14px;color:#9ca3af;position:absolute;left:11px;top:50%;transform:translateY(-50%)">🔍</span>
-        <input placeholder="Buscar por nome, modelo, código..." id="produtoPickerSearch" oninput="filterProdutoPicker()" style="padding-left:34px" />
-      </div>
-      <div class="produto-list" id="produtoPickerList" style="max-height:320px"></div>
-    </div>
-  </div>
-</div>
-<!-- ORCAMENTOS PAGE -->
-<div id="page-orcamentos" class="page">
-  <div style="margin-bottom:16px">
-    <div class="page-title">Orçamentos</div>
-    <div class="page-sub">Crie e baixe orçamentos em PDF</div>
-  </div>
-  <button class="btn btn-primary" style="width:100%;height:50px;font-size:15px;margin-bottom:16px;border-radius:10px" onclick="openOrcamentoModal()">+ Novo orçamento</button>
-  <div class="card"><div class="card-body-p0 divide-y" id="orcamentosList">
-    <div class="empty-state">Nenhum orçamento gerado ainda.</div>
-  </div></div>
-</div>
-
-<div class="overlay" id="orcamentoOverlay">
-  <div class="modal" style="max-width:560px">
-    <div class="modal-header"><span class="modal-title">Novo orçamento</span><button class="modal-close" onclick="closeOrcamentoModal()">&#x2715;</button></div>
-    <div class="modal-body">
-      <div class="form-field"><label class="form-label">Cliente *</label><input id="orcCliente" placeholder="Nome do cliente" /></div>
-      <div class="form-field"><label class="form-label">Data *</label><input type="date" id="orcData" style="width:100%" /></div>
-      <div class="form-field">
-        <label class="form-label">Itens</label>
-        <div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
-          <div style="display:grid;grid-template-columns:1fr 60px 100px 32px;background:#1e2434;color:#fff;font-size:11px;font-weight:600;text-transform:uppercase;padding:8px 10px;gap:6px">
-            <span>Descricao</span><span style="text-align:center">QTD</span><span style="text-align:right">Valor Unit.</span><span></span>
-          </div>
-          <div id="orcItens"></div>
-        </div>
-        <button type="button" onclick="addOrcItem()" style="margin-top:8px;background:none;border:1px dashed var(--border);border-radius:var(--radius);width:100%;padding:8px;font-size:12px;color:var(--muted);cursor:pointer">+ Adicionar item</button>
-      </div>
-      <div class="form-field"><label class="form-label">Observacoes</label><textarea id="orcObs" rows="2" placeholder="Opcional..."></textarea></div>
-      <div class="form-field"><label class="form-label">Total calculado</label><input id="orcTotal" readonly style="background:#f9fafb;font-weight:700;font-size:15px;color:var(--primary)" placeholder="R$ 0,00" /></div>
-      <div class="form-actions">
-        <button class="btn btn-ghost" onclick="closeOrcamentoModal()">Cancelar</button>
-        <button class="btn btn-primary" onclick="gerarOrcamentoPDF()">Gerar PDF</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- CONFIRM -->
-<div class="confirm-overlay" id="confirmOverlay">
-  <div class="confirm-box">
-    <div class="confirm-title" id="confirmTitle"></div>
-    <div class="confirm-desc" id="confirmDesc"></div>
-    <div class="confirm-actions"><button class="btn btn-outline" onclick="closeConfirm()">Cancelar</button><button class="btn" style="background:var(--destructive);color:#fff;border-color:var(--destructive)" id="confirmOkBtn">Excluir</button></div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
+<script src="/shared/config.js"></script>
+<script src="/shared/db.js"></script>
+<script src="/shared/auth.js"></script>
 <script>
-const SB_URL = 'https://egkuoribqndxyjsffxbd.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVna3VvcmlicW5keHlqc2ZmeGJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxOTU2NjksImV4cCI6MjA5NDc3MTY2OX0.EQl1UB5th8QLihTV_T-zvLCjHGVbf3W4-OXLiJl-HAU';
 
-async function sb(table, method='GET', body=null, query='') {
-  const url = `${SB_URL}/rest/v1/${table}${query}`;
-  const opts = {
-    method,
-    headers: {
-      'apikey': SB_KEY,
-      'Authorization': `Bearer ${SB_KEY}`,
-      'Content-Type': 'application/json',
-      'Prefer': method === 'POST' ? 'return=representation' : method === 'PATCH' ? 'return=representation' : ''
-    }
-  };
-  if (body) opts.body = JSON.stringify(body);
-  const res = await fetch(url, opts);
-  if (!res.ok) { const e = await res.text(); throw new Error(e); }
-  if (res.status === 204) return null;
-  return res.json();
-}
-
-const uid = () => Math.random().toString(36).slice(2) + Date.now().toString(36);
-const today = () => new Date().toISOString().slice(0, 10);
-const brl = v => new Intl.NumberFormat('pt-BR', {style:'currency', currency:'BRL'}).format(Number(v||0));
-const fmtDate = d => { if(!d) return '—'; try { const p=d.split('-'); return `${p[2]}/${p[1]}/${p[0]}`; } catch { return d; }};
-const tipoLabel = t => t==='motor_partida' ? 'Motor de partida' : 'Alternador';
-const pedidoLabel = p => ({verbal:'Verbal',email:'E-mail',whatsapp:'WhatsApp'}[p]||'');
-const esc = s => { if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); };
-
-let currentPage = 'dashboard', vendaFixedEmpresaId = null, selectedProdutoId = null;
-let confirmCallback = null, currentEmpresaDetailId = null;
-let btValue = true, servicoValue = 'remanufatura';
-let _empresas = [], _produtos = [], _vendas = [];
-
-function loading(show) { document.getElementById('loadingOverlay').classList.toggle('show', show); }
-function showToast(msg, type='success') {
-  const t = document.getElementById('toast'); t.textContent = msg;
-  t.className = 'toast ' + type; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
-
+// ── Login ────────────────────────────────────────────────────
 async function doLogin() {
-  const user = document.getElementById('loginUser').value.trim();
-  const pw = document.getElementById('loginPassword').value;
-  const err = document.getElementById('loginError');
-  if (!user || !pw) { err.style.display='block'; err.textContent='Preencha usuário e senha.'; return; }
-  loading(true);
+  const usuario = document.getElementById('loginUser').value.trim();
+  const senha   = document.getElementById('loginPassword').value;
+  const errEl   = document.getElementById('loginError');
+  errEl.style.display = 'none';
+
+  if (!usuario || !senha) {
+    errEl.textContent = 'Preencha usuário e senha.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  document.getElementById('az-loading').classList.add('show');
   try {
-    const rows = await sb('az_config', 'GET', null, `?key=in.(username,password)&select=key,value`);
-    const cfg = {};
-    rows.forEach(r => cfg[r.key] = r.value);
-    if (user !== cfg.username || pw !== cfg.password) {
-      err.style.display='block'; err.textContent='Usuário ou senha incorretos.';
-      loading(false); return;
-    }
-    err.style.display='none';
-    sessionStorage.setItem('az_logged', '1');
+    await AZ_AUTH.login(usuario, senha);
     bootApp();
-  } catch(e) { err.style.display='block'; err.textContent='Erro ao conectar. Tente novamente.'; loading(false); }
+  } catch(e) {
+    errEl.textContent = e.message || 'Usuário ou senha incorretos.';
+    errEl.style.display = 'block';
+  } finally {
+    document.getElementById('az-loading').classList.remove('show');
+  }
 }
 
+// ── Logout ───────────────────────────────────────────────────
 function doLogout() {
-  sessionStorage.removeItem('az_logged');
-  document.getElementById('mainApp').style.display = 'none';
-  document.getElementById('homePage').style.display = 'none';
-  document.getElementById('loginPage').style.display = 'flex';
+  AZ_AUTH.logout();
 }
 
-async function bootApp() {
-  loading(true);
-  document.getElementById('loginPage').style.display = 'none';
-  await loadAll();
-  loading(false);
-  showHomePage();
+// ── Boot ─────────────────────────────────────────────────────
+function bootApp() {
+  document.getElementById('loginPage').style.display  = 'none';
+  document.getElementById('homePage').style.display   = 'block';
+  renderModulosGrid();
 }
 
-async function loadAll() {
-  const [e, p, v] = await Promise.all([
-    sb('az_empresas','GET',null,'?select=*&order=nome'),
-    sb('az_produtos','GET',null,'?select=*&order=nome'),
-    sb('az_vendas','GET',null,'?select=*&order=data_venda.desc')
-  ]);
-  _empresas = e||[]; _produtos = p||[]; _vendas = v||[];
-}
+// ── Renderiza a grade de módulos na home ─────────────────────
+function renderModulosGrid() {
+  const grid = document.getElementById('modulosGrid');
 
-function navigate(page, extraId) {
-  currentPage = page;
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-  const el = document.getElementById('page-' + (page==='empresa-detail'?'empresa-detail':page));
-  if (el) el.classList.add('active');
-  const navEl = document.getElementById('nav-' + (page==='empresa-detail'?'empresas':page));
-  if (navEl) navEl.classList.add('active');
-  if (page==='dashboard') renderDashboard();
-  else if (page==='empresas') renderEmpresas();
-  else if (page==='empresa-detail') { currentEmpresaDetailId=extraId; renderEmpresaDetail(extraId); }
-  else if (page==='produtos') renderProdutos();
-  else if (page==='vendas') renderVendas();
-  // orcamentos has no render fn needed
-}
-
-function toggleMobileMenu() { document.getElementById('mobileNav').classList.toggle('open'); }
-function closeMobileMenu() { document.getElementById('mobileNav').classList.remove('open'); }
-function selectBT(sim) { btValue=sim; document.getElementById('btSim').classList.toggle('on',sim); document.getElementById('btNao').classList.toggle('on',!sim); }
-function selectServico(val) { servicoValue=val; document.getElementById('svcReman').classList.toggle('on',val==='remanufatura'); document.getElementById('svcNovo').classList.toggle('on',val==='novo'); }
-
-function renderDashboard() {
-  document.getElementById('dashStats').innerHTML=`
-    <div class="stat-card"><div class="stat-icon blue">🏢</div><div class="stat-label">Empresas cadastradas</div><div class="stat-val">${_empresas.length}</div><div class="stat-link" onclick="navigate('empresas')">Ver empresas →</div></div>
-    <div class="stat-card"><div class="stat-icon green">🧾</div><div class="stat-label">Vendas registradas</div><div class="stat-val">${_vendas.length}</div><div class="stat-link" onclick="navigate('vendas')">Ver vendas →</div></div>`;
-  const ultimas = _vendas.slice(0,8);
-  document.getElementById('dashVendas').innerHTML = ultimas.length ? ultimas.map(v => {
-    const e=_empresas.find(x=>x.id===v.empresa_id), p=_produtos.find(x=>x.id===v.produto_id);
-    return `<div class="item-row"><div style="min-width:0;flex:1"><div class="item-name">${esc(p?p.nome:v.modelo||'Produto')}</div><div class="item-meta">${e?`<a onclick="navigate('empresa-detail','${e.id}')">${esc(e.nome)}</a>`:'—'} · ${fmtDate(v.data_venda)}</div><div class="item-meta" style="margin-top:3px">${v.bt?'<span style="background:#fef9c3;color:#92400e;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:500">BT: Sim</span>':'<span style="background:#f3f4f6;color:#6b7280;padding:1px 7px;border-radius:999px;font-size:11px">BT: Não</span>'} ${v.servico==='novo'?'<span style="background:#dcfce7;color:#166534;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:500">Novo</span>':'<span style="background:#e0f2fe;color:#075985;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:500">Remanufatura</span>'}</div></div><div style="text-align:right;flex-shrink:0"><div class="item-val">${brl(v.valor_total)}</div><span class="badge badge-blue">${tipoLabel(v.tipo)}</span></div></div>`;
-  }).join('') : '<div class="empty-state">Nenhuma venda registrada ainda.</div>';
-}
-
-function renderEmpresas() {
-  const q = (document.getElementById('empresaSearch')||{}).value||'';
-  const filtered = q ? _empresas.filter(e=>[e.nome,e.cnpj,e.cidade,e.contato].filter(Boolean).join(' ').toLowerCase().includes(q.toLowerCase())) : _empresas;
-  document.getElementById('empresasCount').textContent = `${_empresas.length} empresa(s) cadastrada(s)`;
-  document.getElementById('empresasTable').innerHTML = filtered.length ? `<div class="table-wrap"><table><thead><tr><th>Empresa</th><th>CNPJ</th><th>Contato</th><th>Cidade</th><th>Cadastro</th></tr></thead><tbody>${filtered.map(e=>`<tr><td><span class="link-primary" onclick="navigate('empresa-detail','${e.id}')">${esc(e.nome)}</span></td><td style="color:var(--muted)">${e.cnpj||'—'}</td><td>${e.contato||'—'}${e.telefone?`<br><small style="color:var(--muted)">${esc(e.telefone)}</small>`:''}</td><td>${[e.cidade,e.estado].filter(Boolean).join(' / ')||'—'}</td><td style="color:var(--muted)">${fmtDate(e.created_at)}</td></tr>`).join('')}</tbody></table></div>` : '<div class="empty-state">Nenhuma empresa encontrada.</div>';
-}
-
-function renderEmpresaDetail(id) {
-  const emp = _empresas.find(e=>e.id===id);
-  if (!emp) { document.getElementById('empresaDetailContent').innerHTML='<p>Empresa não encontrada.</p>'; return; }
-  const vendas = _vendas.filter(v=>v.empresa_id===id);
-  const total = vendas.reduce((s,v)=>s+Number(v.valor_total),0);
-  document.getElementById('empresaDetailContent').innerHTML=`
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:20px">
-      <div><div class="page-title">${esc(emp.nome)}</div>${emp.cnpj?`<div class="page-sub">CNPJ: ${esc(emp.cnpj)}</div>`:''}</div>
-      <div class="flex-row">
-        <button class="btn btn-outline btn-sm" onclick="openEmpresaModal('${id}')">Editar</button>
-        <button class="btn btn-outline btn-sm" style="color:var(--destructive)" onclick="openConfirm('Excluir empresa?','Todas as vendas vinculadas serão excluídas.',()=>{deleteEmpresa('${id}')})">✕</button>
-      </div>
-    </div>
-    <div class="card" style="margin-bottom:16px">
-      <div class="card-header"><span class="card-title" style="font-size:13px">Dados da empresa</span></div>
-      <div class="card-body"><div class="info-grid">
-        <div class="info-item"><div><div class="info-key">Contato</div><div class="info-val">${esc(emp.contato||'—')}</div></div></div>
-        <div class="info-item"><div><div class="info-key">Telefone</div><div class="info-val">${esc(emp.telefone||'—')}</div></div></div>
-        <div class="info-item"><div><div class="info-key">E-mail</div><div class="info-val">${esc(emp.email||'—')}</div></div></div>
-        <div class="info-item"><div><div class="info-key">Localização</div><div class="info-val">${[emp.cidade,emp.estado].filter(Boolean).join(' / ')||'—'}</div></div></div>
-        ${emp.observacoes?`<div class="info-item" style="grid-column:1/-1"><div><div class="info-key">Observações</div><div class="info-val" style="white-space:pre-wrap">${esc(emp.observacoes)}</div></div></div>`:''}
-      </div></div>
-    </div>
-    <div class="card">
-      <div class="card-header">
-        <div><span class="card-title">Histórico de serviços</span><div style="font-size:12px;color:var(--muted);margin-top:2px">${vendas.length} registro(s) · Total: <strong>${brl(total)}</strong></div></div>
-        <div class="flex-row">
-          ${vendas.length?`<button class="btn btn-outline btn-sm" onclick="exportVendasEmpresa('${id}')">↓ Exportar</button>`:''}
-          <button class="btn btn-primary btn-sm" onclick="openVendaModal(null,'${id}')">+ Adicionar serviço</button>
+  grid.innerHTML = AZ_CONFIG.modulos.map(m => {
+    const ativo = m.ativo;
+    return `
+      <div
+        onclick="${ativo ? `window.location.href='${m.arquivo}'` : ''}"
+        style="
+          background:#fff;
+          border:1px solid #e2e5ec;
+          border-radius:16px;
+          padding:20px 22px;
+          cursor:${ativo ? 'pointer' : 'default'};
+          display:flex;
+          align-items:center;
+          gap:16px;
+          box-shadow:0 2px 8px rgba(0,0,0,0.05);
+          opacity:${ativo ? '1' : '0.6'};
+          transition:box-shadow 0.15s,transform 0.1s;
+        "
+        ${ativo ? `onmouseenter="this.style.boxShadow='0 4px 16px rgba(61,90,254,0.12)';this.style.transform='translateY(-1px)'"
+                   onmouseleave="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.05)';this.style.transform=''"` : ''}
+      >
+        <div style="width:52px;height:52px;background:${m.cor};border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">
+          ${m.icone}
         </div>
-      </div>
-      <div class="card-body-p0">${vendas.length?'<div class="divide-y">'+vendas.map(v=>{
-        const p=_produtos.find(x=>x.id===v.produto_id), nome=p?p.nome:v.modelo||'Produto';
-        const modelo=p&&p.modelo?p.modelo:v.modelo, codigo=p&&p.codigo?p.codigo:v.codigo;
-        return `<div class="item-row"><div style="min-width:0;flex:1"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="item-name">${esc(nome)}</span><span class="badge badge-blue">${tipoLabel(v.tipo)}</span></div><div class="item-meta">${[modelo?'Modelo: '+modelo:'',codigo?'Cód: '+codigo:''].filter(Boolean).join(' · ')}</div>${v.observacoes?`<div style="font-size:12px;font-style:italic;color:var(--muted);margin-top:2px">${esc(v.observacoes)}</div>`:''}<div class="item-meta">${fmtDate(v.data_venda)}${v.pedido?' · '+pedidoLabel(v.pedido):''}</div><div class="item-meta" style="margin-top:3px">${v.bt?'<span style="background:#fef9c3;color:#92400e;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:500">BT: Sim</span>':'<span style="background:#f3f4f6;color:#6b7280;padding:1px 7px;border-radius:999px;font-size:11px">BT: Não</span>'} ${v.servico==='novo'?'<span style="background:#dcfce7;color:#166534;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:500">Novo</span>':'<span style="background:#e0f2fe;color:#075985;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:500">Remanufatura</span>'}</div></div><div style="text-align:right;flex-shrink:0"><div class="item-val">${brl(v.valor_total)}</div><div class="item-actions"><button class="btn btn-ghost btn-sm btn-icon" onclick="openVendaModal('${v.id}','${id}')">✎</button><button class="btn btn-danger-ghost btn-sm btn-icon" onclick="openConfirm('Excluir serviço?','Esta ação não pode ser desfeita.',()=>{deleteVenda('${v.id}')})">✕</button></div></div></div>`;
-      }).join('')+'</div>':'<div class="empty-state">Nenhum serviço registrado.</div>'}</div>
-    </div>`;
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;font-size:16px;color:#1a1d2e;display:flex;align-items:center;gap:8px">
+            ${m.nome}
+            ${!ativo ? '<span style="font-size:10px;background:#f3f4f6;color:#9ca3af;padding:2px 8px;border-radius:999px;font-weight:500">Em breve</span>' : ''}
+          </div>
+          <div style="font-size:13px;color:#6b7280;margin-top:3px">${m.descricao}</div>
+        </div>
+        ${ativo ? '<div style="color:#3d5afe;font-size:20px;flex-shrink:0">›</div>' : ''}
+      </div>`;
+  }).join('');
 }
 
-function renderProdutos() {
-  const q = (document.getElementById('produtoSearch')||{}).value||'';
-  const filtered = q ? _produtos.filter(p=>[p.nome,p.modelo,p.codigo,p.aplicacao,tipoLabel(p.tipo)].filter(Boolean).join(' ').toLowerCase().includes(q.toLowerCase())) : _produtos;
-  document.getElementById('produtosCount').textContent = `${_produtos.length} produto(s) cadastrado(s)`;
-  document.getElementById('produtosTable').innerHTML = filtered.length ? `<div class="table-wrap"><table><thead><tr><th>Produto</th><th>Tipo</th><th>Modelo</th><th>Código</th><th>Aplicação</th><th></th></tr></thead><tbody>${filtered.map(p=>`<tr><td style="font-weight:500">${esc(p.nome)}</td><td><span class="badge badge-blue">${tipoLabel(p.tipo)}</span></td><td style="color:var(--muted)">${p.modelo||'—'}</td><td style="color:var(--muted)">${p.codigo||'—'}</td><td style="color:var(--muted)">${p.aplicacao||'—'}</td><td><div class="flex-row" style="justify-content:flex-end"><button class="btn btn-ghost btn-sm btn-icon" onclick="openProdutoModal('${p.id}')">✎</button><button class="btn btn-danger-ghost btn-sm btn-icon" onclick="openConfirm('Excluir produto?','Esta ação não pode ser desfeita.',()=>{deleteProduto('${p.id}')})">✕</button></div></td></tr>`).join('')}</tbody></table></div>` : '<div class="empty-state">Nenhum produto encontrado.</div>';
+// ── Verificar sessão ao carregar ─────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('loginPage').style.display !== 'none') doLogin();
+});
+
+if (AZ_AUTH.isLoggedIn()) {
+  bootApp();
 }
 
-function renderVendas() {
-  const q = (document.getElementById('vendaSearch')||{}).value||'';
-  const from = (document.getElementById('vendaFrom')||{}).value||'';
-  let filtered = _vendas.filter(v=>{
-    if (from && v.data_venda!==from) return false;
-    if (q) { const e=_empresas.find(x=>x.id===v.empresa_id), p=_produtos.find(x=>x.id===v.produto_id);
-      if (![e&&e.nome,p&&p.nome,p&&p.modelo,p&&p.codigo,v.modelo,v.codigo].filter(Boolean).join(' ').toLowerCase().includes(q.toLowerCase())) return false; }
-    return true;
-  });
-  const total = filtered.reduce((s,v)=>s+Number(v.valor_total),0);
-  document.getElementById('vendasStats').textContent = `${filtered.length} venda(s) · Total: ${brl(total)}`;
-  document.getElementById('vendasList').innerHTML = filtered.length ? '<div class="divide-y">'+filtered.map(v=>{
-    const e=_empresas.find(x=>x.id===v.empresa_id), p=_produtos.find(x=>x.id===v.produto_id);
-    const nome=p?p.nome:v.modelo||'Produto', modelo=p&&p.modelo?p.modelo:v.modelo;
-    return `<div class="item-row"><div style="min-width:0;flex:1"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="item-name">${esc(nome)}</span><span class="badge badge-blue">${tipoLabel(v.tipo)}</span></div><div class="item-meta">${e?`<a onclick="navigate('empresa-detail','${e.id}')">${esc(e.nome)}</a>`:'—'}${modelo?' · '+esc(modelo):''} · ${fmtDate(v.data_venda)}</div><div class="item-meta" style="margin-top:3px">${v.bt?'<span style="background:#fef9c3;color:#92400e;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:500">BT: Sim</span>':'<span style="background:#f3f4f6;color:#6b7280;padding:1px 7px;border-radius:999px;font-size:11px">BT: Não</span>'} ${v.servico==='novo'?'<span style="background:#dcfce7;color:#166534;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:500">Novo</span>':'<span style="background:#e0f2fe;color:#075985;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:500">Remanufatura</span>'}</div></div><div style="text-align:right;flex-shrink:0"><div class="item-val">${brl(v.valor_total)}</div><div class="item-actions"><button class="btn btn-ghost btn-sm btn-icon" onclick="openVendaModal('${v.id}')">✎</button><button class="btn btn-danger-ghost btn-sm btn-icon" onclick="openConfirm('Excluir venda?','Esta ação não pode ser desfeita.',()=>{deleteVenda('${v.id}')})">✕</button></div></div></div>`;
-  }).join('')+'</div>' : '<div class="empty-state">Nenhuma venda encontrada.</div>';
-}
-
-function openEmpresaModal(id) {
-  const emp = id ? _empresas.find(e=>e.id===id) : null;
-  document.getElementById('empresaModalTitle').textContent = emp?'Editar empresa':'Nova empresa';
-  document.getElementById('empresaId').value = id||'';
-  document.getElementById('empresaNome').value = emp?emp.nome:'';
-  document.getElementById('empresaCnpj').value = emp?emp.cnpj||'':'';
-  document.getElementById('empresaTelefone').value = emp?emp.telefone||'':'';
-  document.getElementById('empresaEmail').value = emp?emp.email||'':'';
-  document.getElementById('empresaContato').value = emp?emp.contato||'':'';
-  document.getElementById('empresaCidade').value = emp?emp.cidade||'':'';
-  document.getElementById('empresaEstado').value = emp?emp.estado||'':'';
-  document.getElementById('empresaObs').value = emp?emp.observacoes||'':'';
-  document.getElementById('empresaOverlay').classList.add('open');
-}
-function closeEmpresaModal() { document.getElementById('empresaOverlay').classList.remove('open'); }
-async function saveEmpresa() {
-  const nome = document.getElementById('empresaNome').value.trim();
-  if (!nome) { showToast('Nome é obrigatório','error'); return; }
-  const id = document.getElementById('empresaId').value;
-  const obj = { nome, cnpj:document.getElementById('empresaCnpj').value.trim()||null, telefone:document.getElementById('empresaTelefone').value.trim()||null, email:document.getElementById('empresaEmail').value.trim()||null, contato:document.getElementById('empresaContato').value.trim()||null, cidade:document.getElementById('empresaCidade').value.trim()||null, estado:document.getElementById('empresaEstado').value.trim().toUpperCase()||null, observacoes:document.getElementById('empresaObs').value.trim()||null };
-  loading(true);
-  try {
-    if (id) { await sb('az_empresas','PATCH',obj,`?id=eq.${id}`); const i=_empresas.findIndex(e=>e.id===id); _empresas[i]={..._empresas[i],...obj}; showToast('Empresa atualizada'); }
-    else { obj.id=uid(); obj.created_at=today(); const r=await sb('az_empresas','POST',obj); _empresas.push(r[0]||obj); _empresas.sort((a,b)=>a.nome.localeCompare(b.nome)); showToast('Empresa cadastrada'); }
-    closeEmpresaModal();
-    if (currentPage==='empresas') renderEmpresas();
-    else if (currentPage==='empresa-detail') renderEmpresaDetail(currentEmpresaDetailId);
-    else renderDashboard();
-  } catch(e) { showToast('Erro ao salvar','error'); } finally { loading(false); }
-}
-async function deleteEmpresa(id) {
-  loading(true);
-  try {
-    await sb('az_empresas','DELETE',null,`?id=eq.${id}`);
-    _empresas = _empresas.filter(e=>e.id!==id);
-    _vendas = _vendas.filter(v=>v.empresa_id!==id);
-    showToast('Empresa excluída'); navigate('empresas');
-  } catch(e) { showToast('Erro ao excluir','error'); } finally { loading(false); }
-}
-
-function openProdutoModal(id) {
-  const prod = id ? _produtos.find(p=>p.id===id) : null;
-  document.getElementById('produtoModalTitle').textContent = prod?'Editar produto':'Novo produto';
-  document.getElementById('produtoId').value = id||'';
-  document.getElementById('produtoNome').value = prod?prod.nome:'';
-  document.getElementById('produtoTipo').value = prod?prod.tipo:'motor_partida';
-  document.getElementById('produtoModelo').value = prod?prod.modelo||'':'';
-  document.getElementById('produtoCodigo').value = prod?prod.codigo||'':'';
-  document.getElementById('produtoAplicacao').value = prod?prod.aplicacao||'':'';
-  document.getElementById('produtoEspec').value = prod?prod.especificacoes||'':'';
-  document.getElementById('produtoObs').value = prod?prod.observacoes||'':'';
-  document.getElementById('produtoOverlay').classList.add('open');
-}
-function closeProdutoModal() { document.getElementById('produtoOverlay').classList.remove('open'); }
-async function saveProduto() {
-  const nome = document.getElementById('produtoNome').value.trim();
-  if (!nome) { showToast('Nome é obrigatório','error'); return; }
-  const id = document.getElementById('produtoId').value;
-  const obj = { nome, tipo:document.getElementById('produtoTipo').value, modelo:document.getElementById('produtoModelo').value.trim()||null, codigo:document.getElementById('produtoCodigo').value.trim()||null, aplicacao:document.getElementById('produtoAplicacao').value.trim()||null, especificacoes:document.getElementById('produtoEspec').value.trim()||null, observacoes:document.getElementById('produtoObs').value.trim()||null };
-  loading(true);
-  try {
-    if (id) { await sb('az_produtos','PATCH',obj,`?id=eq.${id}`); const i=_produtos.findIndex(p=>p.id===id); _produtos[i]={..._produtos[i],...obj}; showToast('Produto atualizado'); }
-    else { obj.id=uid(); const r=await sb('az_produtos','POST',obj); _produtos.push(r[0]||obj); _produtos.sort((a,b)=>a.nome.localeCompare(b.nome)); showToast('Produto cadastrado'); }
-    closeProdutoModal();
-    if (currentPage==='produtos') renderProdutos(); else renderDashboard();
-  } catch(e) { showToast('Erro ao salvar','error'); } finally { loading(false); }
-}
-async function deleteProduto(id) {
-  loading(true);
-  try { await sb('az_produtos','DELETE',null,`?id=eq.${id}`); _produtos=_produtos.filter(p=>p.id!==id); showToast('Produto excluído'); renderProdutos(); }
-  catch(e) { showToast('Erro ao excluir','error'); } finally { loading(false); }
-}
-
-function openProdutoPicker() {
-  document.getElementById('produtoPickerSearch').value = '';
-  renderProdutoPicker(selectedProdutoId);
-  document.getElementById('produtoPickerOverlay').classList.add('open');
-  setTimeout(() => document.getElementById('produtoPickerSearch').focus(), 100);
-}
-function closeProdutoPicker() {
-  document.getElementById('produtoPickerOverlay').classList.remove('open');
-  document.getElementById('produtoPickerSearch').value = '';
-}
-function openVendaModal(vendaId, fixedEmpId) {
-  vendaFixedEmpresaId = fixedEmpId||null; selectedProdutoId = null;
-  const venda = vendaId ? _vendas.find(v=>v.id===vendaId) : null;
-  document.getElementById('vendaModalTitle').textContent = venda?'Editar serviço':'Novo serviço / venda';
-  document.getElementById('vendaId').value = vendaId||'';
-  const empField = document.getElementById('vendaEmpresaField');
-  if (fixedEmpId) { empField.style.display='none'; }
-  else {
-    empField.style.display='';
-    const sel = document.getElementById('vendaEmpresaId');
-    sel.innerHTML = '<option value="">Selecione a empresa...</option>' + _empresas.map(e=>`<option value="${e.id}"${venda&&venda.empresa_id===e.id?' selected':''}>${esc(e.nome)}</option>`).join('');
-  }
-  document.getElementById('vendaValor').value = venda?venda.valor_unitario:'';
-  document.getElementById('vendaData').value = venda?venda.data_venda:today();
-  document.getElementById('vendaPedido').value = venda?venda.pedido||'':'';
-  btValue = venda ? !!venda.bt : true; selectBT(btValue);
-  servicoValue = venda ? venda.servico||'remanufatura' : 'remanufatura'; selectServico(servicoValue);
-  document.getElementById('vendaMarca').value = venda?venda.marca||'':''; document.getElementById('vendaObs').value = venda?venda.observacoes||'':'';
-  selectedProdutoId = venda?venda.produto_id:null;
-  const selP = selectedProdutoId ? _produtos.find(p=>p.id===selectedProdutoId) : null;
-  const btn = document.getElementById('produtoBtnLabel');
-  if (selP) { btn.textContent = selP.nome + (selP.modelo?' · '+selP.modelo:''); btn.style.color='var(--text)'; }
-  else { btn.textContent = 'Selecione o produto...'; btn.style.color='#9ca3af'; }
-  document.getElementById('vendaOverlay').classList.add('open');
-}
-function closeVendaModal() { document.getElementById('vendaOverlay').classList.remove('open'); }
-function filterProdutoPicker() { renderProdutoPicker(selectedProdutoId); }
-function renderProdutoPicker(selId) {
-  const q = (document.getElementById('produtoPickerSearch')||{}).value||'';
-  const ql = q.toLowerCase();
-  const list = ql ? _produtos.filter(p=>[p.nome,p.modelo,p.codigo,p.aplicacao,tipoLabel(p.tipo)].filter(Boolean).join(' ').toLowerCase().includes(ql)) : _produtos;
-  document.getElementById('produtoPickerList').innerHTML = list.length ? list.map(p=>`<div class="produto-option${p.id===selId?' selected':''}" onclick="selectProduto('${p.id}')"><strong>${esc(p.nome)}</strong><div style="font-size:11px;color:var(--muted)">${tipoLabel(p.tipo)}${p.modelo?' · '+esc(p.modelo):''}${p.codigo?' · '+esc(p.codigo):''}${p.aplicacao?' · '+esc(p.aplicacao):''}</div></div>`).join('') : `<div style="padding:12px;text-align:center;color:var(--muted);font-size:13px">Nenhum produto encontrado.</div>`;
-}
-function selectProduto(id) {
-  selectedProdutoId = id;
-  const p = _produtos.find(x => x.id === id);
-  if (p) {
-    document.getElementById('produtoBtnLabel').textContent = p.nome + (p.modelo ? ' · ' + p.modelo : '');
-    document.getElementById('produtoBtnLabel').style.color = 'var(--text)';
-  }
-  closeProdutoPicker();
-}
-
-async function saveVenda() {
-  const id = document.getElementById('vendaId').value;
-  const empresa_id = vendaFixedEmpresaId || document.getElementById('vendaEmpresaId').value;
-  const valor = parseFloat(document.getElementById('vendaValor').value);
-  if (!empresa_id) { showToast('Selecione uma empresa','error'); return; }
-  if (!selectedProdutoId) { showToast('Selecione um produto','error'); return; }
-  if (!valor||valor<=0) { showToast('Informe um valor válido','error'); return; }
-  const produto = _produtos.find(p=>p.id===selectedProdutoId);
-  if (!produto) { showToast('Produto inválido','error'); return; }
-  const obj = { empresa_id, produto_id:selectedProdutoId, tipo:produto.tipo, modelo:produto.modelo||produto.nome, codigo:produto.codigo||null, aplicacao:produto.aplicacao||null, quantidade:1, valor_unitario:valor, valor_total:valor, data_venda:document.getElementById('vendaData').value, pedido:document.getElementById('vendaPedido').value||null, bt:btValue, servico:servicoValue, marca:document.getElementById('vendaMarca').value.trim()||null, observacoes:document.getElementById('vendaObs').value.trim()||null, created_at:Date.now() };
-  loading(true);
-  try {
-    if (id) { await sb('az_vendas','PATCH',obj,`?id=eq.${id}`); const i=_vendas.findIndex(v=>v.id===id); _vendas[i]={..._vendas[i],...obj}; showToast('Serviço atualizado'); }
-    else { obj.id=uid(); const r=await sb('az_vendas','POST',obj); _vendas.unshift(r[0]||obj); showToast('Serviço registrado'); }
-    closeVendaModal();
-    if (currentPage==='dashboard') renderDashboard();
-    else if (currentPage==='vendas') renderVendas();
-    else if (currentPage==='empresa-detail') renderEmpresaDetail(currentEmpresaDetailId);
-  } catch(e) { showToast('Erro ao salvar','error'); } finally { loading(false); }
-}
-async function deleteVenda(id) {
-  loading(true);
-  try { await sb('az_vendas','DELETE',null,`?id=eq.${id}`); _vendas=_vendas.filter(v=>v.id!==id); showToast('Excluído com sucesso');
-    if (currentPage==='vendas') renderVendas();
-    else if (currentPage==='empresa-detail') renderEmpresaDetail(currentEmpresaDetailId);
-    else renderDashboard();
-  } catch(e) { showToast('Erro ao excluir','error'); } finally { loading(false); }
-}
-
-function openConfirm(title,desc,cb) { document.getElementById('confirmTitle').textContent=title; document.getElementById('confirmDesc').textContent=desc; confirmCallback=cb; document.getElementById('confirmOverlay').classList.add('open'); }
-function closeConfirm() { document.getElementById('confirmOverlay').classList.remove('open'); confirmCallback=null; }
-document.getElementById('confirmOkBtn').onclick = function() { if(confirmCallback) confirmCallback(); closeConfirm(); };
-
-function exportVendas() {
-  const rows = _vendas.map(v=>{const e=_empresas.find(x=>x.id===v.empresa_id),p=_produtos.find(x=>x.id===v.produto_id);return[v.data_venda,e?e.nome:'',p?p.nome:'',tipoLabel(v.tipo),v.valor_total,v.pedido||'',v.bt?'Sim':'Não',v.servico||'',v.observacoes||''].join(';');});
-  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent('Data;Empresa;Produto;Tipo;Valor;Pedido;BT;Servico;Observacoes\n'+rows.join('\n'));a.download='vendas.csv';a.click();
-}
-function exportVendasEmpresa(empId) {
-  const emp=_empresas.find(e=>e.id===empId);
-  const rows=_vendas.filter(v=>v.empresa_id===empId).map(v=>{const p=_produtos.find(x=>x.id===v.produto_id);return[v.data_venda,p?p.nome:'',tipoLabel(v.tipo),v.valor_total,v.pedido||'',v.servico||'',v.observacoes||''].join(';');});
-  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent('Data;Produto;Tipo;Valor;Pedido;Servico;Observacoes\n'+rows.join('\n'));a.download=`vendas-${emp?emp.nome:'empresa'}.csv`;a.click();
-}
-
-
-// ===== MODULOS =====
-function showHomePage() {
-  document.getElementById('mainApp').style.display = 'none';
-  document.getElementById('homePage').style.display = 'block';
-}
-function goHome() {
-  document.getElementById('mainApp').style.display = 'none';
-  document.getElementById('homePage').style.display = 'block';
-  document.getElementById('homePage').scrollTop = 0;
-}
-function openModule(module) {
-  document.getElementById('homePage').style.display = 'none';
-  document.getElementById('mainApp').style.display = 'flex';
-  window.scrollTo(0,0);
-  navigate(module);
-}
-function openModulesSidebar() { document.getElementById('modulesSidebar').style.display = 'block'; }
-function closeModulesSidebar() { document.getElementById('modulesSidebar').style.display = 'none'; }
-
-// ===== ORCAMENTOS =====
-const LOGO_DATA = 'data:image/jpeg;base64,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FItJe6MCpGAGUqMeWR1UJ1O05znn61GQMFtxHU4xn3xXz74E+HHxAvvHXh7VPGmn6ZbWWiMZjLH5IluX3F1D+V99t2PmOAAuK+g+1AhKKKKACigUGgAooooAKWikoAWjFJS0ANp1JRQAtFFIaAFpKKKACiiigAo60UUALRRSUALmikooAM0UlFADqM02lzQAUtJRQAtJRRQAUUUCgANFFFAC0lLSUALSUUUAFFLSGgAooooAKKKKAFoxRSZoAKKWkoAKKKKACiiigBKUUUlADqSiigBaQ0UUAFFFFABRRRQAUhpaKAEpaSloAKSiigBaKBRQAtJRS0AJRRRQAUUUUAFFKaSgA+lFApaAEooNFABSUtFACUtGKKAAUtFJQAtJS0lABRS0lABRRRQAUtJRQAUUUUAFAoooAWkNLSUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAGkFLRQACloooAaKXNBpKAFoopKAFooFFABRRRQAUUUUAFFFFABRRS0AJRS0lABRRRQAUUoooASiiigAo6UUUAFFFFACUtFFABRRRQAlFLSUALRRRQAUUUUAFFHeigAFFAoNABRRRQAUvakpaAEpaKKACikoFABRS0lABRS0lABRRRQAUUUUAFLSUUAFFFFACUtFFAAaKUUlAC0lFFABRRRQAUlOpKAEFLmiigAoooNABSZpaMUAJS0CigAopRRQAlFLSUAFLSUUALSUooNACUUUUAFFFFABSGnUhoAKKBS0AJRS0UAJRRRQAUUUUALRRSUAFFFFAC0lFKKAEoopaAEopaKAEooooAKKKKAAUtB4pRQAlFB6UUAFFLRQAlFBooAKSlpKACilFBoASil7UlAC0UdqBQAlLRRQAUlL2o70AJRSmkoAKWig0AFJS0DrQAlFLSUAFLSUooAKKDQKACijFHegApKU0d6AEoopwoA//Z';
-let _orcItemCount = 0;
-function openOrcamentoModal() {
-  _orcItemCount = 0;
-  document.getElementById('orcCliente').value = '';
-  document.getElementById('orcData').value = new Date().toISOString().slice(0,10);
-  document.getElementById('orcObs').value = '';
-  document.getElementById('orcTotal').value = '';
-  document.getElementById('orcItens').innerHTML = '';
-  addOrcItem(); addOrcItem(); addOrcItem();
-  document.getElementById('orcamentoOverlay').classList.add('open');
-}
-function closeOrcamentoModal() { document.getElementById('orcamentoOverlay').classList.remove('open'); }
-function addOrcItem() {
-  const id = ++_orcItemCount;
-  const row = document.createElement('div');
-  row.id = 'orc-row-'+id;
-  row.style.cssText = 'display:grid;grid-template-columns:1fr 60px 100px 32px;gap:6px;padding:6px 10px;border-top:1px solid #f0f0f0;align-items:center';
-  row.innerHTML = '<input placeholder="Descricao" style="height:32px;font-size:12px;border:1px solid #e2e5ec;border-radius:6px;padding:0 8px;width:100%" oninput="calcOrcTotal()" id="orc-desc-'+id+'" />'
-    +'<input type="number" placeholder="1" min="1" style="height:32px;font-size:12px;border:1px solid #e2e5ec;border-radius:6px;padding:0 6px;text-align:center;width:100%" oninput="calcOrcTotal()" id="orc-qtd-'+id+'" />'
-    +'<input type="number" placeholder="0.00" min="0" step="0.01" style="height:32px;font-size:12px;border:1px solid #e2e5ec;border-radius:6px;padding:0 6px;text-align:right;width:100%" oninput="calcOrcTotal()" id="orc-val-'+id+'" />'
-    +'<button type="button" onclick="removeOrcItem('+id+')" style="width:28px;height:28px;background:none;border:1px solid #fee2e2;border-radius:6px;color:#ef4444;cursor:pointer;font-size:14px">x</button>';
-  document.getElementById('orcItens').appendChild(row);
-}
-function removeOrcItem(id) { const el=document.getElementById('orc-row-'+id); if(el)el.remove(); calcOrcTotal(); }
-function calcOrcTotal() {
-  let total=0;
-  for(let i=1;i<=_orcItemCount;i++){
-    const qtd=parseFloat(document.getElementById('orc-qtd-'+i)?.value)||0;
-    const val=parseFloat(document.getElementById('orc-val-'+i)?.value)||0;
-    total+=qtd*val;
-  }
-  document.getElementById('orcTotal').value=total.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-  return total;
-}
-function gerarOrcamentoPDF() {
-  const cliente=document.getElementById('orcCliente').value.trim();
-  if(!cliente){showToast('Informe o nome do cliente','error');return;}
-  const dp=document.getElementById('orcData').value.split('-');
-  const dataFmt=dp.length===3?dp[2]+'/'+dp[1]+'/'+dp[0]:document.getElementById('orcData').value;
-  const obs=document.getElementById('orcObs').value.trim();
-  const total=calcOrcTotal();
-  const totalFmt=total.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-  const brl2=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-  const itens=[];
-  for(let i=1;i<=_orcItemCount;i++){
-    const desc=document.getElementById('orc-desc-'+i)?.value.trim();
-    const qtd=parseFloat(document.getElementById('orc-qtd-'+i)?.value)||0;
-    const val=parseFloat(document.getElementById('orc-val-'+i)?.value)||0;
-    if(desc)itens.push({desc,qtd,val,sub:qtd*val});
-  }
-  if(!itens.length){showToast('Adicione pelo menos um item','error');return;}
-  let rows='';
-  for(let i=0;i<8;i++){
-    const it=itens[i]||null;
-    const bg=i%2===0?'#fff5f5':'#ffffff';
-    rows+='<tr style="background:'+bg+'"><td style="padding:10px 12px;font-size:12px;border-bottom:1px solid #e5e7eb;border-right:1px solid #ccc">'+(it?it.desc:'')+'</td><td style="padding:10px 8px;font-size:12px;text-align:center;border-bottom:1px solid #e5e7eb;border-right:1px solid #ccc;width:70px">'+(it?it.qtd:'')+'</td><td style="padding:10px 12px;font-size:12px;text-align:right;border-bottom:1px solid #e5e7eb;width:120px">'+(it?brl2(it.sub):'')+'</td></tr>';
-  }
-  const html='<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;font-size:13px;color:#1a1a1a;background:#fff;padding:32px}.hbar{background:#1a1a1a;color:#fff;text-align:center;padding:14px;font-size:20px;font-weight:700;letter-spacing:2px;margin-bottom:24px}.top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #ccc}.ci{font-size:12px;line-height:1.9}.ci b{font-size:14px}.logo{width:130px}.crow{display:flex;gap:40px;margin-bottom:20px}.fl{font-weight:700;font-size:13px;margin-right:6px}.fv{border-bottom:1.5px solid #333;display:inline-block;min-width:180px;padding-bottom:2px;font-size:13px}table{width:100%;border-collapse:collapse;border:1px solid #ccc;margin-bottom:20px}thead tr{background:#1a1a1a;color:#fff}thead th{padding:10px 12px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}.foot{display:flex;justify-content:space-between;align-items:center}</style></head><body>'
-    +'<div class="hbar">ORÇAMENTO</div>'
-    +'<div class="top"><div class="ci"><b>AZ REMANUFATURADOS</b><br>Razão Social: ANTONIO ANDERLE PRANTE ME<br>CNPJ: 23.454.801/0001-22<br>IE: 9070624491<br>Serviços: Remanufatura / Motores de Partida e Alternadores<br>E-mail: az@azremanufaturados.com.br<br>Fone: (41) 98414-4940 / 3016-9263<br>Endereço: Rua Iapó 782</div><img src="'+LOGO_DATA+'" class="logo" /></div>'
-    +'<div class="crow"><div><span class="fl">CLIENTE:</span><span class="fv">'+cliente+'</span></div><div><span class="fl">DATA:</span><span class="fv">'+dataFmt+'</span></div></div>'
-    +'<table><thead><tr><th style="text-align:left">DESCRIÇÃO</th><th style="text-align:center;width:70px">QTD</th><th style="text-align:right;width:120px;padding-right:12px">VALOR</th></tr></thead><tbody>'+rows+'</tbody></table>'
-    +'<div class="foot"><div><span class="fl">OBSERVAÇÕES:</span><span class="fv" style="min-width:220px">'+obs+'</span></div><div style="font-weight:700;font-size:14px">TOTAL: <span style="border-bottom:1.5px solid #333;display:inline-block;min-width:140px;padding-bottom:2px">'+totalFmt+'</span></div></div>'
-    +'</body></html>';
-  const w=window.open('','_blank','width=794,height=1123');
-  w.document.write(html);w.document.close();w.focus();
-  setTimeout(()=>{w.print();},700);
-  closeOrcamentoModal();
-  showToast('Orcamento gerado!');
-}
-// ===== FIM =====
-
-document.querySelectorAll('.overlay').forEach(o=>{o.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});});
-document.addEventListener('keydown', e => { if(e.key==='Enter' && document.getElementById('loginPage').style.display!=='none') doLogin(); });
-
-if (sessionStorage.getItem('az_logged')) bootApp();
 </script>
 </body>
 </html>
-<!-- build 1779560902 -->
