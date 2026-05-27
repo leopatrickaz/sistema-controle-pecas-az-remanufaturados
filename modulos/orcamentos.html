@@ -264,12 +264,11 @@ async function gerarOrcamentoPDF() {
   div.id = 'orc-render';
   div.style.cssText = 'position:fixed;left:-9999px;top:0;width:794px;background:#f0f0f0;font-family:Arial,sans-serif;color:#1a1a1a';
 
-  // Helper: campo com texto sentado na linha
+  // Helper: texto com linha embaixo — border no próprio elemento
   const campo = (val, w) =>
-    '<div style="display:inline-flex;flex-direction:column;justify-content:flex-end;width:' + w + 'px;vertical-align:bottom">'
-  + '<div style="font-size:12.5px;line-height:1;padding-bottom:3px">' + (val || '&nbsp;') + '</div>'
-  + '<div style="border-bottom:1.5px solid #444;width:100%"></div>'
-  + '</div>';
+    '<span style="display:inline-block;width:' + w + 'px;border-bottom:1.5px solid #444;font-size:12.5px;padding-bottom:1px;vertical-align:bottom">'
+  + (val || '&nbsp;')
+  + '</span>';
 
   div.innerHTML =
     '<div style="background:#1a1a1a;color:#fff;text-align:center;padding:16px;font-size:22px;font-weight:700;letter-spacing:3px">ORÇAMENTO</div>'
