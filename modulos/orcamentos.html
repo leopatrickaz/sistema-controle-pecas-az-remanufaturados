@@ -274,26 +274,33 @@ async function gerarOrcamentoPDF() {
   div.innerHTML =
     '<div style="background:#1a1a1a;color:#fff;text-align:center;padding:16px;font-size:22px;font-weight:700;letter-spacing:3px">ORÇAMENTO</div>'
   + '<div style="background:#fff;padding:28px 32px 32px">'
-  + '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #ccc">'
+  // Seção empresa: texto à esquerda, logo à direita centralizada
+  + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #ccc">'
   + '<div style="font-size:11.5px;line-height:1.85"><b style="font-size:13px;display:block;margin-bottom:4px">AZ REMANUFATURADOS</b>'
   + 'Razão Social: ANTONIO ANDERLE PRANTE ME<br>CNPJ: 23.454.801/0001-22<br>IE: 9070624491<br>'
   + 'Serviços: Remanufatura / Motores de Partida e Alternadores<br>'
   + 'E-mail: az@azremanufaturados.com.br<br>Fone: (41) 98414-4940 / 3016-9263<br>Endereço: Rua Iapó 782</div>'
-  + '<img src="' + LOGO_DATA + '" style="width:150px;height:auto;margin-top:4px" crossorigin="anonymous"/>'
+  + '<img src="' + LOGO_DATA + '" style="width:180px;height:auto" crossorigin="anonymous"/>'
   + '</div>'
-  + '<div style="display:flex;align-items:flex-end;gap:32px;margin-bottom:22px">'
-  + '<div style="display:flex;align-items:flex-end;gap:8px"><span style="font-weight:700;font-size:12.5px">CLIENTE:</span>' + campo(cliente, 240) + '</div>'
-  + '<div style="display:flex;align-items:flex-end;gap:8px"><span style="font-weight:700;font-size:12.5px">DATA:</span>' + campo(dataFmt, 140) + '</div>'
+  // CLIENTE (linha 1) — sozinho
+  + '<div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:18px">'
+  + '<span style="font-weight:700;font-size:12.5px">CLIENTE:</span>'
+  + '<div style="flex:1"><div style="font-size:12.5px;min-height:18px">' + cliente + '</div><div style="border-bottom:1.5px solid #444"></div></div>'
   + '</div>'
+  // Tabela
   + '<table style="width:100%;border-collapse:collapse;margin-bottom:22px">'
   + '<thead><tr style="background:#1a1a1a">'
   + '<th style="padding:10px 14px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;text-align:center;color:#fff;border:1px solid #444">DESCRIÇÃO</th>'
   + '<th style="padding:10px 14px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;text-align:center;color:#fff;border:1px solid #444;width:80px">QTD</th>'
   + '<th style="padding:10px 14px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;text-align:center;color:#fff;border:1px solid #444;width:150px">VALOR</th>'
   + '</tr></thead><tbody>' + rows + '</tbody></table>'
+  // OBSERVAÇÕES e TOTAL + DATA na mesma linha
   + '<div style="display:flex;justify-content:space-between;align-items:flex-end">'
-  + '<div style="display:flex;align-items:flex-end;gap:8px"><span style="font-weight:700;font-size:12.5px">OBSERVAÇÕES:</span>' + campo(obs, 220) + '</div>'
-  + '<div style="display:flex;align-items:flex-end;gap:8px"><span style="font-weight:700;font-size:13.5px">TOTAL:</span>' + campo(totalFmt, 160) + '</div>'
+  + '<div style="display:flex;align-items:flex-end;gap:8px"><span style="font-weight:700;font-size:12.5px">OBSERVAÇÕES:</span><div style="width:220px"><div style="font-size:12.5px;min-height:18px">' + obs + '</div><div style="border-bottom:1.5px solid #444"></div></div></div>'
+  + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">'
+  + '<div style="display:flex;align-items:flex-end;gap:8px"><span style="font-weight:700;font-size:12.5px">DATA:</span><div style="width:140px"><div style="font-size:12.5px;min-height:18px">' + dataFmt + '</div><div style="border-bottom:1.5px solid #444"></div></div></div>'
+  + '<div style="display:flex;align-items:flex-end;gap:8px"><span style="font-weight:700;font-size:13.5px">TOTAL:</span><div style="width:160px"><div style="font-size:13.5px;font-weight:600;min-height:18px">' + totalFmt + '</div><div style="border-bottom:1.5px solid #444"></div></div></div>'
+  + '</div>'
   + '</div>'
   + '</div>';
 
