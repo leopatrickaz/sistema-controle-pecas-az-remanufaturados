@@ -283,10 +283,10 @@ async function gerarOrcamentoPDF() {
   + '<img src="' + LOGO_DATA + '" style="width:180px;height:auto" crossorigin="anonymous"/>'
   + '</div>'
   + '</div>'
-  // CLIENTE + DATA na mesma linha
-  + '<div style="display:flex;align-items:flex-end;gap:32px;margin-bottom:22px">'
-  + '<div style="display:flex;align-items:flex-end;gap:8px"><span style="font-weight:700;font-size:12.5px">CLIENTE:</span><div style="width:240px"><div style="font-size:12.5px;min-height:18px">' + cliente + '</div><div style="border-bottom:1.5px solid #444"></div></div></div>'
-  + '<div style="display:flex;align-items:flex-end;gap:8px"><span style="font-weight:700;font-size:12.5px">DATA:</span><div style="width:140px"><div style="font-size:12.5px;min-height:18px">' + dataFmt + '</div><div style="border-bottom:1.5px solid #444"></div></div></div>'
+  // CLIENTE + DATA na mesma linha, DATA alinhada com TOTAL
+  + '<div style="display:flex;align-items:flex-end;margin-bottom:22px">'
+  + '<div style="display:flex;align-items:flex-end;gap:8px;flex:1"><span style="font-weight:700;font-size:12.5px">CLIENTE:</span><div style="width:240px"><div style="font-size:12.5px;min-height:18px">' + cliente + '</div><div style="border-bottom:1.5px solid #444"></div></div></div>'
+  + '<div style="display:flex;align-items:flex-end;gap:8px;width:230px;flex-shrink:0"><span style="font-weight:700;font-size:12.5px">DATA:</span><div style="width:160px"><div style="font-size:12.5px;min-height:18px">' + dataFmt + '</div><div style="border-bottom:1.5px solid #444"></div></div></div>'
   + '</div>'
   + '<table style="width:100%;border-collapse:collapse;margin-bottom:22px">'
   + '<thead><tr style="background:#1a1a1a">'
