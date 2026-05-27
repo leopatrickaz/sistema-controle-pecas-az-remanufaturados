@@ -251,42 +251,64 @@ async function gerarOrcamentoPDF() {
   let rows = '';
   for (let i = 0; i < 8; i++) {
     const it = itens[i] || null;
-    const bg = i % 2 === 0 ? '#f3f4f6' : '#ffffff';
+    const bg = i % 2 === 0 ? '#dde3f5' : '#eef1fb';
     rows += '<tr style="background:' + bg + ';-webkit-print-color-adjust:exact">'
-      + '<td style="padding:9px 14px;font-size:13px;border:1px solid #d1d5db;text-align:center">' + (it ? it.desc : '&nbsp;') + '</td>'
-      + '<td style="padding:9px 8px;font-size:13px;text-align:center;border:1px solid #d1d5db;width:80px">' + (it ? it.qtd : '&nbsp;') + '</td>'
-      + '<td style="padding:9px 14px;font-size:13px;text-align:center;border:1px solid #d1d5db;width:150px">' + (it ? brl2(it.sub) : '&nbsp;') + '</td>'
+      + '<td style="padding:9px 16px;font-size:13px;border:1px solid #b0b8d4;text-align:center">' + (it ? it.desc : '&nbsp;') + '</td>'
+      + '<td style="padding:9px 8px;font-size:13px;text-align:center;border:1px solid #b0b8d4;width:75px">' + (it ? it.qtd : '&nbsp;') + '</td>'
+      + '<td style="padding:9px 16px;font-size:13px;text-align:center;border:1px solid #b0b8d4;width:145px">' + (it ? brl2(it.sub) : '&nbsp;') + '</td>'
       + '</tr>';
   }
 
   // Monta o HTML do orçamento em div oculto para captura
   const div = document.createElement('div');
   div.id = 'orc-render';
-  div.style.cssText = 'position:fixed;left:-9999px;top:0;width:794px;background:#fff;font-family:Arial,sans-serif;color:#1a1a1a';
+  div.style.cssText = 'position:fixed;left:-9999px;top:0;width:794px;background:#f5f5f5;font-family:Arial,sans-serif;color:#1a1a1a';
   div.innerHTML =
-    '<div style="background:#1a1a1a;color:#fff;text-align:center;padding:16px;font-size:22px;font-weight:700;letter-spacing:3px">ORÇAMENTO</div>'
-  + '<div style="padding:28px 32px">'
-  + '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #ccc">'
-  + '<div style="font-size:11.5px;line-height:1.85"><b style="font-size:13px;display:block;margin-bottom:4px">AZ REMANUFATURADOS</b>'
-  + 'Razão Social: ANTONIO ANDERLE PRANTE ME<br>CNPJ: 23.454.801/0001-22<br>IE: 9070624491<br>'
+  // Barra preta título
+    '<div style="background:#1a1a1a;color:#fff;text-align:center;padding:16px;font-size:20px;font-weight:700;letter-spacing:3px">ORÇAMENTO</div>'
+  // Bloco branco principal
+  + '<div style="background:#fff;margin:0;padding:28px 36px 36px 36px">'
+  // Linha separadora topo
+  + '<div style="border-top:1px solid #ccc;margin-bottom:18px"></div>'
+  // Seção empresa + logo
+  + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'
+  + '<b style="font-size:13px">AZ REMANUFATURADOS</b>'
+  + '</div>'
+  + '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px">'
+  + '<div style="font-size:11.5px;line-height:1.9;color:#222">'
+  + 'Razão Social: ANTONIO ANDERLE PRANTE ME<br>'
+  + 'CNPJ: 23.454.801/0001-22<br>'
+  + 'IE: 9070624491<br>'
   + 'Serviços: Remanufatura / Motores de Partida e Alternadores<br>'
-  + 'E-mail: az@azremanufaturados.com.br<br>Fone: (41) 98414-4940 / 3016-9263<br>Endereço: Rua Iapó 782</div>'
-  + '<img src="' + LOGO_DATA + '" style="width:140px;height:auto" crossorigin="anonymous"/>'
+  + 'E-mail: az@azremanufaturados.com.br<br>'
+  + 'Fone: (41) 98414-4940 / 3016-9263<br>'
+  + 'Endereço: Rua Iapó 782'
   + '</div>'
-  + '<div style="display:flex;gap:48px;margin-bottom:22px">'
-  + '<div><span style="font-weight:700;font-size:12.5px;margin-right:6px">CLIENTE:</span><span style="border-bottom:1.5px solid #333;display:inline-block;min-width:170px;padding-bottom:2px;font-size:12.5px">' + cliente + '</span></div>'
-  + '<div><span style="font-weight:700;font-size:12.5px;margin-right:6px">DATA:</span><span style="border-bottom:1.5px solid #333;display:inline-block;min-width:170px;padding-bottom:2px;font-size:12.5px">' + dataFmt + '</span></div>'
+  + '<img src="' + LOGO_DATA + '" style="width:160px;height:auto;margin-top:4px" crossorigin="anonymous"/>'
   + '</div>'
-  + '<table style="width:100%;border-collapse:collapse;margin-bottom:22px">'
+  // Linha separadora inferior empresa
+  + '<div style="border-top:1px solid #ccc;margin-bottom:22px"></div>'
+  // CLIENTE e DATA
+  + '<div style="display:flex;align-items:center;margin-bottom:24px;gap:0">'
+  + '<span style="font-weight:700;font-size:12.5px;margin-right:8px">CLIENTE:</span>'
+  + '<span style="border-bottom:1.5px solid #555;display:inline-block;width:260px;padding-bottom:2px;font-size:12.5px;margin-right:60px">' + cliente + '</span>'
+  + '<span style="font-weight:700;font-size:12.5px;margin-right:8px">DATA:</span>'
+  + '<span style="border-bottom:1.5px solid #555;display:inline-block;width:140px;padding-bottom:2px;font-size:12.5px">' + dataFmt + '</span>'
+  + '</div>'
+  // Tabela
+  + '<table style="width:100%;border-collapse:collapse;margin-bottom:28px;border:1px solid #999">'
   + '<thead><tr style="background:#1a1a1a">'
-  + '<th style="padding:10px 14px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;text-align:center;color:#fff;border:1px solid #444">DESCRIÇÃO</th>'
-  + '<th style="padding:10px 14px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;text-align:center;color:#fff;border:1px solid #444;width:80px">QTD</th>'
-  + '<th style="padding:10px 14px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;text-align:center;color:#fff;border:1px solid #444;width:150px">VALOR</th>'
+  + '<th style="padding:10px 16px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;text-align:center;color:#fff;border:1px solid #444">DESCRIÇÃO</th>'
+  + '<th style="padding:10px 10px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;text-align:center;color:#fff;border:1px solid #444;width:75px">QTD</th>'
+  + '<th style="padding:10px 16px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;text-align:center;color:#fff;border:1px solid #444;width:145px">VALOR</th>'
   + '</tr></thead><tbody>' + rows + '</tbody></table>'
-  + '<div style="display:flex;justify-content:space-between;align-items:flex-end">'
-  + '<div><span style="font-weight:700;font-size:12.5px;margin-right:6px">OBSERVAÇÕES:</span><span style="border-bottom:1.5px solid #333;display:inline-block;min-width:200px;padding-bottom:2px;font-size:12.5px">' + obs + '</span></div>'
-  + '<div style="font-weight:700;font-size:14px">TOTAL:&nbsp;<span style="border-bottom:1.5px solid #333;display:inline-block;min-width:150px;padding-bottom:2px;text-align:center;font-size:14px">' + totalFmt + '</span></div>'
+  // OBSERVAÇÕES e TOTAL
+  + '<div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:32px">'
+  + '<div><span style="font-weight:700;font-size:12px;margin-right:8px">OBSERVAÇÕES:</span><span style="border-bottom:1.5px solid #555;display:inline-block;min-width:220px;padding-bottom:2px;font-size:12px">' + obs + '</span></div>'
+  + '<div style="font-weight:700;font-size:13.5px">TOTAL:&nbsp;<span style="border-bottom:1.5px solid #555;display:inline-block;min-width:145px;padding-bottom:2px;text-align:center;font-size:13.5px">' + totalFmt + '</span></div>'
   + '</div>'
+  // Espaço inferior
+  + '<div style="height:40px"></div>'
   + '</div>';
 
   document.body.appendChild(div);
