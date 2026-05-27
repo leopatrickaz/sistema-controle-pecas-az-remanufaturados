@@ -8,6 +8,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Orçamentos — AZ Remanufaturados</title>
   <link rel="stylesheet" href="/shared/styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -226,7 +228,7 @@ function calcOrcTotal() {
   return total;
 }
 
-function gerarOrcamentoPDF() {
+async function gerarOrcamentoPDF() {
   const cliente = document.getElementById('orcCliente').value.trim();
   if (!cliente) { showToast('Informe o nome do cliente', 'error'); return; }
 
@@ -250,74 +252,82 @@ function gerarOrcamentoPDF() {
   for (let i = 0; i < 8; i++) {
     const it = itens[i] || null;
     const bg = i % 2 === 0 ? '#f3f4f6' : '#ffffff';
-    rows += '<tr style="background:' + bg + '">'
-      + '<td style="padding:10px 12px;font-size:14px;border-bottom:1px solid #e5e7eb;border-right:1px solid #ccc;text-align:left">' + (it ? it.desc : '') + '</td>'
-      + '<td style="padding:10px 8px;font-size:13px;text-align:center;border-bottom:1px solid #e5e7eb;border-right:1px solid #ccc;width:80px">' + (it ? it.qtd : '') + '</td>'
-      + '<td style="padding:10px 12px;font-size:13px;text-align:center;border-bottom:1px solid #e5e7eb;width:140px">' + (it ? brl2(it.sub) : '') + '</td>'
+    rows += '<tr style="background:' + bg + ';-webkit-print-color-adjust:exact">'
+      + '<td style="padding:9px 14px;font-size:13px;border:1px solid #d1d5db;text-align:center">' + (it ? it.desc : '&nbsp;') + '</td>'
+      + '<td style="padding:9px 8px;font-size:13px;text-align:center;border:1px solid #d1d5db;width:80px">' + (it ? it.qtd : '&nbsp;') + '</td>'
+      + '<td style="padding:9px 14px;font-size:13px;text-align:center;border:1px solid #d1d5db;width:150px">' + (it ? brl2(it.sub) : '&nbsp;') + '</td>'
       + '</tr>';
   }
 
-  const html = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/>'
-    + '<meta name="viewport" content="width=device-width,initial-scale=1"/>'
-    + '<title>Orçamento — AZ Remanufaturados</title>'
-    + '<style>'
-    + '*{margin:0;padding:0;box-sizing:border-box}'
-    + 'body{font-family:Arial,sans-serif;background:#e8e8e8;color:#1a1a1a}'
-    + '#toolbar{background:#1e2434;color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}'
-    + '#toolbar span{font-size:13px;opacity:0.8}'
-    + '#toolbar button{background:#3d5afe;color:#fff;border:none;padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}'
-    + '.sheet{background:#fff;width:794px;margin:24px auto 40px;padding:0;box-shadow:0 4px 24px rgba(0,0,0,0.18)}'
-    + '.hbar{background:#1a1a1a;color:#fff;text-align:center;padding:16px;font-size:22px;font-weight:700;letter-spacing:3px;width:100%}'
-    + '.body{padding:28px 32px}'
-    + '.top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #ccc}'
-    + '.ci{font-size:11.5px;line-height:1.85}'
-    + '.ci b{font-size:13px;display:block;margin-bottom:2px}'
-    + '.logo-wrap{width:140px;display:flex;align-items:center;justify-content:flex-end;flex-shrink:0}'
-    + '.logo-wrap img{width:140px;height:auto}'
-    + '.crow{display:flex;gap:48px;margin-bottom:22px}'
-    + '.fl{font-weight:700;font-size:12.5px;margin-right:6px}'
-    + '.fv{border-bottom:1.5px solid #333;display:inline-block;min-width:170px;padding-bottom:2px;font-size:12.5px}'
-    + 'table{width:100%;border-collapse:collapse;margin-bottom:22px}'
-    + 'thead tr{background:#1a1a1a !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}'
-    + 'thead th{padding:10px 14px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;text-align:center;color:#fff;border:1px solid #444}'
-    + 'tbody tr:nth-child(even){background:#f3f4f6 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}'
-    + 'tbody tr:nth-child(odd){background:#fff}'
-    + 'tbody td{padding:10px 14px;font-size:13px;text-align:center;border:1px solid #d1d5db}'
-    + '.foot{display:flex;justify-content:space-between;align-items:flex-end}'
-    + '.foot-total{font-weight:700;font-size:14px;text-align:right}'
-    + '.foot-total span{border-bottom:1.5px solid #333;display:inline-block;min-width:150px;padding-bottom:2px;text-align:center;font-size:14px}'
-    + '@media print{'
-    + '@page{size:A4 portrait;margin:0}'
-    + '#toolbar{display:none!important}'
-    + 'body{background:#fff}'
-    + '.sheet{width:100%;margin:0;box-shadow:none;page-break-after:avoid;page-break-inside:avoid}'
-    + '}'
-    + '@media(max-width:820px){'
-    + '.sheet{width:100%;margin:8px}'
-    + '}'
-    + '</style></head><body>'
-    + '<div id="toolbar"><span>Orçamento gerado — AZ Remanufaturados</span><button onclick="window.print()">🖨 Imprimir / Salvar PDF</button></div>'
-    + '<div class="sheet">'
-    + '<div class="hbar">ORÇAMENTO</div>'
-    + '<div class="body">'
-    + '<div class="top">'
-    + '<div class="ci"><b>AZ REMANUFATURADOS</b>Razão Social: ANTONIO ANDERLE PRANTE ME<br>CNPJ: 23.454.801/0001-22<br>IE: 9070624491<br>Serviços: Remanufatura / Motores de Partida e Alternadores<br>E-mail: az@azremanufaturados.com.br<br>Fone: (41) 98414-4940 / 3016-9263<br>Endereço: Rua Iapó 782</div>'
-    + '<div class="logo-wrap"><img src="' + LOGO_DATA + '" /></div>'
-    + '</div>'
-    + '<div class="crow"><div><span class="fl">CLIENTE:</span><span class="fv">' + cliente + '</span></div><div><span class="fl">DATA:</span><span class="fv">' + dataFmt + '</span></div></div>'
-    + '<table><thead><tr><th>DESCRIÇÃO</th><th style="width:90px">QTD</th><th style="width:150px">VALOR</th></tr></thead><tbody>' + rows + '</tbody></table>'
-    + '<div class="foot"><div><span class="fl">OBSERVAÇÕES:</span><span class="fv" style="min-width:200px">' + obs + '</span></div>'
-    + '<div class="foot-total">TOTAL:&nbsp;<span>' + totalFmt + '</span></div></div>'
-    + '</div></div></body></html>';
+  // Monta o HTML do orçamento em div oculto para captura
+  const div = document.createElement('div');
+  div.id = 'orc-render';
+  div.style.cssText = 'position:fixed;left:-9999px;top:0;width:794px;background:#fff;font-family:Arial,sans-serif;color:#1a1a1a';
+  div.innerHTML =
+    '<div style="background:#1a1a1a;color:#fff;text-align:center;padding:16px;font-size:22px;font-weight:700;letter-spacing:3px">ORÇAMENTO</div>'
+  + '<div style="padding:28px 32px">'
+  + '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #ccc">'
+  + '<div style="font-size:11.5px;line-height:1.85"><b style="font-size:13px;display:block;margin-bottom:4px">AZ REMANUFATURADOS</b>'
+  + 'Razão Social: ANTONIO ANDERLE PRANTE ME<br>CNPJ: 23.454.801/0001-22<br>IE: 9070624491<br>'
+  + 'Serviços: Remanufatura / Motores de Partida e Alternadores<br>'
+  + 'E-mail: az@azremanufaturados.com.br<br>Fone: (41) 98414-4940 / 3016-9263<br>Endereço: Rua Iapó 782</div>'
+  + '<img src="' + LOGO_DATA + '" style="width:140px;height:auto" crossorigin="anonymous"/>'
+  + '</div>'
+  + '<div style="display:flex;gap:48px;margin-bottom:22px">'
+  + '<div><span style="font-weight:700;font-size:12.5px;margin-right:6px">CLIENTE:</span><span style="border-bottom:1.5px solid #333;display:inline-block;min-width:170px;padding-bottom:2px;font-size:12.5px">' + cliente + '</span></div>'
+  + '<div><span style="font-weight:700;font-size:12.5px;margin-right:6px">DATA:</span><span style="border-bottom:1.5px solid #333;display:inline-block;min-width:170px;padding-bottom:2px;font-size:12.5px">' + dataFmt + '</span></div>'
+  + '</div>'
+  + '<table style="width:100%;border-collapse:collapse;margin-bottom:22px">'
+  + '<thead><tr style="background:#1a1a1a">'
+  + '<th style="padding:10px 14px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;text-align:center;color:#fff;border:1px solid #444">DESCRIÇÃO</th>'
+  + '<th style="padding:10px 14px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;text-align:center;color:#fff;border:1px solid #444;width:80px">QTD</th>'
+  + '<th style="padding:10px 14px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;text-align:center;color:#fff;border:1px solid #444;width:150px">VALOR</th>'
+  + '</tr></thead><tbody>' + rows + '</tbody></table>'
+  + '<div style="display:flex;justify-content:space-between;align-items:flex-end">'
+  + '<div><span style="font-weight:700;font-size:12.5px;margin-right:6px">OBSERVAÇÕES:</span><span style="border-bottom:1.5px solid #333;display:inline-block;min-width:200px;padding-bottom:2px;font-size:12.5px">' + obs + '</span></div>'
+  + '<div style="font-weight:700;font-size:14px">TOTAL:&nbsp;<span style="border-bottom:1.5px solid #333;display:inline-block;min-width:150px;padding-bottom:2px;text-align:center;font-size:14px">' + totalFmt + '</span></div>'
+  + '</div>'
+  + '</div>';
 
-  const w = window.open('', '_blank');
-  if (!w) { showToast('Permita pop-ups para gerar o orçamento', 'error'); return; }
-  w.document.write(html);
-  w.document.close();
-  w.focus();
-
+  document.body.appendChild(div);
+  showLoading(true);
   closeOrcamentoModal();
-  showToast('Orçamento gerado!');
+
+  try {
+    // Aguarda imagem carregar
+    const imgEl = div.querySelector('img');
+    await new Promise(res => {
+      if (imgEl.complete) { res(); return; }
+      imgEl.onload = res;
+      imgEl.onerror = res;
+      setTimeout(res, 2000);
+    });
+
+    const canvas = await html2canvas(div, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#ffffff',
+      width: 794,
+      windowWidth: 794
+    });
+
+    const imgData = canvas.toDataURL('image/jpeg', 0.97);
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
+    const ratio = canvas.height / canvas.width;
+    const imgH  = pageW * ratio;
+    pdf.addImage(imgData, 'JPEG', 0, 0, pageW, Math.min(imgH, pageH));
+    pdf.save('Orcamento_AZ_' + cliente.replace(/\s+/g, '_') + '_' + dataFmt.replace(/\//g, '-') + '.pdf');
+    showToast('PDF gerado com sucesso!');
+  } catch(e) {
+    showToast('Erro ao gerar PDF: ' + e.message, 'error');
+  } finally {
+    document.body.removeChild(div);
+    showLoading(false);
+  }
 }
 
 // ── Fechar overlay ao clicar fora ────────────────────────────
