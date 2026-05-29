@@ -257,7 +257,7 @@ async function gerarOrcamentoPDF() {
     rows += '<tr style="background:' + bg + ';-webkit-print-color-adjust:exact">'
       + '<td style="padding:9px 14px;font-size:13px;border:1px solid #d1d5db;text-align:center">' + (it ? it.desc : '&nbsp;') + '</td>'
       + '<td style="padding:9px 8px;font-size:13px;text-align:center;border:1px solid #d1d5db;width:80px">' + (it ? it.qtd : '&nbsp;') + '</td>'
-      + '<td style="padding:9px 14px;font-size:13px;text-align:center;border:1px solid #d1d5db;width:150px">' + (it ? brl2(it.sub) : '&nbsp;') + '</td>'
+      + '<td style="padding:9px 14px;font-size:13px;text-align:center;border:1px solid #d1d5db;width:150px">' + (it ? brl2(it.val) : '&nbsp;') + '</td>'
       + '</tr>';
   }
 
