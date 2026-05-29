@@ -219,11 +219,12 @@ function removeOrcItem(id) {
 
 function calcOrcTotal() {
   let total = 0;
-  for (let i = 1; i <= _orcItemCount; i++) {
-    const qtd = parseFloat(document.getElementById('orc-qtd-' + i)?.value) || 0;
-    const val = parseFloat(document.getElementById('orc-val-' + i)?.value) || 0;
+  document.querySelectorAll('#orcItens > div').forEach(row => {
+    const id  = row.id.replace('orc-row-', '');
+    const qtd = parseFloat(document.getElementById('orc-qtd-' + id)?.value) || 0;
+    const val = parseFloat(document.getElementById('orc-val-' + id)?.value) || 0;
     total += qtd * val;
-  }
+  });
   document.getElementById('orcTotal').value = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   return total;
 }
@@ -240,12 +241,13 @@ async function gerarOrcamentoPDF() {
   const brl2 = v => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
   const itens = [];
-  for (let i = 1; i <= _orcItemCount; i++) {
-    const desc = document.getElementById('orc-desc-' + i)?.value.trim();
-    const qtd  = parseFloat(document.getElementById('orc-qtd-' + i)?.value) || 0;
-    const val  = parseFloat(document.getElementById('orc-val-' + i)?.value) || 0;
+  document.querySelectorAll('#orcItens > div').forEach(row => {
+    const id   = row.id.replace('orc-row-', '');
+    const desc = document.getElementById('orc-desc-' + id)?.value.trim();
+    const qtd  = parseFloat(document.getElementById('orc-qtd-' + id)?.value) || 0;
+    const val  = parseFloat(document.getElementById('orc-val-' + id)?.value) || 0;
     if (desc) itens.push({ desc, qtd, val, sub: qtd * val });
-  }
+  });
   if (!itens.length) { showToast('Adicione pelo menos um item', 'error'); return; }
 
   let rows = '';
