@@ -93,7 +93,7 @@
      MODAL ORÇAMENTO
 ════════════════════════════════════════════ -->
 <div class="overlay" id="orcamentoOverlay">
-  <div class="modal" style="max-width:620px">
+  <div class="modal" style="max-width:620px;max-height:90vh;overflow-y:auto;width:calc(100vw - 32px)">
     <div class="modal-header">
       <span class="modal-title">Novo orçamento</span>
       <button class="modal-close" onclick="closeOrcamentoModal()">✕</button>
@@ -106,7 +106,7 @@
       </div>
       <div class="form-field">
         <label class="form-label">Data *</label>
-        <input type="date" id="orcData" style="width:100%" />
+        <input type="date" id="orcData" style="width:100%;max-width:100%;box-sizing:border-box" />
       </div>
 
       <!-- cabeçalho da tabela de itens -->
