@@ -336,6 +336,18 @@ async function gerarOrcamentoPDF() {
     const dataNome = dataFmt.replace(/\//g, '.');
     const nomeArquivo = 'Orçamento - ' + cliente + ' ' + dataNome + '.pdf';
     const pdfBlob = pdf.output('blob');
+
+    // iOS Safari: usa Web Share API para compartilhar o arquivo direto, sem blob URL
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS && navigator.share) {
+      const file = new File([pdfBlob], nomeArquivo, { type: 'application/pdf' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: nomeArquivo });
+        return;
+      }
+    }
+
+    // Desktop e outros: download direto
     const blobUrl = URL.createObjectURL(pdfBlob);
     const a = document.createElement('a');
     a.href = blobUrl;
