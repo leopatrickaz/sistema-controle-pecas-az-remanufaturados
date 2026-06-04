@@ -337,16 +337,13 @@ async function gerarOrcamentoPDF() {
     const nomeArquivo = 'Orçamento - ' + cliente + ' ' + dataNome + '.pdf';
     const pdfBlob = pdf.output('blob');
     const blobUrl = URL.createObjectURL(pdfBlob);
-
-    // Abre em nova aba limpa — usuário compartilha o arquivo direto do visualizador
-    const newTab = window.open('', '_blank');
-    newTab.document.write(
-      '<html><head><title>' + nomeArquivo + '</title></head><body style="margin:0">' +
-      '<embed src="' + blobUrl + '" type="application/pdf" width="100%" height="100%" />' +
-      '</body></html>'
-    );
-    newTab.document.close();
-    setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = nomeArquivo;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
     showToast('PDF gerado com sucesso!');
   } catch(e) {
     showToast('Erro ao gerar PDF: ' + e.message, 'error');
