@@ -334,7 +334,15 @@ async function gerarOrcamentoPDF() {
     const imgH  = pageW * ratio;
     pdf.addImage(imgData, 'JPEG', 0, 0, pageW, Math.min(imgH, pageH));
     const nomeArquivo = 'Orçamento - ' + cliente + ' ' + dataFmt + '.pdf';
-    pdf.save(nomeArquivo);
+    const pdfBlob = pdf.output('blob');
+    const blobUrl = URL.createObjectURL(pdfBlob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = nomeArquivo;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
     showToast('PDF gerado com sucesso!');
   } catch(e) {
     showToast('Erro ao gerar PDF: ' + e.message, 'error');
