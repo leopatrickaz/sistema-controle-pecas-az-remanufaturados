@@ -333,7 +333,7 @@ async function gerarOrcamentoPDF() {
     const ratio = canvas.height / canvas.width;
     const imgH  = pageW * ratio;
     pdf.addImage(imgData, 'JPEG', 0, 0, pageW, Math.min(imgH, pageH));
-    const nomeArquivo = 'Orcamento ' + cliente + ' ' + dataFmt + '.pdf';
+    const nomeArquivo = 'Orçamento - ' + cliente + ' ' + dataFmt + '.pdf';
     pdf.save(nomeArquivo);
     showToast('PDF gerado com sucesso!');
   } catch(e) {
