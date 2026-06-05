@@ -73,11 +73,14 @@
         <button class="btn btn-primary btn-lg" style="margin-bottom:24px" onclick="openOrcamentoModal()">+ Novo orçamento</button>
 
         <div class="card">
-          <div class="card-body" style="text-align:center;padding:48px 24px">
-            <div style="font-size:48px;margin-bottom:12px">📋</div>
-            <div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px">Gere um orçamento</div>
-            <div style="font-size:13px;color:var(--muted);max-width:360px;margin:0 auto;line-height:1.6">
-              Preencha os dados do cliente e os itens para gerar o PDF do orçamento.
+          <div class="card-header">
+            <span class="card-title">Histórico de orçamentos</span>
+          </div>
+          <div class="card-body-p0 divide-y" id="historicoList">
+            <div class="empty-state" id="historicoEmpty">
+              <i>📋</i>
+              <div style="font-weight:600;margin-bottom:4px">Nenhum orçamento gerado ainda</div>
+              <div style="font-size:12px">Os orçamentos gerados aparecerão aqui</div>
             </div>
           </div>
         </div>
@@ -337,6 +340,10 @@ async function gerarOrcamentoPDF() {
     const nomeArquivo = 'Orçamento ' + cliente + ' - ' + dataNome + '.pdf';
     const pdfBlob = pdf.output('blob');
 
+    // Salvar no histórico
+    const pdfBase64 = btoa(String.fromCharCode(...new Uint8Array(await pdfBlob.arrayBuffer())));
+    salvarNoHistorico(cliente, dataFmt, pdfBase64, nomeArquivo);
+
     // iOS Safari: usa Web Share API para compartilhar o arquivo direto, sem blob URL
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     if (isIOS && navigator.share) {
@@ -365,7 +372,85 @@ async function gerarOrcamentoPDF() {
   }
 }
 
-// ── Fechar overlay ao clicar fora ────────────────────────────
+// ── Histórico de orçamentos ──────────────────────────────────
+const HISTORICO_KEY = 'az_orcamentos_historico';
+
+function loadHistorico() {
+  try { return JSON.parse(localStorage.getItem(HISTORICO_KEY) || '[]'); }
+  catch { return []; }
+}
+
+function saveHistorico(lista) {
+  localStorage.setItem(HISTORICO_KEY, JSON.stringify(lista));
+}
+
+function renderHistorico() {
+  const lista = loadHistorico();
+  const container = document.getElementById('historicoList');
+  const empty = document.getElementById('historicoEmpty');
+  if (!lista.length) {
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+  // Renderiza apenas os itens (mantém o empty-state no DOM)
+  const items = container.querySelectorAll('.orc-hist-item');
+  items.forEach(el => el.remove());
+  lista.slice().reverse().forEach((item, idx) => {
+    const realIdx = lista.length - 1 - idx;
+    const row = document.createElement('div');
+    row.className = 'item-row orc-hist-item';
+    row.style.cursor = 'pointer';
+    row.innerHTML = `
+      <div style="flex:1;min-width:0" onclick="abrirOrcamento(${realIdx})">
+        <div class="item-name">${item.cliente}</div>
+        <div class="item-meta">${item.data}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="btn btn-outline btn-sm" onclick="abrirOrcamento(${realIdx})">↓ Abrir</button>
+        <button class="btn btn-danger-ghost btn-sm btn-icon" onclick="excluirOrcamento(${realIdx})">✕</button>
+      </div>`;
+    container.appendChild(row);
+  });
+}
+
+function salvarNoHistorico(cliente, data, pdfBase64, nomeArquivo) {
+  const lista = loadHistorico();
+  lista.push({ cliente, data, pdfBase64, nomeArquivo, geradoEm: new Date().toISOString() });
+  saveHistorico(lista);
+  renderHistorico();
+}
+
+function abrirOrcamento(idx) {
+  const lista = loadHistorico();
+  const item = lista[idx];
+  if (!item) return;
+  const blob = new Blob([Uint8Array.from(atob(item.pdfBase64), c => c.charCodeAt(0))], { type: 'application/pdf' });
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  if (isIOS && navigator.share) {
+    const file = new File([blob], item.nomeArquivo, { type: 'application/pdf' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({ files: [file], title: item.nomeArquivo });
+      return;
+    }
+  }
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = item.nomeArquivo;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 100);
+}
+
+function excluirOrcamento(idx) {
+  const lista = loadHistorico();
+  lista.splice(idx, 1);
+  saveHistorico(lista);
+  renderHistorico();
+}
+
+// Inicializar histórico
+renderHistorico();
 document.querySelectorAll('.overlay').forEach(o => {
   o.addEventListener('click', function(e) {
     if (e.target === this) this.classList.remove('open');
