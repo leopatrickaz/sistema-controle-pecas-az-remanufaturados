@@ -265,7 +265,7 @@ async function gerarOrcamentoPDF() {
   // Monta o HTML do orçamento em div oculto para captura
   const div = document.createElement('div');
   div.id = 'orc-render';
-  div.style.cssText = 'position:fixed;left:-9999px;top:0;width:794px;background:#f0f0f0;font-family:Arial,sans-serif;color:#1a1a1a';
+  div.style.cssText = 'position:fixed;left:-9999px;top:0;width:794px;background:#f0f0f0;font-family:Arial,sans-serif;color:#1a1a1a;font-size:16px;-webkit-text-size-adjust:none;text-size-adjust:none';
 
   const campo = (val, w) =>
     '<div style="display:inline-block;width:' + w + 'px;height:20px;position:relative;vertical-align:bottom">'
