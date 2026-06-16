@@ -324,3 +324,8 @@ select   { padding: 0 32px 0 12px; appearance: none; -webkit-appearance: none; b
   .form-grid2, .info-grid { grid-template-columns: 1fr; }
   .form-grid-auto   { grid-template-columns: 1fr 70px; }
 }
+
+/* Remove setas do input number para centralizar texto */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance: textfield; }

@@ -283,7 +283,7 @@ function addOrcItem() {
   row.style.cssText = 'display:grid;grid-template-columns:1fr 60px 100px 32px;gap:4px;padding:3px 0;border-top:1px solid #f0f0f0;align-items:center';
   row.innerHTML =
     '<input placeholder="Descrição" style="height:32px;font-size:12px;border:1px solid #e2e5ec;border-radius:6px;padding:0 8px;width:100%" oninput="calcOrcTotal()" id="orc-desc-' + id + '" />' +
-    '<input type="number" value="1" min="1" style="height:32px;font-size:12px;border:1px solid #e2e5ec;border-radius:6px;padding:0 6px;text-align:center;width:100%" oninput="calcOrcTotal()" id="orc-qtd-' + id + '" />' +
+    '<input type="number" value="1" min="1" style="height:32px;font-size:12px;border:1px solid #e2e5ec;border-radius:6px;padding:0;text-align:center;width:100%" oninput="calcOrcTotal()" id="orc-qtd-' + id + '" />' +
     '<input type="number" placeholder="0.00" min="0" step="0.01" style="height:32px;font-size:12px;border:1px solid #e2e5ec;border-radius:6px;padding:0 6px;text-align:right;width:100%" oninput="calcOrcTotal()" id="orc-val-' + id + '" />' +
     '<button type="button" onclick="removeOrcItem(' + id + ')" style="width:28px;height:28px;background:none;border:1px solid #fee2e2;border-radius:6px;color:#ef4444;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center">✕</button>';
   document.getElementById('orcItens').appendChild(row);
