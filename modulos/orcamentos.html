@@ -238,8 +238,8 @@ async function gerarOrcamentoPDF() {
   const dataFmt = dp.length === 3 ? dp[2] + '/' + dp[1] + '/' + dp[0] : document.getElementById('orcData').value;
   const obs   = document.getElementById('orcObs').value.trim();
   const total = calcOrcTotal();
-  const totalFmt = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-  const brl2 = v => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  const totalFmt = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }).replace('R$ ', 'R$\u202F');
+  const brl2 = v => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }).replace('R$ ', 'R$\u202F');
 
   const itens = [];
   document.querySelectorAll('#orcItens > div').forEach(row => {
