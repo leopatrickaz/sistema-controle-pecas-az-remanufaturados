@@ -284,7 +284,6 @@ function addOrcItem() {
     q => _produtos.filter(p => p.nome.toLowerCase().includes(q)),
     p => {
       descInput.value = p.nome;
-      if (p.preco_venda) valInput.value = p.preco_venda;
       calcOrcTotal();
     }
   );
