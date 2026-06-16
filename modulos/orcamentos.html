@@ -191,6 +191,7 @@ async function loadAutoCompleteData() {
     ]);
     _clientes = (empresas || []).map(e => e.nome).filter(Boolean);
     _produtos = (produtos || []).filter(p => p.nome);
+    console.log('Autocomplete: clientes =', _clientes.length, '| produtos =', _produtos.length);
   } catch(e) { console.error('Autocomplete error:', e); }
 }
 loadAutoCompleteData();
