@@ -15,8 +15,8 @@
 
 <div class="app" id="mainApp">
 
-  <!-- SIDEBAR DESKTOP -->
-  <aside class="sidebar">
+  <!-- SIDEBAR DESKTOP (módulos principais) -->
+  <aside class="sidebar" id="mainSidebar">
     <div class="sidebar-logo">
       <div class="logo-icon">⚙</div>
       <div class="logo-text">
@@ -24,10 +24,7 @@
         <div class="logo-sub">Remanufaturados</div>
       </div>
     </div>
-    <button class="nav-link" id="nav-dashboard" onclick="navigate('dashboard')">Início</button>
-    <button class="nav-link" id="nav-empresas"  onclick="navigate('empresas')">Empresas</button>
-    <button class="nav-link" id="nav-produtos"  onclick="navigate('produtos')">Produtos</button>
-    <button class="nav-link" id="nav-vendas"    onclick="navigate('vendas')">Vendas</button>
+    <div id="sidebarModulosListDesktop"></div>
     <div class="sidebar-footer">
       <div class="sidebar-user">sistemaaz</div>
       <button class="logout-btn" onclick="AZ_AUTH.logout()">→ Sair</button>
@@ -73,6 +70,14 @@
 
     <!-- CONTEÚDO -->
     <div class="content">
+
+      <!-- TABS DE NAVEGAÇÃO INTERNA -->
+      <div style="display:flex;gap:4px;margin-bottom:24px;border-bottom:2px solid var(--border);padding-bottom:0">
+        <button id="tab-dashboard" onclick="navigate('dashboard')" style="padding:8px 18px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--muted);transition:all 0.15s">Início</button>
+        <button id="tab-empresas"  onclick="navigate('empresas')"  style="padding:8px 18px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--muted);transition:all 0.15s">Empresas</button>
+        <button id="tab-produtos"  onclick="navigate('produtos')"  style="padding:8px 18px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--muted);transition:all 0.15s">Produtos</button>
+        <button id="tab-vendas"    onclick="navigate('vendas')"    style="padding:8px 18px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--muted);transition:all 0.15s">Vendas</button>
+      </div>
 
       <!-- DASHBOARD -->
       <div class="page" id="page-dashboard">
@@ -359,15 +364,20 @@ async function loadAll() {
 function navigate(page, extraId) {
   currentPage = page;
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+
+  // tabs
+  ['dashboard','empresas','produtos','vendas'].forEach(t => {
+    const tab = document.getElementById('tab-' + t);
+    if (tab) {
+      const isActive = t === (page === 'empresa-detail' ? 'empresas' : page);
+      tab.style.color = isActive ? 'var(--primary)' : 'var(--muted)';
+      tab.style.borderBottomColor = isActive ? 'var(--primary)' : 'transparent';
+    }
+  });
 
   const pageId = page === 'empresa-detail' ? 'empresa-detail' : page;
   const el = document.getElementById('page-' + pageId);
   if (el) el.classList.add('active');
-
-  const navId = page === 'empresa-detail' ? 'empresas' : page;
-  const navEl = document.getElementById('nav-' + navId);
-  if (navEl) navEl.classList.add('active');
 
   if (page === 'dashboard')       renderDashboard();
   else if (page === 'empresas')   renderEmpresas();

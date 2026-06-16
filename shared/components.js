@@ -105,10 +105,13 @@ function abrirModulo(arquivo) {
 // ── Renderiza sidebar de módulos (lateral deslizante) ────────
 
 function renderSidebarModulos(moduloAtualId) {
-  const container = document.getElementById('sidebarModulosList');
-  if (!container) return;
+  const containers = [
+    document.getElementById('sidebarModulosList'),
+    document.getElementById('sidebarModulosListDesktop')
+  ].filter(Boolean);
+  if (!containers.length) return;
 
-  container.innerHTML = AZ_CONFIG.modulos.map(m => {
+  const html = AZ_CONFIG.modulos.map(m => {
     const isAtual = m.id === moduloAtualId;
     const badge = !m.ativo
       ? '<span style="font-size:10px;background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);padding:1px 7px;border-radius:999px;margin-left:6px">Em breve</span>'
@@ -133,4 +136,6 @@ function renderSidebarModulos(moduloAtualId) {
         </div>
       </div>`;
   }).join('');
+
+  containers.forEach(c => c.innerHTML = html);
 }
