@@ -191,9 +191,10 @@ async function loadAutoCompleteData() {
     ]);
     _clientes = (empresas || []).map(e => e.nome).filter(Boolean);
     _produtos = (produtos || []).filter(p => p.nome);
-  } catch(e) { /* silencioso */ }
+  } catch(e) { console.error('Autocomplete error:', e); }
 }
 loadAutoCompleteData();
+window.addEventListener('load', loadAutoCompleteData);
 
 function criarAutoComplete(input, getSugestoes, onSelecionar) {
   let dropdown = null;
@@ -238,7 +239,7 @@ function criarAutoComplete(input, getSugestoes, onSelecionar) {
 // ── Modal Orçamento ──────────────────────────────────────────
 let _orcItemCount = 0;
 
-function openOrcamentoModal() {
+async function openOrcamentoModal() {
   _orcItemCount = 0;
   const clienteInput = document.getElementById('orcCliente');
   clienteInput.value = '';
@@ -246,6 +247,9 @@ function openOrcamentoModal() {
   document.getElementById('orcObs').value = '';
   document.getElementById('orcTotal').value = '';
   document.getElementById('orcItens').innerHTML = '';
+
+  // Garante que os dados de autocomplete estejam carregados
+  if (!_clientes.length && !_produtos.length) await loadAutoCompleteData();
 
   // Autocomplete de clientes
   criarAutoComplete(
