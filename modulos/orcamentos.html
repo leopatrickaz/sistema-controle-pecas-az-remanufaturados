@@ -203,36 +203,44 @@ function criarAutoComplete(input, getSugestoes, onSelecionar) {
     if (dropdown) { dropdown.remove(); dropdown = null; }
   }
 
-  input.addEventListener('input', function() {
+  function mostrar(q) {
     fechar();
-    const q = this.value.trim().toLowerCase();
-    if (!q) return;
-    const sugestoes = getSugestoes(q).slice(0, 8);
+    const sugestoes = getSugestoes(q).slice(0, 20);
     if (!sugestoes.length) return;
 
+    const rect = input.getBoundingClientRect();
     dropdown = document.createElement('div');
-    dropdown.style.cssText = 'position:absolute;z-index:9999;background:#fff;border:1px solid #e2e5ec;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.12);width:' + input.offsetWidth + 'px;max-height:200px;overflow-y:auto;top:' + (input.offsetTop + input.offsetHeight) + 'px;left:' + input.offsetLeft + 'px';
+    dropdown.style.cssText = 'position:fixed;z-index:99999;background:#fff;border:1px solid #e2e5ec;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.15);width:' + rect.width + 'px;max-height:220px;overflow-y:auto;top:' + (rect.bottom + 4) + 'px;left:' + rect.left + 'px';
 
     sugestoes.forEach(s => {
       const item = document.createElement('div');
-      item.style.cssText = 'padding:8px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid #f0f0f0';
+      item.style.cssText = 'padding:9px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid #f0f0f0';
       item.textContent = typeof s === 'string' ? s : s.nome;
       item.addEventListener('mousedown', function(e) {
         e.preventDefault();
         onSelecionar(s);
         fechar();
       });
-      item.addEventListener('mouseover', function() { this.style.background = '#f5f7ff'; });
-      item.addEventListener('mouseout', function() { this.style.background = ''; });
+      item.addEventListener('mouseover', function() { this.style.background = '#f0f4ff'; });
+      item.addEventListener('mouseout',  function() { this.style.background = ''; });
       dropdown.appendChild(item);
     });
 
-    input.parentElement.style.position = 'relative';
-    input.parentElement.appendChild(dropdown);
+    document.body.appendChild(dropdown);
+  }
+
+  // Mostra tudo ao focar
+  input.addEventListener('focus', function() {
+    mostrar('');
+  });
+
+  // Filtra conforme digita
+  input.addEventListener('input', function() {
+    mostrar(this.value.trim().toLowerCase());
   });
 
   input.addEventListener('blur', function() {
-    setTimeout(fechar, 150);
+    setTimeout(fechar, 200);
   });
 }
 
@@ -254,7 +262,7 @@ async function openOrcamentoModal() {
   // Autocomplete de clientes
   criarAutoComplete(
     clienteInput,
-    q => _clientes.filter(c => c.toLowerCase().includes(q)),
+    q => q ? _clientes.filter(c => c.toLowerCase().includes(q)) : _clientes,
     nome => { clienteInput.value = nome; }
   );
 
@@ -285,7 +293,7 @@ function addOrcItem() {
   const valInput  = document.getElementById('orc-val-'  + id);
   criarAutoComplete(
     descInput,
-    q => _produtos.filter(p => p.nome.toLowerCase().includes(q)),
+    q => q ? _produtos.filter(p => p.nome.toLowerCase().includes(q)) : _produtos,
     p => {
       descInput.value = p.nome;
       calcOrcTotal();
