@@ -249,6 +249,9 @@ function criarAutoComplete(input, getSugestoes, onSelecionar) {
 let _orcItemCount = 0;
 
 async function openOrcamentoModal() {
+  // Garante que os dados de autocomplete estejam carregados
+  if (!_clientes.length && !_produtos.length) await loadAutoCompleteData();
+
   _orcItemCount = 0;
   const clienteInput = document.getElementById('orcCliente');
   clienteInput.value = '';
@@ -256,9 +259,6 @@ async function openOrcamentoModal() {
   document.getElementById('orcObs').value = '';
   document.getElementById('orcTotal').value = '';
   document.getElementById('orcItens').innerHTML = '';
-
-  // Garante que os dados de autocomplete estejam carregados
-  if (!_clientes.length && !_produtos.length) await loadAutoCompleteData();
 
   // Autocomplete de clientes
   criarAutoComplete(
