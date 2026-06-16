@@ -113,10 +113,10 @@
       </div>
 
       <!-- cabeçalho da tabela de itens -->
-      <div style="display:grid;grid-template-columns:1fr 60px 100px 32px;gap:6px;padding:6px 10px;background:#f9fafb;border-radius:6px;margin-bottom:4px">
-        <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase">Descrição</div>
+      <div style="display:grid;grid-template-columns:1fr 60px 100px 32px;gap:6px;padding:6px 0;background:#f9fafb;border-radius:6px;margin-bottom:4px">
+        <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;padding-left:8px">Descrição</div>
         <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;text-align:center">Qtd</div>
-        <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;text-align:right">Valor (R$)</div>
+        <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;text-align:right;padding-right:8px">Valor (R$)</div>
         <div></div>
       </div>
 
@@ -281,7 +281,7 @@ function addOrcItem() {
   const id = ++_orcItemCount;
   const row = document.createElement('div');
   row.id = 'orc-row-' + id;
-  row.style.cssText = 'display:grid;grid-template-columns:1fr 60px 100px 32px;gap:6px;padding:6px 10px;border-top:1px solid #f0f0f0;align-items:center';
+  row.style.cssText = 'display:grid;grid-template-columns:1fr 60px 100px 32px;gap:6px;padding:6px 0;border-top:1px solid #f0f0f0;align-items:center';
   row.innerHTML =
     '<input placeholder="Descrição" style="height:32px;font-size:12px;border:1px solid #e2e5ec;border-radius:6px;padding:0 8px;width:100%" oninput="calcOrcTotal()" id="orc-desc-' + id + '" />' +
     '<input type="number" value="1" min="1" style="height:32px;font-size:12px;border:1px solid #e2e5ec;border-radius:6px;padding:0 6px;text-align:center;width:100%" oninput="calcOrcTotal()" id="orc-qtd-' + id + '" />' +
