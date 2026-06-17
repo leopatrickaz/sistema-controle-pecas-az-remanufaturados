@@ -219,6 +219,7 @@ input, select, textarea {
   font-size: 13px;
   color: var(--text);
   caret-color: var(--text);
+  color-scheme: light;
   background: #fff;
   width: 100%;
   outline: none;
