@@ -329,3 +329,32 @@ select   { padding: 0 32px 0 12px; appearance: none; -webkit-appearance: none; b
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 input[type=number] { -moz-appearance: textfield; }
+
+/* ── Status do orçamento (aprovado/recusado) ─────────────── */
+.orc-status-btn {
+  width: 26px; height: 26px;
+  border-radius: 6px;
+  border: 1px solid var(--border, #e5e7eb);
+  background: #fff;
+  color: #9ca3af;
+  font-size: 13px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+  line-height: 1;
+}
+.orc-status-btn:hover { background: #f3f4f6; }
+.orc-status-btn.is-aprovado {
+  background: var(--success-light);
+  border-color: var(--success);
+  color: var(--success);
+}
+.orc-status-btn.is-recusado {
+  background: var(--destructive-light);
+  border-color: var(--destructive);
+  color: var(--destructive);
+}
