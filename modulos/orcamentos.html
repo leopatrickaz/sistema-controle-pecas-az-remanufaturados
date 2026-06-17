@@ -63,7 +63,16 @@
 
     <!-- CONTEÚDO -->
     <div class="content">
-      <div class="page active">
+
+      <!-- TABS DE NAVEGAÇÃO INTERNA -->
+      <div style="display:flex;gap:4px;margin-bottom:24px;border-bottom:2px solid var(--border);padding-bottom:0">
+        <button id="tab-inicio"    onclick="navigateOrc('inicio')"    style="padding:8px 18px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--muted);transition:all 0.15s">Início</button>
+        <button id="tab-aprovados" onclick="navigateOrc('aprovados')" style="padding:8px 18px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--muted);transition:all 0.15s">Aprovados</button>
+        <button id="tab-recusados" onclick="navigateOrc('recusados')" style="padding:8px 18px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--muted);transition:all 0.15s">Recusados</button>
+      </div>
+
+      <!-- PÁGINA: INÍCIO -->
+      <div class="page active" id="page-inicio">
 
         <div class="page-header">
           <div class="page-title">📋 Orçamentos</div>
@@ -86,6 +95,47 @@
         </div>
 
       </div>
+
+      <!-- PÁGINA: APROVADOS -->
+      <div class="page" id="page-aprovados">
+
+        <div class="page-header">
+          <div class="page-title">✓ Orçamentos aprovados</div>
+          <div class="page-sub">Orçamentos marcados como aprovados</div>
+        </div>
+
+        <div class="card">
+          <div class="card-body-p0 divide-y" id="aprovadosList">
+            <div class="empty-state" id="aprovadosEmpty">
+              <i>✓</i>
+              <div style="font-weight:600;margin-bottom:4px">Nenhum orçamento aprovado</div>
+              <div style="font-size:12px">Marque um orçamento como aprovado no Início</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PÁGINA: RECUSADOS -->
+      <div class="page" id="page-recusados">
+
+        <div class="page-header">
+          <div class="page-title">✕ Orçamentos recusados</div>
+          <div class="page-sub">Orçamentos marcados como não aprovados</div>
+        </div>
+
+        <div class="card">
+          <div class="card-body-p0 divide-y" id="recusadosList">
+            <div class="empty-state" id="recusadosEmpty">
+              <i>✕</i>
+              <div style="font-weight:600;margin-bottom:4px">Nenhum orçamento recusado</div>
+              <div style="font-size:12px">Marque um orçamento como não aprovado no Início</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
     </div>
 
   </div>
@@ -474,6 +524,25 @@ async function gerarOrcamentoPDF() {
   }
 }
 
+// ── Navegação por abas (Início / Aprovados / Recusados) ──────
+function navigateOrc(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  ['inicio','aprovados','recusados'].forEach(t => {
+    const tab = document.getElementById('tab-' + t);
+    if (tab) {
+      const isActive = t === page;
+      tab.style.color = isActive ? 'var(--primary)' : 'var(--muted)';
+      tab.style.borderBottomColor = isActive ? 'var(--primary)' : 'transparent';
+    }
+  });
+  const el = document.getElementById('page-' + page);
+  if (el) el.classList.add('active');
+
+  if (page === 'inicio')         renderHistorico();
+  else if (page === 'aprovados') renderListaPorStatus('aprovado', 'aprovadosList', 'aprovadosEmpty');
+  else if (page === 'recusados') renderListaPorStatus('recusado', 'recusadosList', 'recusadosEmpty');
+}
+
 // ── Histórico de orçamentos ──────────────────────────────────
 const HISTORICO_KEY = 'az_orcamentos_historico';
 
@@ -484,6 +553,25 @@ function loadHistorico() {
 
 function saveHistorico(lista) {
   localStorage.setItem(HISTORICO_KEY, JSON.stringify(lista));
+}
+
+function criarLinhaOrcamento(item, realIdx) {
+  const row = document.createElement('div');
+  row.className = 'item-row orc-hist-item';
+  row.style.cursor = 'pointer';
+  row.innerHTML = `
+    <div style="flex:1;min-width:0" onclick="abrirOrcamento(${realIdx})">
+      <div class="item-name">${item.cliente}</div>
+      <div class="item-meta">${item.data}</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:12px;color:#6b7280;font-weight:500">Status</span>
+      <button class="orc-status-btn ${item.status === 'aprovado' ? 'is-aprovado' : ''}" onclick="event.stopPropagation();openConfirm('Marcar como aprovado?','O status deste orçamento será alterado.',()=>{definirStatusOrcamento(${realIdx},'aprovado')})" title="Aprovado">✓</button>
+      <button class="orc-status-btn ${item.status === 'recusado' ? 'is-recusado' : ''}" onclick="event.stopPropagation();openConfirm('Marcar como não aprovado?','O status deste orçamento será alterado.',()=>{definirStatusOrcamento(${realIdx},'recusado')})" title="Não aprovado">✕</button>
+      <button class="btn btn-outline btn-sm" onclick="abrirOrcamento(${realIdx})">↓ Abrir</button>
+      <button class="btn btn-danger-ghost btn-sm btn-icon" onclick="event.stopPropagation();openConfirm('Excluir orçamento?','Esta ação não pode ser desfeita.',()=>{excluirOrcamento(${realIdx})})">✕</button>
+    </div>`;
+  return row;
 }
 
 function renderHistorico() {
@@ -500,22 +588,29 @@ function renderHistorico() {
   items.forEach(el => el.remove());
   lista.slice().reverse().forEach((item, idx) => {
     const realIdx = lista.length - 1 - idx;
-    const row = document.createElement('div');
-    row.className = 'item-row orc-hist-item';
-    row.style.cursor = 'pointer';
-    row.innerHTML = `
-      <div style="flex:1;min-width:0" onclick="abrirOrcamento(${realIdx})">
-        <div class="item-name">${item.cliente}</div>
-        <div class="item-meta">${item.data}</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:12px;color:#6b7280;font-weight:500">Status</span>
-        <button class="orc-status-btn ${item.status === 'aprovado' ? 'is-aprovado' : ''}" onclick="event.stopPropagation();openConfirm('Marcar como aprovado?','O status deste orçamento será alterado.',()=>{definirStatusOrcamento(${realIdx},'aprovado')})" title="Aprovado">✓</button>
-        <button class="orc-status-btn ${item.status === 'recusado' ? 'is-recusado' : ''}" onclick="event.stopPropagation();openConfirm('Marcar como não aprovado?','O status deste orçamento será alterado.',()=>{definirStatusOrcamento(${realIdx},'recusado')})" title="Não aprovado">✕</button>
-        <button class="btn btn-outline btn-sm" onclick="abrirOrcamento(${realIdx})">↓ Abrir</button>
-        <button class="btn btn-danger-ghost btn-sm btn-icon" onclick="event.stopPropagation();openConfirm('Excluir orçamento?','Esta ação não pode ser desfeita.',()=>{excluirOrcamento(${realIdx})})">✕</button>
-      </div>`;
-    container.appendChild(row);
+    container.appendChild(criarLinhaOrcamento(item, realIdx));
+  });
+}
+
+function renderListaPorStatus(status, containerId, emptyId) {
+  const lista = loadHistorico();
+  const container = document.getElementById(containerId);
+  const empty = document.getElementById(emptyId);
+  const items = container.querySelectorAll('.orc-hist-item');
+  items.forEach(el => el.remove());
+
+  const filtrados = [];
+  lista.forEach((item, realIdx) => {
+    if (item.status === status) filtrados.push({ item, realIdx });
+  });
+
+  if (!filtrados.length) {
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+  filtrados.slice().reverse().forEach(({ item, realIdx }) => {
+    container.appendChild(criarLinhaOrcamento(item, realIdx));
   });
 }
 
@@ -525,7 +620,13 @@ function definirStatusOrcamento(idx, status) {
   if (!item) return;
   item.status = status;
   saveHistorico(lista);
+  renderTodasListas();
+}
+
+function renderTodasListas() {
   renderHistorico();
+  renderListaPorStatus('aprovado', 'aprovadosList', 'aprovadosEmpty');
+  renderListaPorStatus('recusado', 'recusadosList', 'recusadosEmpty');
 }
 
 function salvarNoHistorico(cliente, data, pdfBase64, nomeArquivo) {
@@ -560,11 +661,12 @@ function excluirOrcamento(idx) {
   const lista = loadHistorico();
   lista.splice(idx, 1);
   saveHistorico(lista);
-  renderHistorico();
+  renderTodasListas();
 }
 
 // Inicializar histórico
-renderHistorico();
+navigateOrc('inicio');
+renderTodasListas();
 document.querySelectorAll('.overlay').forEach(o => {
   o.addEventListener('click', function(e) {
     if (e.target === this) this.classList.remove('open');
