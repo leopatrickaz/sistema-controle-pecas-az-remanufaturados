@@ -67,6 +67,7 @@
       <!-- TABS DE NAVEGAÇÃO INTERNA -->
       <div style="display:flex;gap:4px;margin-bottom:24px;border-bottom:2px solid var(--border);padding-bottom:0">
         <button id="tab-inicio"    onclick="navigateOrc('inicio')"    style="padding:8px 18px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--muted);transition:all 0.15s">Início</button>
+        <button id="tab-todos"     onclick="navigateOrc('todos')"     style="padding:8px 18px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--muted);transition:all 0.15s">Todos</button>
         <button id="tab-aprovados" onclick="navigateOrc('aprovados')" style="padding:8px 18px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--muted);transition:all 0.15s">Aprovados</button>
         <button id="tab-recusados" onclick="navigateOrc('recusados')" style="padding:8px 18px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--muted);transition:all 0.15s">Recusados</button>
       </div>
@@ -88,6 +89,26 @@
           <div class="card-body-p0 divide-y" id="historicoList">
             <div class="empty-state" id="historicoEmpty">
               <i>📋</i>
+              <div style="font-weight:600;margin-bottom:4px">Nenhum orçamento gerado ainda</div>
+              <div style="font-size:12px">Os orçamentos gerados aparecerão aqui</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PÁGINA: TODOS -->
+      <div class="page" id="page-todos">
+
+        <div class="page-header">
+          <div class="page-title">📑 Todos os orçamentos</div>
+          <div class="page-sub">Lista completa de orçamentos gerados</div>
+        </div>
+
+        <div class="card">
+          <div class="card-body-p0 divide-y" id="todosList">
+            <div class="empty-state" id="todosEmpty">
+              <i>📑</i>
               <div style="font-weight:600;margin-bottom:4px">Nenhum orçamento gerado ainda</div>
               <div style="font-size:12px">Os orçamentos gerados aparecerão aqui</div>
             </div>
@@ -527,7 +548,7 @@ async function gerarOrcamentoPDF() {
 // ── Navegação por abas (Início / Aprovados / Recusados) ──────
 function navigateOrc(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  ['inicio','aprovados','recusados'].forEach(t => {
+  ['inicio','todos','aprovados','recusados'].forEach(t => {
     const tab = document.getElementById('tab-' + t);
     if (tab) {
       const isActive = t === page;
@@ -539,6 +560,7 @@ function navigateOrc(page) {
   if (el) el.classList.add('active');
 
   if (page === 'inicio')         renderHistorico();
+  else if (page === 'todos')     renderTodosOrcamentos();
   else if (page === 'aprovados') renderListaPorStatus('aprovado', 'aprovadosList', 'aprovadosEmpty');
   else if (page === 'recusados') renderListaPorStatus('recusado', 'recusadosList', 'recusadosEmpty');
 }
@@ -592,6 +614,23 @@ function renderHistorico() {
   });
 }
 
+function renderTodosOrcamentos() {
+  const lista = loadHistorico();
+  const container = document.getElementById('todosList');
+  const empty = document.getElementById('todosEmpty');
+  const items = container.querySelectorAll('.orc-hist-item');
+  items.forEach(el => el.remove());
+  if (!lista.length) {
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+  lista.slice().reverse().forEach((item, idx) => {
+    const realIdx = lista.length - 1 - idx;
+    container.appendChild(criarLinhaOrcamento(item, realIdx));
+  });
+}
+
 function renderListaPorStatus(status, containerId, emptyId) {
   const lista = loadHistorico();
   const container = document.getElementById(containerId);
@@ -625,6 +664,7 @@ function definirStatusOrcamento(idx, status) {
 
 function renderTodasListas() {
   renderHistorico();
+  renderTodosOrcamentos();
   renderListaPorStatus('aprovado', 'aprovadosList', 'aprovadosEmpty');
   renderListaPorStatus('recusado', 'recusadosList', 'recusadosEmpty');
 }
