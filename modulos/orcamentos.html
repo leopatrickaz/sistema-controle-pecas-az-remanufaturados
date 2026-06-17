@@ -497,14 +497,14 @@ async function gerarOrcamentoPDF() {
       letterRendering: true
     });
 
-    const imgData = canvas.toDataURL('image/png');
+    const imgData = canvas.toDataURL('image/jpeg', 1.0);
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
     const pageW = pdf.internal.pageSize.getWidth();
     const pageH = pdf.internal.pageSize.getHeight();
     const ratio = canvas.height / canvas.width;
     const imgH  = pageW * ratio;
-    pdf.addImage(imgData, 'PNG', 0, 0, pageW, Math.min(imgH, pageH));
+    pdf.addImage(imgData, 'JPEG', 0, 0, pageW, Math.min(imgH, pageH));
     const dataNome = dataFmt.replace(/\//g, '.');
     const nomeArquivo = 'Orçamento ' + cliente + ' - ' + dataNome + '.pdf';
     const pdfBlob = pdf.output('blob');
@@ -574,7 +574,12 @@ function loadHistorico() {
 }
 
 function saveHistorico(lista) {
-  localStorage.setItem(HISTORICO_KEY, JSON.stringify(lista));
+  try {
+    localStorage.setItem(HISTORICO_KEY, JSON.stringify(lista));
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 function criarLinhaOrcamento(item, realIdx) {
@@ -670,10 +675,25 @@ function renderTodasListas() {
 }
 
 function salvarNoHistorico(cliente, data, pdfBase64, nomeArquivo) {
-  const lista = loadHistorico();
+  let lista = loadHistorico();
   lista.push({ cliente, data, pdfBase64, nomeArquivo, geradoEm: new Date().toISOString() });
-  saveHistorico(lista);
-  renderHistorico();
+
+  let ok = saveHistorico(lista);
+  let removidos = 0;
+  // Se exceder a cota do navegador, remove os orçamentos mais antigos até caber
+  while (!ok && lista.length > 1) {
+    lista.shift(); // remove o mais antigo
+    removidos++;
+    ok = saveHistorico(lista);
+  }
+
+  renderTodasListas();
+
+  if (!ok) {
+    showToast('Não foi possível salvar no histórico: espaço do navegador esgotado. O PDF foi gerado, mas não ficará salvo aqui.', 'error');
+  } else if (removidos > 0) {
+    showToast('Espaço esgotado: ' + removidos + ' orçamento(s) mais antigo(s) removido(s) do histórico para liberar espaço.', 'error');
+  }
 }
 
 function abrirOrcamento(idx) {
