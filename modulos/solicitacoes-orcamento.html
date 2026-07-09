@@ -64,9 +64,12 @@
     <!-- CONTEÚDO -->
     <div class="content">
 
-      <div class="page-header">
-        <div class="page-title">📩 Solicitações de Orçamento</div>
-        <div class="page-sub">Pedidos enviados pelos formulários do site</div>
+      <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
+        <div>
+          <div class="page-title">📩 Solicitações de Orçamento</div>
+          <div class="page-sub">Pedidos enviados pelos formulários do site</div>
+        </div>
+        <button id="somToggleBtn" class="btn btn-outline btn-sm" onclick="ativarSom()">🔔 Ativar aviso sonoro</button>
       </div>
 
       <!-- TABS -->
@@ -277,9 +280,11 @@ function mergeNovasSolicitacoes(atual, recebidos, rotulo, render) {
 // ── Aviso sonoro ──────────────────────────────────────────────
 // Toca um bipe curto (gerado na hora, sem arquivo de áudio) quando
 // uma nova solicitação chega. Navegadores só liberam áudio depois de
-// alguma interação do usuário na página, então destravamos no
-// primeiro clique/tecla.
+// uma interação DIRETA do usuário (não vale clique em qualquer canto
+// nem timer) — por isso existe o botão "Ativar aviso sonoro": ele
+// destrava o som nesta aba e confirma tocando um bipe de teste.
 let _audioCtx = null;
+let _somAtivo = false;
 
 function getAudioCtx() {
   const Ctx = window.AudioContext || window.webkitAudioContext;
@@ -288,17 +293,29 @@ function getAudioCtx() {
   return _audioCtx;
 }
 
-function unlockAudio() {
+function ativarSom() {
   const ctx = getAudioCtx();
-  if (ctx && ctx.state === 'suspended') ctx.resume();
+  if (!ctx) { showToast('Seu navegador não suporta som', 'error'); return; }
+
+  const finish = () => {
+    _somAtivo = true;
+    const btn = document.getElementById('somToggleBtn');
+    if (btn) {
+      btn.textContent = '🔔 Som ativado';
+      btn.disabled = true;
+      btn.style.opacity = '0.7';
+    }
+    playNotificationSound();
+    showToast('Aviso sonoro ativado');
+  };
+
+  if (ctx.state === 'suspended') ctx.resume().then(finish).catch(finish);
+  else finish();
 }
-document.addEventListener('click', unlockAudio, { once: true });
-document.addEventListener('keydown', unlockAudio, { once: true });
 
 function playNotificationSound() {
   const ctx = getAudioCtx();
-  if (!ctx) return;
-  if (ctx.state === 'suspended') ctx.resume();
+  if (!ctx || ctx.state === 'suspended') return;
 
   const now = ctx.currentTime;
   [880, 1174.66].forEach((freq, i) => {
