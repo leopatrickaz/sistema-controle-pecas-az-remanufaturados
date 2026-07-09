@@ -18,15 +18,16 @@
   <!-- SIDEBAR DESKTOP (módulos principais) -->
   <aside class="sidebar" id="mainSidebar">
     <div class="sidebar-logo">
-      <div class="logo-icon">⚙</div>
+      <div class="logo-icon" data-brand-icon>⚙</div>
       <div class="logo-text">
-        <div class="logo-title">AZ</div>
-        <div class="logo-sub">Remanufaturados</div>
+        <div class="logo-title" data-brand-curto>AZ</div>
+        <div class="logo-sub" data-brand-sub>Remanufaturados</div>
       </div>
     </div>
     <div id="sidebarModulosListDesktop"></div>
     <div class="sidebar-footer">
       <div class="sidebar-user">sistemaaz</div>
+      <button class="logout-btn" onclick="trocarEmpresa()" style="margin-bottom:6px">⇄ Trocar empresa</button>
       <button class="logout-btn" onclick="AZ_AUTH.logout()">→ Sair</button>
     </div>
   </aside>
@@ -38,7 +39,7 @@
     <div class="topbar" id="topbar">
       <div style="display:flex;align-items:center;gap:10px">
         <button onclick="openModulesSidebar()" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:4px;line-height:1">☰</button>
-        <span style="font-weight:700;font-size:14px">AZ Remanufaturados</span>
+        <span style="font-weight:700;font-size:14px" data-brand-nome>AZ Remanufaturados</span>
       </div>
       <button onclick="goHome()" style="background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:12px;cursor:pointer;padding:6px 12px;border-radius:8px;font-weight:500">⌂ Menu</button>
     </div>
@@ -57,12 +58,13 @@
       <div onclick="closeModulesSidebar()" style="position:absolute;inset:0;background:rgba(0,0,0,0.45)"></div>
       <div style="position:absolute;left:0;top:0;bottom:0;width:280px;background:#1e2434;display:flex;flex-direction:column;box-shadow:4px 0 20px rgba(0,0,0,0.3)">
         <div style="padding:20px;border-bottom:1px solid rgba(255,255,255,0.1)">
-          <div style="color:#fff;font-weight:700;font-size:15px">⚙ AZ Remanufaturados</div>
+          <div style="color:#fff;font-weight:700;font-size:15px"><span data-brand-icon>⚙</span> <span data-brand-nome>AZ Remanufaturados</span></div>
           <div style="color:rgba(255,255,255,0.5);font-size:11px;margin-top:2px">Módulos do sistema</div>
         </div>
         <div style="padding:12px;flex:1;overflow-y:auto" id="sidebarModulosList"></div>
         <div style="padding:16px;border-top:1px solid rgba(255,255,255,0.1)">
           <button onclick="goHome()" style="width:100%;background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.7);padding:10px;border-radius:8px;cursor:pointer;font-size:13px;text-align:left;margin-bottom:6px">⌂ Tela inicial</button>
+          <button onclick="trocarEmpresa()" style="width:100%;background:none;border:none;color:rgba(255,255,255,0.5);padding:10px;border-radius:8px;cursor:pointer;font-size:13px;text-align:left">⇄ Trocar empresa</button>
           <button onclick="AZ_AUTH.logout()" style="width:100%;background:none;border:none;color:rgba(255,255,255,0.5);padding:10px;border-radius:8px;cursor:pointer;font-size:13px;text-align:left">→ Sair</button>
         </div>
       </div>
@@ -318,13 +320,15 @@
      SCRIPTS
 ════════════════════════════════════════════ -->
 <script src="/shared/config.js"></script>
+<script src="/shared/empresa.js"></script>
 <script src="/shared/db.js"></script>
 <script src="/shared/auth.js"></script>
 <script src="/shared/components.js"></script>
 <script>
 
-// ── Verificação de autenticação ──────────────────────────────
-if (!AZ_AUTH.requireAuth()) { /* requireAuth já redireciona */ }
+// ── Verificação de autenticação e empresa ────────────────────
+if (!AZ_AUTH.requireAcesso()) { /* requireAcesso já redireciona */ }
+else { applyEmpresaBranding('Controle de Vendas'); }
 
 // ── Estado local do módulo ───────────────────────────────────
 let currentPage = 'dashboard';
@@ -351,9 +355,9 @@ let _empresas = [], _produtos = [], _vendas = [];
 
 async function loadAll() {
   const [e, p, v] = await Promise.all([
-    AZ_DB.get('az_empresas', '?select=*&order=nome'),
-    AZ_DB.get('az_produtos', '?select=*&order=nome'),
-    AZ_DB.get('az_vendas',   '?select=*&order=data_venda.desc')
+    AZ_DB.get(AZ_DB.tbl('empresas'), '?select=*&order=nome'),
+    AZ_DB.get(AZ_DB.tbl('produtos'), '?select=*&order=nome'),
+    AZ_DB.get(AZ_DB.tbl('vendas'),   '?select=*&order=data_venda.desc')
   ]);
   _empresas = e || [];
   _produtos = p || [];
@@ -625,13 +629,13 @@ async function saveEmpresa() {
   showLoading(true);
   try {
     if (id) {
-      await AZ_DB.update('az_empresas', id, obj);
+      await AZ_DB.update(AZ_DB.tbl('empresas'), id, obj);
       const i = _empresas.findIndex(e => e.id === id);
       _empresas[i] = { ..._empresas[i], ...obj };
       showToast('Empresa atualizada');
     } else {
       obj.id = uid(); obj.created_at = today();
-      const r = await AZ_DB.insert('az_empresas', obj);
+      const r = await AZ_DB.insert(AZ_DB.tbl('empresas'), obj);
       _empresas.push(r[0] || obj);
       _empresas.sort((a, b) => a.nome.localeCompare(b.nome));
       showToast('Empresa cadastrada');
@@ -647,7 +651,7 @@ async function saveEmpresa() {
 async function deleteEmpresa(id) {
   showLoading(true);
   try {
-    await AZ_DB.remove('az_empresas', id);
+    await AZ_DB.remove(AZ_DB.tbl('empresas'), id);
     _empresas = _empresas.filter(e => e.id !== id);
     _vendas   = _vendas.filter(v => v.empresa_id !== id);
     showToast('Empresa excluída');
@@ -688,13 +692,13 @@ async function saveProduto() {
   showLoading(true);
   try {
     if (id) {
-      await AZ_DB.update('az_produtos', id, obj);
+      await AZ_DB.update(AZ_DB.tbl('produtos'), id, obj);
       const i = _produtos.findIndex(p => p.id === id);
       _produtos[i] = { ..._produtos[i], ...obj };
       showToast('Produto atualizado');
     } else {
       obj.id = uid();
-      const r = await AZ_DB.insert('az_produtos', obj);
+      const r = await AZ_DB.insert(AZ_DB.tbl('produtos'), obj);
       _produtos.push(r[0] || obj);
       _produtos.sort((a, b) => a.nome.localeCompare(b.nome));
       showToast('Produto cadastrado');
@@ -709,7 +713,7 @@ async function saveProduto() {
 async function deleteProduto(id) {
   showLoading(true);
   try {
-    await AZ_DB.remove('az_produtos', id);
+    await AZ_DB.remove(AZ_DB.tbl('produtos'), id);
     _produtos = _produtos.filter(p => p.id !== id);
     showToast('Produto excluído');
     renderProdutos();
@@ -780,13 +784,13 @@ async function saveVenda() {
   showLoading(true);
   try {
     if (id) {
-      await AZ_DB.update('az_vendas', id, obj);
+      await AZ_DB.update(AZ_DB.tbl('vendas'), id, obj);
       const i = _vendas.findIndex(v => v.id === id);
       _vendas[i] = { ..._vendas[i], ...obj };
       showToast('Venda atualizada');
     } else {
       obj.id = uid(); obj.created_at = today();
-      const r = await AZ_DB.insert('az_vendas', obj);
+      const r = await AZ_DB.insert(AZ_DB.tbl('vendas'), obj);
       _vendas.unshift(r[0] || obj);
       showToast('Venda registrada');
     }
@@ -801,7 +805,7 @@ async function saveVenda() {
 async function deleteVenda(id) {
   showLoading(true);
   try {
-    await AZ_DB.remove('az_vendas', id);
+    await AZ_DB.remove(AZ_DB.tbl('vendas'), id);
     _vendas = _vendas.filter(v => v.id !== id);
     showToast('Venda excluída');
     if (currentPage === 'empresa-detail') renderEmpresaDetail(currentEmpresaDetailId);

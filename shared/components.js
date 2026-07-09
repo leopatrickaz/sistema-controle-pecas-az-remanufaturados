@@ -101,6 +101,36 @@ function abrirModulo(arquivo) {
   window.location.href = arquivo;
 }
 
+// Sai da empresa ativa e volta para a tela de seleção de empresa
+function trocarEmpresa() {
+  if (typeof AZ_EMPRESA !== 'undefined') AZ_EMPRESA.limpar();
+  window.location.href = '/';
+}
+
+
+// ── Identidade visual da empresa ativa ───────────────────────
+// Aplica cores, ícone e nome da empresa selecionada em todos os
+// elementos marcados com data-brand-*, e ajusta o <title> da página.
+// Chamar após AZ_AUTH.requireAcesso() em cada módulo.
+
+function applyEmpresaBranding(tituloPagina) {
+  if (typeof AZ_EMPRESA === 'undefined') return;
+  const empresa = AZ_EMPRESA.atual();
+  if (!empresa) return;
+
+  const root = document.documentElement.style;
+  root.setProperty('--primary', empresa.tema.primary);
+  root.setProperty('--primary-light', empresa.tema.primaryLight);
+  root.setProperty('--sidebar-active', empresa.tema.sidebarActive);
+
+  document.querySelectorAll('[data-brand-icon]').forEach(el => el.textContent = empresa.icone);
+  document.querySelectorAll('[data-brand-nome]').forEach(el => el.textContent = empresa.nome);
+  document.querySelectorAll('[data-brand-curto]').forEach(el => el.textContent = empresa.nomeCurto);
+  document.querySelectorAll('[data-brand-sub]').forEach(el => el.textContent = empresa.nomeSub);
+
+  if (tituloPagina) document.title = `${tituloPagina} — ${empresa.nome}`;
+}
+
 
 // ── Renderiza sidebar de módulos (lateral deslizante) ────────
 

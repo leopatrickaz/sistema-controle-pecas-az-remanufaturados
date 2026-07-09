@@ -5,6 +5,14 @@
 
 const AZ_DB = {
 
+  // Retorna o nome da tabela prefixado conforme a empresa ativa na sessão.
+  // Ex: AZ_DB.tbl('vendas') -> 'az_vendas' (AZ Remanufaturados) ou 'azp_vendas' (AZ Pesados)
+  tbl(base) {
+    const empresa = (typeof AZ_EMPRESA !== 'undefined') ? AZ_EMPRESA.atual() : null;
+    const prefix = empresa ? empresa.tablePrefix : 'az_';
+    return prefix + base;
+  },
+
   // Requisição genérica ao Supabase REST API
   async query(table, queryString = '', method = 'GET', body = null) {
     const { url, key } = AZ_CONFIG.supabase;

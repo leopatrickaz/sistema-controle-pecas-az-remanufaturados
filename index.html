@@ -41,6 +41,25 @@
 </div>
 
 <!-- ═══════════════════════════
+     TELA DE SELEÇÃO DE EMPRESA
+════════════════════════════ -->
+<div id="empresaPage" class="empresa-page" style="display:none">
+  <div class="empresa-topbar">
+    <button class="empresa-sair" onclick="doLogout()">→ Sair</button>
+  </div>
+
+  <div class="empresa-header">
+    <div class="empresa-eyebrow">Painel interno de gestão</div>
+    <div class="empresa-welcome" id="empresaWelcome">Bem-vindo</div>
+    <div class="empresa-title">Selecione a empresa</div>
+  </div>
+
+  <div class="empresa-grid" id="empresaGrid"></div>
+
+  <div class="empresa-footer">Você pode trocar de empresa a qualquer momento após entrar</div>
+</div>
+
+<!-- ═══════════════════════════
      TELA HOME (SELEÇÃO DE MÓDULOS)
 ════════════════════════════ -->
 <div id="homePage" style="display:none;min-height:100vh;background:#f4f5f7">
@@ -48,10 +67,13 @@
   <!-- Topbar -->
   <div style="background:#1e2434;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50">
     <div style="display:flex;align-items:center;gap:10px">
-      <span style="font-size:20px">⚙</span>
-      <span style="color:#fff;font-weight:700;font-size:16px">AZ Remanufaturados</span>
+      <span style="font-size:20px" data-brand-icon>⚙</span>
+      <span style="color:#fff;font-weight:700;font-size:16px" data-brand-nome>AZ Remanufaturados</span>
     </div>
-    <button onclick="doLogout()" style="background:none;border:none;color:rgba(255,255,255,0.6);font-size:12px;cursor:pointer;padding:4px 8px">→ Sair</button>
+    <div style="display:flex;align-items:center;gap:4px">
+      <button onclick="trocarEmpresa()" style="background:none;border:none;color:rgba(255,255,255,0.6);font-size:12px;cursor:pointer;padding:4px 8px">⇄ Trocar empresa</button>
+      <button onclick="doLogout()" style="background:none;border:none;color:rgba(255,255,255,0.6);font-size:12px;cursor:pointer;padding:4px 8px">→ Sair</button>
+    </div>
   </div>
 
   <!-- Conteúdo -->
@@ -63,15 +85,17 @@
     <div id="modulosGrid" style="display:flex;flex-direction:column;gap:12px"></div>
 
     <!-- Rodapé -->
-    <div style="margin-top:40px;text-align:center;font-size:11px;color:#9ca3af">
+    <div style="margin-top:40px;text-align:center;font-size:11px;color:#9ca3af" data-brand-nome>
       AZ Remanufaturados · Sistema interno de gestão
     </div>
   </div>
 </div>
 
 <script src="/shared/config.js"></script>
+<script src="/shared/empresa.js"></script>
 <script src="/shared/db.js"></script>
 <script src="/shared/auth.js"></script>
+<script src="/shared/components.js"></script>
 <script>
 
 // ── Login ────────────────────────────────────────────────────
@@ -90,7 +114,7 @@ async function doLogin() {
   document.getElementById('az-loading').classList.add('show');
   try {
     await AZ_AUTH.login(usuario, senha);
-    bootApp();
+    afterLogin(usuario);
   } catch(e) {
     errEl.textContent = e.message || 'Usuário ou senha incorretos.';
     errEl.style.display = 'block';
@@ -104,10 +128,48 @@ function doLogout() {
   AZ_AUTH.logout();
 }
 
+// ── Pós-login: decide entre tela de empresa e a home ──────────
+function afterLogin(usuario) {
+  if (AZ_EMPRESA.atual()) {
+    bootApp();
+  } else {
+    showEmpresaSelection(usuario);
+  }
+}
+
+// ── Tela de seleção de empresa ────────────────────────────────
+function showEmpresaSelection(usuario) {
+  document.getElementById('loginPage').style.display  = 'none';
+  document.getElementById('homePage').style.display   = 'none';
+  document.getElementById('empresaPage').style.display = 'flex';
+
+  const welcomeEl = document.getElementById('empresaWelcome');
+  if (welcomeEl) welcomeEl.textContent = usuario ? `Bem-vindo, ${usuario}` : 'Bem-vindo';
+
+  const grid = document.getElementById('empresaGrid');
+  grid.innerHTML = AZ_EMPRESA.listar().map(emp => `
+    <div class="empresa-card" style="--accent:${emp.tema.primary};--accent-soft:${emp.tema.primaryLight}"
+         onclick="selecionarEmpresa('${emp.id}')" tabindex="0"
+         onkeydown="if(event.key==='Enter')selecionarEmpresa('${emp.id}')">
+      <div class="empresa-card-icon">${emp.icone}</div>
+      <div class="empresa-card-nome">${emp.nome}</div>
+      <div class="empresa-card-desc">${emp.descricao}</div>
+      <div class="empresa-card-cta">Entrar →</div>
+    </div>
+  `).join('');
+}
+
+function selecionarEmpresa(id) {
+  AZ_EMPRESA.selecionar(id);
+  bootApp();
+}
+
 // ── Boot ─────────────────────────────────────────────────────
 function bootApp() {
-  document.getElementById('loginPage').style.display  = 'none';
-  document.getElementById('homePage').style.display   = 'block';
+  document.getElementById('loginPage').style.display   = 'none';
+  document.getElementById('empresaPage').style.display = 'none';
+  document.getElementById('homePage').style.display    = 'block';
+  applyEmpresaBranding('Início');
   renderModulosGrid();
 }
 
@@ -157,7 +219,7 @@ document.addEventListener('keydown', e => {
 });
 
 if (AZ_AUTH.isLoggedIn()) {
-  bootApp();
+  afterLogin();
 }
 
 </script>

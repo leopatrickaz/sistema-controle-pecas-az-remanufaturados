@@ -314,6 +314,178 @@ select   { padding: 0 32px 0 12px; appearance: none; -webkit-appearance: none; b
 .login-form-sub  { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
 .error-msg       { background: var(--destructive-light); color: var(--destructive); border-radius: var(--radius); padding: 8px 12px; font-size: 12px; margin-bottom: 12px; display: none; }
 
+/* ── Seleção de empresa ──────────────────────────────────── */
+
+.empresa-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(61,90,254,0.20), transparent 42%),
+    radial-gradient(circle at 85% 85%, rgba(194,102,26,0.20), transparent 42%),
+    #0d1120;
+  position: relative;
+  overflow: hidden;
+}
+
+.empresa-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(circle at 50% 40%, #000 0%, transparent 75%);
+  pointer-events: none;
+}
+
+.empresa-topbar {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  z-index: 2;
+}
+
+.empresa-sair {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.55);
+  font-size: 12px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.empresa-sair:hover { color: #fff; border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.06); }
+
+.empresa-header {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  margin-bottom: 44px;
+}
+
+.empresa-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 14px;
+}
+
+.empresa-welcome {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 6px;
+}
+
+.empresa-title {
+  font-size: 30px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+
+.empresa-grid {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 26px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 720px;
+}
+
+.empresa-card {
+  --accent: #3d5afe;
+  --accent-soft: rgba(61,90,254,0.16);
+  width: 260px;
+  padding: 38px 26px 30px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.09);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.25s cubic-bezier(.2,.8,.2,1), box-shadow 0.25s, border-color 0.25s, background 0.25s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.empresa-card:hover,
+.empresa-card:focus-visible {
+  transform: translateY(-8px);
+  border-color: var(--accent);
+  background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+  box-shadow: 0 20px 46px -12px var(--accent-soft), 0 0 0 1px var(--accent-soft);
+  outline: none;
+}
+
+.empresa-card-icon {
+  width: 68px;
+  height: 68px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin-bottom: 20px;
+  background: var(--accent);
+  background: linear-gradient(145deg, var(--accent), color-mix(in srgb, var(--accent) 55%, #000));
+  box-shadow: 0 10px 24px -8px var(--accent-soft);
+  transition: transform 0.25s cubic-bezier(.2,.8,.2,1);
+}
+.empresa-card:hover .empresa-card-icon { transform: scale(1.08) rotate(-3deg); }
+
+.empresa-card-nome {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.2px;
+  margin-bottom: 6px;
+}
+
+.empresa-card-desc {
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.5;
+  margin-bottom: 22px;
+}
+
+.empresa-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  transition: gap 0.2s;
+}
+.empresa-card:hover .empresa-card-cta { gap: 10px; }
+
+.empresa-footer {
+  position: relative;
+  z-index: 1;
+  margin-top: 40px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .empresa-card { width: 100%; max-width: 280px; }
+  .empresa-title { font-size: 24px; }
+}
+
 /* ── Responsivo ──────────────────────────────────────────── */
 
 @media (max-width: 768px) {

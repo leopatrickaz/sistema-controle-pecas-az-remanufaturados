@@ -20,6 +20,7 @@ const AZ_AUTH = {
   // Remove sessão e redireciona para login
   logout() {
     sessionStorage.removeItem(this.SESSION_KEY);
+    if (typeof AZ_EMPRESA !== 'undefined') AZ_EMPRESA.limpar();
     window.location.href = '/';
   },
 
@@ -30,6 +31,15 @@ const AZ_AUTH = {
       window.location.href = '/';
       return false;
     }
+    return true;
+  },
+
+  // Redireciona para a tela inicial se não estiver logado OU
+  // se nenhuma empresa estiver selecionada na sessão.
+  // Chamar no topo de cada módulo protegido.
+  requireAcesso() {
+    if (!this.requireAuth()) return false;
+    if (typeof AZ_EMPRESA !== 'undefined' && !AZ_EMPRESA.requireSelecionada()) return false;
     return true;
   },
 
