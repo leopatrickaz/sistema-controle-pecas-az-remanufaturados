@@ -9,6 +9,7 @@ const uid       = () => Math.random().toString(36).slice(2) + Date.now().toStrin
 const today     = () => new Date().toISOString().slice(0, 10);
 const brl       = v  => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(v || 0));
 const fmtDate   = d  => { if (!d) return '—'; try { const p = d.split('-'); return `${p[2]}/${p[1]}/${p[0]}`; } catch { return d; } };
+const fmtDateTime = d => { if (!d) return '—'; try { const dt = new Date(d); return dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); } catch { return d; } };
 const esc       = s  => { if (!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); };
 const tipoLabel = t  => t === 'motor_partida' ? 'Motor de partida' : 'Alternador';
 const pedidoLabel = p => ({ verbal: 'Verbal', email: 'E-mail', whatsapp: 'WhatsApp' }[p] || '');
@@ -141,7 +142,10 @@ function renderSidebarModulos(moduloAtualId) {
   ].filter(Boolean);
   if (!containers.length) return;
 
-  const html = AZ_CONFIG.modulos.map(m => {
+  const empresa = (typeof AZ_EMPRESA !== 'undefined') ? AZ_EMPRESA.atual() : null;
+  const modulos = empresa ? empresa.modulos : AZ_CONFIG.modulosComuns;
+
+  const html = modulos.map(m => {
     const isAtual = m.id === moduloAtualId;
     const badge = !m.ativo
       ? '<span style="font-size:10px;background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);padding:1px 7px;border-radius:999px;margin-left:6px">Em breve</span>'

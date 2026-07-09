@@ -177,7 +177,8 @@ function bootApp() {
 function renderModulosGrid() {
   const grid = document.getElementById('modulosGrid');
 
-  grid.innerHTML = AZ_CONFIG.modulos.map(m => {
+  const modulos = AZ_EMPRESA.atual().modulos;
+  grid.innerHTML = modulos.map(m => {
     const ativo = m.ativo;
     return `
       <div
