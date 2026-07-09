@@ -240,20 +240,17 @@ function startAutoRefresh() {
   _autoRefreshTimer = setInterval(checkNovasSolicitacoes, AUTO_REFRESH_MS);
 }
 
-function stopAutoRefresh() {
-  clearInterval(_autoRefreshTimer);
-  _autoRefreshTimer = null;
-}
-
-// Pausa a verificação quando a aba não está visível, para não gastar
-// requisições à toa, e retoma (com checagem imediata) ao voltar.
+// Continua verificando mesmo com a aba em segundo plano (minimizada
+// ou trocada por outra), para o aviso sonoro funcionar independente
+// do que você estiver fazendo no navegador. Ao voltar para a aba,
+// confere na hora, sem esperar o próximo ciclo.
+// Obs: navegadores atrasam timers de abas em segundo plano por muito
+// tempo (o Chrome, por exemplo, passa a checar só 1x por minuto após
+// alguns minutos em segundo plano) — é uma limitação de economia de
+// bateria do próprio navegador, o som ainda toca, só pode demorar um
+// pouco mais nesses casos.
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) {
-    stopAutoRefresh();
-  } else {
-    checkNovasSolicitacoes();
-    startAutoRefresh();
-  }
+  if (!document.hidden) checkNovasSolicitacoes();
 });
 
 async function checkNovasSolicitacoes() {
