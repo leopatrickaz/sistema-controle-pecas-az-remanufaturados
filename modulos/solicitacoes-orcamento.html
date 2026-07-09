@@ -294,43 +294,54 @@ function getAudioCtx() {
   return _audioCtx;
 }
 
-function atualizarBotaoSom(ativo) {
+// O botão NUNCA fica travado/desabilitado: ele sempre mostra o estado
+// real do áudio (destravado ou não) e pode ser clicado de novo a
+// qualquer momento, mesmo que o destrave automático silencioso não
+// tenha funcionado por algum motivo.
+function atualizarBotaoSom() {
   const btn = document.getElementById('somToggleBtn');
   if (!btn) return;
-  btn.textContent = ativo ? '🔔 Som ativado' : '🔔 Ativar aviso sonoro';
-  btn.disabled = ativo;
+  const ativo = _audioCtx && _audioCtx.state === 'running';
+  btn.textContent = ativo ? '🔔 Som ativo' : '🔔 Ativar aviso sonoro';
   btn.style.opacity = ativo ? '0.7' : '1';
 }
 
 function ativarSom() {
   const ctx = getAudioCtx();
   if (!ctx) { showToast('Seu navegador não suporta som', 'error'); return; }
+  localStorage.setItem(AZ_SOM_KEY, '1');
 
   const finish = () => {
-    localStorage.setItem(AZ_SOM_KEY, '1');
-    atualizarBotaoSom(true);
-    playNotificationSound();
-    showToast('Aviso sonoro ativado — fica lembrado para as próximas vezes');
+    atualizarBotaoSom();
+    if (ctx.state === 'running') {
+      playNotificationSound();
+      showToast('Aviso sonoro ativado — fica lembrado para as próximas vezes');
+    } else {
+      showToast('Não foi possível ativar o som neste navegador', 'error');
+    }
   };
 
   if (ctx.state === 'suspended') ctx.resume().then(finish).catch(finish);
   else finish();
 }
 
-// Se o usuário já ativou o som antes, tenta destravar de novo assim que
-// ele interagir com a página pela primeira vez nesta sessão — sem
-// precisar clicar em nenhum botão específico.
+// Se o usuário já ativou o som antes, tenta destravar de novo a cada
+// interação com a página (clique, tecla, toque) — sem precisar clicar
+// em nenhum botão específico. Continua tentando até dar certo, porque
+// nem toda interação conta como "gesto válido" para o navegador.
 function tentarDestravarSomAutomaticamente() {
+  atualizarBotaoSom();
   if (localStorage.getItem(AZ_SOM_KEY) !== '1') return;
-  atualizarBotaoSom(true);
 
   const tentar = () => {
     const ctx = getAudioCtx();
-    if (ctx && ctx.state === 'suspended') ctx.resume();
+    if (ctx && ctx.state === 'suspended') {
+      ctx.resume().then(atualizarBotaoSom).catch(atualizarBotaoSom);
+    }
   };
   tentar();
   ['click', 'keydown', 'touchstart'].forEach(evt =>
-    document.addEventListener(evt, tentar, { once: true })
+    document.addEventListener(evt, tentar)
   );
 }
 
