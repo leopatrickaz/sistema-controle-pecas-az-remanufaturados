@@ -196,6 +196,8 @@ let _filtroOrc = 'todas';
 let _filtroPers = 'todas';
 let _orcamentos = [];
 let _personalizadas = [];
+const AZ_SOM_KEY = 'az_solicitacoes_som_ativo';
+let _audioCtx = null;
 
 if (!AZ_AUTH.requireAcesso()) {
   // requireAcesso já redireciona
@@ -209,6 +211,7 @@ if (!AZ_AUTH.requireAcesso()) {
   const mobile = document.getElementById('sidebarModulosListMobile');
   if (mobile) mobile.innerHTML = document.getElementById('sidebarModulosList').innerHTML;
 
+  tentarDestravarSomAutomaticamente();
   init();
 }
 
@@ -280,11 +283,12 @@ function mergeNovasSolicitacoes(atual, recebidos, rotulo, render) {
 // ── Aviso sonoro ──────────────────────────────────────────────
 // Toca um bipe curto (gerado na hora, sem arquivo de áudio) quando
 // uma nova solicitação chega. Navegadores só liberam áudio depois de
-// uma interação DIRETA do usuário (não vale clique em qualquer canto
-// nem timer) — por isso existe o botão "Ativar aviso sonoro": ele
-// destrava o som nesta aba e confirma tocando um bipe de teste.
-let _audioCtx = null;
-let _somAtivo = false;
+// uma interação direta do usuário na página — isso vale por
+// carregamento de página, não dá pra "destravar para sempre" de
+// verdade. Por isso guardamos a preferência (AZ_SOM_KEY) e, uma vez
+// ativada, destravamos sozinhos no primeiro clique/tecla que o
+// usuário der na página (qualquer um, não precisa ser no botão) —
+// assim ele não precisa lembrar de clicar em nada especial de novo.
 
 function getAudioCtx() {
   const Ctx = window.AudioContext || window.webkitAudioContext;
@@ -293,24 +297,44 @@ function getAudioCtx() {
   return _audioCtx;
 }
 
+function atualizarBotaoSom(ativo) {
+  const btn = document.getElementById('somToggleBtn');
+  if (!btn) return;
+  btn.textContent = ativo ? '🔔 Som ativado' : '🔔 Ativar aviso sonoro';
+  btn.disabled = ativo;
+  btn.style.opacity = ativo ? '0.7' : '1';
+}
+
 function ativarSom() {
   const ctx = getAudioCtx();
   if (!ctx) { showToast('Seu navegador não suporta som', 'error'); return; }
 
   const finish = () => {
-    _somAtivo = true;
-    const btn = document.getElementById('somToggleBtn');
-    if (btn) {
-      btn.textContent = '🔔 Som ativado';
-      btn.disabled = true;
-      btn.style.opacity = '0.7';
-    }
+    localStorage.setItem(AZ_SOM_KEY, '1');
+    atualizarBotaoSom(true);
     playNotificationSound();
-    showToast('Aviso sonoro ativado');
+    showToast('Aviso sonoro ativado — fica lembrado para as próximas vezes');
   };
 
   if (ctx.state === 'suspended') ctx.resume().then(finish).catch(finish);
   else finish();
+}
+
+// Se o usuário já ativou o som antes, tenta destravar de novo assim que
+// ele interagir com a página pela primeira vez nesta sessão — sem
+// precisar clicar em nenhum botão específico.
+function tentarDestravarSomAutomaticamente() {
+  if (localStorage.getItem(AZ_SOM_KEY) !== '1') return;
+  atualizarBotaoSom(true);
+
+  const tentar = () => {
+    const ctx = getAudioCtx();
+    if (ctx && ctx.state === 'suspended') ctx.resume();
+  };
+  tentar();
+  ['click', 'keydown', 'touchstart'].forEach(evt =>
+    document.addEventListener(evt, tentar, { once: true })
+  );
 }
 
 function playNotificationSound() {
