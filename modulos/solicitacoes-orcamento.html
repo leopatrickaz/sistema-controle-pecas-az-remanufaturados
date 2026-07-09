@@ -63,54 +63,104 @@
 
     <!-- CONTEÚDO -->
     <div class="content">
-      <div class="page active">
 
+      <div class="page-header">
+        <div class="page-title">📩 Solicitações de Orçamento</div>
+        <div class="page-sub">Pedidos enviados pelos formulários do site</div>
+      </div>
+
+      <!-- TABS -->
+      <div style="display:flex;gap:4px;margin-bottom:20px;border-bottom:2px solid var(--border);padding-bottom:0">
+        <button id="tab-orcamento"     onclick="navigateTab('orcamento')"     style="padding:8px 18px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--muted);transition:all 0.15s">Orçamento</button>
+        <button id="tab-personalizada" onclick="navigateTab('personalizada')" style="padding:8px 18px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--muted);transition:all 0.15s">Personalizada</button>
+      </div>
+
+      <!-- TAB: ORÇAMENTO -->
+      <div class="tab-page" id="tabpage-orcamento">
         <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
-          <div>
-            <div class="page-title">📩 Solicitações de Orçamento</div>
-            <div class="page-sub" id="solicitacoesCount">Pedidos enviados pelo formulário do site</div>
-          </div>
-          <button class="btn btn-primary" onclick="openSolicitacaoModal()">+ Nova solicitação</button>
+          <div class="page-sub" id="orcamentoCount"></div>
+          <button class="btn btn-primary" onclick="openOrcamentoModal()">+ Nova solicitação</button>
         </div>
-
         <div class="filter-bar">
           <div class="input-wrap" style="flex:1;min-width:200px">
             <span class="search-icon">🔍</span>
-            <input placeholder="Buscar por nome, e-mail, telefone ou peça..." id="solicitacaoSearch" oninput="renderSolicitacoes()" />
+            <input placeholder="Buscar por nome, e-mail, telefone ou peça..." id="orcamentoSearch" oninput="renderOrcamentos()" />
           </div>
           <div class="toggle-group" style="width:280px;flex-shrink:0">
-            <button type="button" class="toggle-opt on" id="filtroTodas"      onclick="setFiltroStatus('todas')">Todas</button>
-            <button type="button" class="toggle-opt"    id="filtroNovas"      onclick="setFiltroStatus('novo')">Novas</button>
-            <button type="button" class="toggle-opt"    id="filtroRespondidas" onclick="setFiltroStatus('respondido')">Respondidas</button>
+            <button type="button" class="toggle-opt on" id="orcFiltroTodas"       onclick="setFiltroOrc('todas')">Todas</button>
+            <button type="button" class="toggle-opt"    id="orcFiltroNovas"       onclick="setFiltroOrc('novo')">Novas</button>
+            <button type="button" class="toggle-opt"    id="orcFiltroRespondidas" onclick="setFiltroOrc('respondido')">Respondidas</button>
           </div>
         </div>
+        <div class="card"><div class="card-body-p0" id="orcamentoList"></div></div>
+      </div>
 
-        <div class="card"><div class="card-body-p0" id="solicitacoesList"></div></div>
+      <!-- TAB: PERSONALIZADA -->
+      <div class="tab-page" id="tabpage-personalizada" style="display:none">
+        <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
+          <div class="page-sub" id="personalizadaCount"></div>
+          <button class="btn btn-primary" onclick="openPersonalizadaModal()">+ Nova solicitação</button>
+        </div>
+        <div class="filter-bar">
+          <div class="input-wrap" style="flex:1;min-width:200px">
+            <span class="search-icon">🔍</span>
+            <input placeholder="Buscar por nome, e-mail, telefone ou descrição..." id="personalizadaSearch" oninput="renderPersonalizadas()" />
+          </div>
+          <div class="toggle-group" style="width:280px;flex-shrink:0">
+            <button type="button" class="toggle-opt on" id="persFiltroTodas"       onclick="setFiltroPers('todas')">Todas</button>
+            <button type="button" class="toggle-opt"    id="persFiltroNovas"       onclick="setFiltroPers('novo')">Novas</button>
+            <button type="button" class="toggle-opt"    id="persFiltroRespondidas" onclick="setFiltroPers('respondido')">Respondidas</button>
+          </div>
+        </div>
+        <div class="card"><div class="card-body-p0" id="personalizadaList"></div></div>
+      </div>
 
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ORÇAMENTO -->
+<div class="overlay" id="orcamentoOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="orcamentoModalTitle">Nova solicitação</span>
+      <button class="modal-close" onclick="closeOrcamentoModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="orcamentoId" />
+      <div class="form-field"><label class="form-label">Nome *</label><input id="orcamentoNome" placeholder="Nome do cliente" /></div>
+      <div class="form-grid2">
+        <div class="form-field"><label class="form-label">E-mail *</label><input type="email" id="orcamentoEmail" placeholder="cliente@email.com" /></div>
+        <div class="form-field"><label class="form-label">Telefone</label><input id="orcamentoTelefone" placeholder="(00) 00000-0000" /></div>
+      </div>
+      <div class="form-field"><label class="form-label">Peça / código *</label><input id="orcamentoPeca" placeholder="Peça desejada" /></div>
+      <div class="form-field"><label class="form-label">Mensagem</label><textarea rows="2" id="orcamentoMensagem" placeholder="Detalhes do pedido"></textarea></div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="closeOrcamentoModal()">Cancelar</button>
+        <button class="btn btn-save"  onclick="saveOrcamento()">Salvar</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- MODAL SOLICITAÇÃO -->
-<div class="overlay" id="solicitacaoOverlay">
+<!-- MODAL PERSONALIZADA -->
+<div class="overlay" id="personalizadaOverlay">
   <div class="modal">
     <div class="modal-header">
-      <span class="modal-title" id="solicitacaoModalTitle">Nova solicitação</span>
-      <button class="modal-close" onclick="closeSolicitacaoModal()">✕</button>
+      <span class="modal-title" id="personalizadaModalTitle">Nova solicitação</span>
+      <button class="modal-close" onclick="closePersonalizadaModal()">✕</button>
     </div>
     <div class="modal-body">
-      <input type="hidden" id="solicitacaoId" />
-      <div class="form-field"><label class="form-label">Nome *</label><input id="solicitacaoNome" placeholder="Nome do cliente" /></div>
+      <input type="hidden" id="personalizadaId" />
+      <div class="form-field"><label class="form-label">Nome *</label><input id="personalizadaNome" placeholder="Nome do cliente" /></div>
       <div class="form-grid2">
-        <div class="form-field"><label class="form-label">E-mail *</label><input type="email" id="solicitacaoEmail" placeholder="cliente@email.com" /></div>
-        <div class="form-field"><label class="form-label">Telefone</label><input id="solicitacaoTelefone" placeholder="(00) 00000-0000" /></div>
+        <div class="form-field"><label class="form-label">E-mail</label><input type="email" id="personalizadaEmail" placeholder="cliente@email.com" /></div>
+        <div class="form-field"><label class="form-label">Telefone</label><input id="personalizadaTelefone" placeholder="(00) 00000-0000" /></div>
       </div>
-      <div class="form-field"><label class="form-label">Peça desejada *</label><textarea rows="2" id="solicitacaoPeca" placeholder="Descrição da peça solicitada"></textarea></div>
-      <div class="form-field"><label class="form-label">Observações internas</label><textarea rows="2" id="solicitacaoObs"></textarea></div>
+      <div class="form-field"><label class="form-label">Descrição da peça *</label><textarea rows="3" id="personalizadaDescricao" placeholder="Código original, aplicação, modelo do veículo..."></textarea></div>
       <div class="form-actions">
-        <button class="btn btn-ghost" onclick="closeSolicitacaoModal()">Cancelar</button>
-        <button class="btn btn-save"  onclick="saveSolicitacao()">Salvar</button>
+        <button class="btn btn-ghost" onclick="closePersonalizadaModal()">Cancelar</button>
+        <button class="btn btn-save"  onclick="savePersonalizada()">Salvar</button>
       </div>
     </div>
   </div>
@@ -138,8 +188,11 @@
 <script>
 
 // ── Verificação de autenticação e empresa ────────────────────
-let _filtroStatus = 'todas';
-let _solicitacoes = [];
+let _tabAtual = 'orcamento';
+let _filtroOrc = 'todas';
+let _filtroPers = 'todas';
+let _orcamentos = [];
+let _personalizadas = [];
 
 if (!AZ_AUTH.requireAcesso()) {
   // requireAcesso já redireciona
@@ -159,8 +212,9 @@ if (!AZ_AUTH.requireAcesso()) {
 async function init() {
   showLoading(true);
   try {
-    await loadSolicitacoes();
-    renderSolicitacoes();
+    await Promise.all([loadOrcamentos(), loadPersonalizadas()]);
+    renderOrcamentos();
+    renderPersonalizadas();
   } catch (e) {
     showToast('Erro ao carregar solicitações', 'error');
   } finally {
@@ -168,118 +222,243 @@ async function init() {
   }
 }
 
-async function loadSolicitacoes() {
+function navigateTab(tab) {
+  _tabAtual = tab;
+  ['orcamento', 'personalizada'].forEach(t => {
+    document.getElementById('tabpage-' + t).style.display = t === tab ? 'block' : 'none';
+    const btn = document.getElementById('tab-' + t);
+    btn.style.color = t === tab ? 'var(--primary)' : 'var(--muted)';
+    btn.style.borderBottomColor = t === tab ? 'var(--primary)' : 'transparent';
+  });
+}
+navigateTab('orcamento');
+
+// ── Orçamento ─────────────────────────────────────────────
+async function loadOrcamentos() {
   const r = await AZ_DB.get(AZ_DB.tbl('solicitacoes_orcamento'), '?select=*&order=created_at.desc');
-  _solicitacoes = r || [];
+  _orcamentos = r || [];
 }
 
-function setFiltroStatus(status) {
-  _filtroStatus = status;
-  document.getElementById('filtroTodas').classList.toggle('on', status === 'todas');
-  document.getElementById('filtroNovas').classList.toggle('on', status === 'novo');
-  document.getElementById('filtroRespondidas').classList.toggle('on', status === 'respondido');
-  renderSolicitacoes();
+function setFiltroOrc(status) {
+  _filtroOrc = status;
+  document.getElementById('orcFiltroTodas').classList.toggle('on', status === 'todas');
+  document.getElementById('orcFiltroNovas').classList.toggle('on', status === 'novo');
+  document.getElementById('orcFiltroRespondidas').classList.toggle('on', status === 'respondido');
+  renderOrcamentos();
 }
 
-function renderSolicitacoes() {
-  const q = (document.getElementById('solicitacaoSearch') || {}).value || '';
-  let filtered = _solicitacoes;
-  if (_filtroStatus !== 'todas') filtered = filtered.filter(s => s.status === _filtroStatus);
+function renderOrcamentos() {
+  const q = (document.getElementById('orcamentoSearch') || {}).value || '';
+  let filtered = _orcamentos;
+  if (_filtroOrc !== 'todas') filtered = filtered.filter(s => s.status === _filtroOrc);
   if (q) {
     const qq = q.toLowerCase();
     filtered = filtered.filter(s => [s.nome, s.email, s.telefone, s.peca].filter(Boolean).join(' ').toLowerCase().includes(qq));
   }
 
-  const novas = _solicitacoes.filter(s => s.status === 'novo').length;
-  document.getElementById('solicitacoesCount').textContent =
-    `${_solicitacoes.length} solicitação(ões) recebida(s) · ${novas} nova(s)`;
+  const novas = _orcamentos.filter(s => s.status === 'novo').length;
+  document.getElementById('orcamentoCount').textContent =
+    `${_orcamentos.length} solicitação(ões) recebida(s) · ${novas} nova(s)`;
 
-  document.getElementById('solicitacoesList').innerHTML = filtered.length
+  document.getElementById('orcamentoList').innerHTML = filtered.length
     ? '<div class="divide-y">' + filtered.map(s => `
         <div class="item-row">
           <div style="min-width:0;flex:1">
             <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
               <span class="item-name">${esc(s.nome)}</span>
               <span class="badge" style="cursor:pointer;background:${s.status === 'novo' ? '#dbeafe' : '#dcfce7'};color:${s.status === 'novo' ? '#1d4ed8' : '#166534'};border-color:transparent"
-                    onclick="toggleStatus('${s.id}')">${s.status === 'novo' ? '● Novo' : '✓ Respondido'}</span>
+                    onclick="toggleStatusOrc('${s.id}')">${s.status === 'novo' ? '● Novo' : '✓ Respondido'}</span>
             </div>
             <div class="item-meta">${esc(s.peca)}</div>
             <div class="item-meta">${esc(s.email)}${s.telefone ? ' · ' + esc(s.telefone) : ''} · ${fmtDateTime(s.created_at)}</div>
-            ${s.observacoes ? `<div style="font-size:12px;font-style:italic;color:var(--muted);margin-top:2px">${esc(s.observacoes)}</div>` : ''}
+            ${s.mensagem ? `<div style="font-size:12px;font-style:italic;color:var(--muted);margin-top:2px">${esc(s.mensagem)}</div>` : ''}
           </div>
           <div style="text-align:right;flex-shrink:0">
             <div class="item-actions">
-              <button class="btn btn-ghost btn-sm btn-icon" onclick="openSolicitacaoModal('${s.id}')">✎</button>
-              <button class="btn btn-danger-ghost btn-sm btn-icon" onclick="openConfirm('Excluir solicitação?','Esta ação não pode ser desfeita.',()=>{deleteSolicitacao('${s.id}')})">✕</button>
+              <button class="btn btn-ghost btn-sm btn-icon" onclick="openOrcamentoModal('${s.id}')">✎</button>
+              <button class="btn btn-danger-ghost btn-sm btn-icon" onclick="openConfirm('Excluir solicitação?','Esta ação não pode ser desfeita.',()=>{deleteOrcamento('${s.id}')})">✕</button>
             </div>
           </div>
         </div>`).join('') + '</div>'
     : '<div class="empty-state">Nenhuma solicitação encontrada.</div>';
 }
 
-async function toggleStatus(id) {
-  const s = _solicitacoes.find(x => x.id === id);
+async function toggleStatusOrc(id) {
+  const s = _orcamentos.find(x => x.id === id);
   if (!s) return;
   const novoStatus = s.status === 'novo' ? 'respondido' : 'novo';
   try {
     await AZ_DB.update(AZ_DB.tbl('solicitacoes_orcamento'), id, { status: novoStatus });
     s.status = novoStatus;
-    renderSolicitacoes();
+    renderOrcamentos();
   } catch (e) { showToast('Erro ao atualizar status', 'error'); }
 }
 
-// ── Modal ──────────────────────────────────────────────────
-function openSolicitacaoModal(id) {
-  const s = id ? _solicitacoes.find(x => x.id === id) : null;
-  document.getElementById('solicitacaoModalTitle').textContent = s ? 'Editar solicitação' : 'Nova solicitação';
-  document.getElementById('solicitacaoId').value        = id || '';
-  document.getElementById('solicitacaoNome').value      = s ? s.nome : '';
-  document.getElementById('solicitacaoEmail').value     = s ? s.email : '';
-  document.getElementById('solicitacaoTelefone').value  = s ? s.telefone || '' : '';
-  document.getElementById('solicitacaoPeca').value      = s ? s.peca : '';
-  document.getElementById('solicitacaoObs').value       = s ? s.observacoes || '' : '';
-  document.getElementById('solicitacaoOverlay').classList.add('open');
+function openOrcamentoModal(id) {
+  const s = id ? _orcamentos.find(x => x.id === id) : null;
+  document.getElementById('orcamentoModalTitle').textContent = s ? 'Editar solicitação' : 'Nova solicitação';
+  document.getElementById('orcamentoId').value        = id || '';
+  document.getElementById('orcamentoNome').value      = s ? s.nome : '';
+  document.getElementById('orcamentoEmail').value     = s ? s.email : '';
+  document.getElementById('orcamentoTelefone').value  = s ? s.telefone || '' : '';
+  document.getElementById('orcamentoPeca').value      = s ? s.peca : '';
+  document.getElementById('orcamentoMensagem').value  = s ? s.mensagem || '' : '';
+  document.getElementById('orcamentoOverlay').classList.add('open');
 }
-function closeSolicitacaoModal() { document.getElementById('solicitacaoOverlay').classList.remove('open'); }
+function closeOrcamentoModal() { document.getElementById('orcamentoOverlay').classList.remove('open'); }
 
-async function saveSolicitacao() {
-  const nome  = document.getElementById('solicitacaoNome').value.trim();
-  const email = document.getElementById('solicitacaoEmail').value.trim();
-  const peca  = document.getElementById('solicitacaoPeca').value.trim();
+async function saveOrcamento() {
+  const nome  = document.getElementById('orcamentoNome').value.trim();
+  const email = document.getElementById('orcamentoEmail').value.trim();
+  const peca  = document.getElementById('orcamentoPeca').value.trim();
   if (!nome || !email || !peca) { showToast('Preencha nome, e-mail e peça', 'error'); return; }
 
-  const id  = document.getElementById('solicitacaoId').value;
+  const id  = document.getElementById('orcamentoId').value;
   const obj = {
     nome, email, peca,
-    telefone:    document.getElementById('solicitacaoTelefone').value.trim() || null,
-    observacoes: document.getElementById('solicitacaoObs').value.trim() || null
+    telefone: document.getElementById('orcamentoTelefone').value.trim() || null,
+    mensagem: document.getElementById('orcamentoMensagem').value.trim() || null
   };
 
   showLoading(true);
   try {
     if (id) {
       await AZ_DB.update(AZ_DB.tbl('solicitacoes_orcamento'), id, obj);
-      const i = _solicitacoes.findIndex(s => s.id === id);
-      _solicitacoes[i] = { ..._solicitacoes[i], ...obj };
+      const i = _orcamentos.findIndex(s => s.id === id);
+      _orcamentos[i] = { ..._orcamentos[i], ...obj };
       showToast('Solicitação atualizada');
     } else {
       obj.status = 'novo';
       const r = await AZ_DB.insert(AZ_DB.tbl('solicitacoes_orcamento'), obj);
-      _solicitacoes.unshift(r[0] || obj);
+      _orcamentos.unshift(r[0] || obj);
       showToast('Solicitação cadastrada');
     }
-    closeSolicitacaoModal();
-    renderSolicitacoes();
+    closeOrcamentoModal();
+    renderOrcamentos();
   } catch (e) { showToast('Erro ao salvar', 'error'); }
   finally { showLoading(false); }
 }
 
-async function deleteSolicitacao(id) {
+async function deleteOrcamento(id) {
   showLoading(true);
   try {
     await AZ_DB.remove(AZ_DB.tbl('solicitacoes_orcamento'), id);
-    _solicitacoes = _solicitacoes.filter(s => s.id !== id);
-    renderSolicitacoes();
+    _orcamentos = _orcamentos.filter(s => s.id !== id);
+    renderOrcamentos();
+    showToast('Solicitação excluída');
+  } catch (e) { showToast('Erro ao excluir', 'error'); }
+  finally { showLoading(false); }
+}
+
+// ── Personalizada ─────────────────────────────────────────
+async function loadPersonalizadas() {
+  const r = await AZ_DB.get(AZ_DB.tbl('solicitacoes_personalizadas'), '?select=*&order=created_at.desc');
+  _personalizadas = r || [];
+}
+
+function setFiltroPers(status) {
+  _filtroPers = status;
+  document.getElementById('persFiltroTodas').classList.toggle('on', status === 'todas');
+  document.getElementById('persFiltroNovas').classList.toggle('on', status === 'novo');
+  document.getElementById('persFiltroRespondidas').classList.toggle('on', status === 'respondido');
+  renderPersonalizadas();
+}
+
+function renderPersonalizadas() {
+  const q = (document.getElementById('personalizadaSearch') || {}).value || '';
+  let filtered = _personalizadas;
+  if (_filtroPers !== 'todas') filtered = filtered.filter(s => s.status === _filtroPers);
+  if (q) {
+    const qq = q.toLowerCase();
+    filtered = filtered.filter(s => [s.nome, s.email, s.telefone, s.descricao].filter(Boolean).join(' ').toLowerCase().includes(qq));
+  }
+
+  const novas = _personalizadas.filter(s => s.status === 'novo').length;
+  document.getElementById('personalizadaCount').textContent =
+    `${_personalizadas.length} solicitação(ões) recebida(s) · ${novas} nova(s)`;
+
+  document.getElementById('personalizadaList').innerHTML = filtered.length
+    ? '<div class="divide-y">' + filtered.map(s => `
+        <div class="item-row">
+          <div style="min-width:0;flex:1">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <span class="item-name">${esc(s.nome)}</span>
+              <span class="badge" style="cursor:pointer;background:${s.status === 'novo' ? '#dbeafe' : '#dcfce7'};color:${s.status === 'novo' ? '#1d4ed8' : '#166534'};border-color:transparent"
+                    onclick="toggleStatusPers('${s.id}')">${s.status === 'novo' ? '● Novo' : '✓ Respondido'}</span>
+            </div>
+            <div class="item-meta">${esc(s.descricao)}</div>
+            <div class="item-meta">${s.email ? esc(s.email) + ' · ' : ''}${s.telefone ? esc(s.telefone) + ' · ' : ''}${fmtDateTime(s.created_at)}</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div class="item-actions">
+              <button class="btn btn-ghost btn-sm btn-icon" onclick="openPersonalizadaModal('${s.id}')">✎</button>
+              <button class="btn btn-danger-ghost btn-sm btn-icon" onclick="openConfirm('Excluir solicitação?','Esta ação não pode ser desfeita.',()=>{deletePersonalizada('${s.id}')})">✕</button>
+            </div>
+          </div>
+        </div>`).join('') + '</div>'
+    : '<div class="empty-state">Nenhuma solicitação encontrada.</div>';
+}
+
+async function toggleStatusPers(id) {
+  const s = _personalizadas.find(x => x.id === id);
+  if (!s) return;
+  const novoStatus = s.status === 'novo' ? 'respondido' : 'novo';
+  try {
+    await AZ_DB.update(AZ_DB.tbl('solicitacoes_personalizadas'), id, { status: novoStatus });
+    s.status = novoStatus;
+    renderPersonalizadas();
+  } catch (e) { showToast('Erro ao atualizar status', 'error'); }
+}
+
+function openPersonalizadaModal(id) {
+  const s = id ? _personalizadas.find(x => x.id === id) : null;
+  document.getElementById('personalizadaModalTitle').textContent = s ? 'Editar solicitação' : 'Nova solicitação';
+  document.getElementById('personalizadaId').value        = id || '';
+  document.getElementById('personalizadaNome').value      = s ? s.nome : '';
+  document.getElementById('personalizadaEmail').value     = s ? s.email || '' : '';
+  document.getElementById('personalizadaTelefone').value  = s ? s.telefone || '' : '';
+  document.getElementById('personalizadaDescricao').value = s ? s.descricao : '';
+  document.getElementById('personalizadaOverlay').classList.add('open');
+}
+function closePersonalizadaModal() { document.getElementById('personalizadaOverlay').classList.remove('open'); }
+
+async function savePersonalizada() {
+  const nome      = document.getElementById('personalizadaNome').value.trim();
+  const descricao = document.getElementById('personalizadaDescricao').value.trim();
+  if (!nome || !descricao) { showToast('Preencha nome e descrição', 'error'); return; }
+
+  const id  = document.getElementById('personalizadaId').value;
+  const obj = {
+    nome, descricao,
+    email:    document.getElementById('personalizadaEmail').value.trim() || null,
+    telefone: document.getElementById('personalizadaTelefone').value.trim() || null
+  };
+
+  showLoading(true);
+  try {
+    if (id) {
+      await AZ_DB.update(AZ_DB.tbl('solicitacoes_personalizadas'), id, obj);
+      const i = _personalizadas.findIndex(s => s.id === id);
+      _personalizadas[i] = { ..._personalizadas[i], ...obj };
+      showToast('Solicitação atualizada');
+    } else {
+      obj.status = 'novo';
+      const r = await AZ_DB.insert(AZ_DB.tbl('solicitacoes_personalizadas'), obj);
+      _personalizadas.unshift(r[0] || obj);
+      showToast('Solicitação cadastrada');
+    }
+    closePersonalizadaModal();
+    renderPersonalizadas();
+  } catch (e) { showToast('Erro ao salvar', 'error'); }
+  finally { showLoading(false); }
+}
+
+async function deletePersonalizada(id) {
+  showLoading(true);
+  try {
+    await AZ_DB.remove(AZ_DB.tbl('solicitacoes_personalizadas'), id);
+    _personalizadas = _personalizadas.filter(s => s.id !== id);
+    renderPersonalizadas();
     showToast('Solicitação excluída');
   } catch (e) { showToast('Erro ao excluir', 'error'); }
   finally { showLoading(false); }
