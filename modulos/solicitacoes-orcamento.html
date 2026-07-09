@@ -220,6 +220,56 @@ async function init() {
   } finally {
     showLoading(false);
   }
+  startAutoRefresh();
+}
+
+// ── Atualização automática ───────────────────────────────────
+// Verifica periodicamente se chegaram novas solicitações (enviadas
+// pelo site) e as insere na lista sem precisar recarregar a página.
+const AUTO_REFRESH_MS = 10000;
+let _autoRefreshTimer = null;
+
+function startAutoRefresh() {
+  if (_autoRefreshTimer) return;
+  _autoRefreshTimer = setInterval(checkNovasSolicitacoes, AUTO_REFRESH_MS);
+}
+
+function stopAutoRefresh() {
+  clearInterval(_autoRefreshTimer);
+  _autoRefreshTimer = null;
+}
+
+// Pausa a verificação quando a aba não está visível, para não gastar
+// requisições à toa, e retoma (com checagem imediata) ao voltar.
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    stopAutoRefresh();
+  } else {
+    checkNovasSolicitacoes();
+    startAutoRefresh();
+  }
+});
+
+async function checkNovasSolicitacoes() {
+  try {
+    const [orc, pers] = await Promise.all([
+      AZ_DB.get(AZ_DB.tbl('solicitacoes_orcamento'), '?select=*&order=created_at.desc'),
+      AZ_DB.get(AZ_DB.tbl('solicitacoes_personalizadas'), '?select=*&order=created_at.desc')
+    ]);
+    mergeNovasSolicitacoes(_orcamentos, orc || [], 'orçamento', renderOrcamentos);
+    mergeNovasSolicitacoes(_personalizadas, pers || [], 'personalizada', renderPersonalizadas);
+  } catch (e) {
+    // Falha silenciosa: tenta de novo no próximo ciclo, sem incomodar o usuário
+  }
+}
+
+function mergeNovasSolicitacoes(atual, recebidos, rotulo, render) {
+  const idsAtuais = new Set(atual.map(x => x.id));
+  const novos = recebidos.filter(r => !idsAtuais.has(r.id));
+  if (!novos.length) return;
+  novos.forEach(n => atual.unshift(n));
+  render();
+  showToast(`${novos.length} nova${novos.length > 1 ? 's' : ''} solicitação${novos.length > 1 ? 'ões' : ''} de ${rotulo}`);
 }
 
 function navigateTab(tab) {
