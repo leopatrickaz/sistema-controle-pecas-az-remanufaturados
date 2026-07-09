@@ -69,7 +69,7 @@
           <div class="page-title">📩 Solicitações de Orçamento</div>
           <div class="page-sub">Pedidos enviados pelos formulários do site</div>
         </div>
-        <button id="somToggleBtn" class="btn btn-outline btn-sm" onclick="ativarSom()">🔔 Ativar aviso sonoro</button>
+        <button id="somToggleBtn" class="btn btn-outline btn-sm" onclick="ativarSom()">🔔 Ativar avisos</button>
       </div>
 
       <!-- TABS -->
@@ -261,7 +261,18 @@ async function checkNovasSolicitacoes() {
     ]);
     const chegouOrc  = mergeNovasSolicitacoes(_orcamentos, orc || [], 'orçamento', renderOrcamentos);
     const chegouPers = mergeNovasSolicitacoes(_personalizadas, pers || [], 'personalizada', renderPersonalizadas);
-    if (chegouOrc || chegouPers) playNotificationSound();
+    if (chegouOrc || chegouPers) {
+      playNotificationSound();
+      // Notificação do sistema: só faz sentido mostrar quando a aba não
+      // está em foco (se ela já está na sua frente, o toast já avisou).
+      if (document.hidden || !document.hasFocus()) {
+        const texto = chegouOrc && chegouPers
+          ? 'Chegaram solicitações de orçamento e personalizadas'
+          : chegouOrc ? 'Chegou uma nova solicitação de orçamento'
+                      : 'Chegou uma nova solicitação personalizada';
+        mostrarNotificacaoDesktop('AZ Pesados — Nova solicitação', texto);
+      }
+    }
   } catch (e) {
     // Falha silenciosa: tenta de novo no próximo ciclo, sem incomodar o usuário
   }
@@ -277,16 +288,17 @@ function mergeNovasSolicitacoes(atual, recebidos, rotulo, render) {
   return true;
 }
 
-// ── Aviso sonoro ──────────────────────────────────────────────
-// Toca um bipe curto (gerado na hora, sem arquivo de áudio) quando
-// uma nova solicitação chega. Navegadores só liberam áudio depois de
-// uma interação direta do usuário na página — isso vale por
-// carregamento de página, não dá pra "destravar para sempre" de
-// verdade. Por isso guardamos a preferência (AZ_SOM_KEY) e, uma vez
-// ativada, destravamos sozinhos no primeiro clique/tecla que o
-// usuário der na página (qualquer um, não precisa ser no botão) —
-// assim ele não precisa lembrar de clicar em nada especial de novo.
-
+// ── Avisos: notificação do sistema + bipe ────────────────────
+// Duas camadas de aviso:
+//  1) Notificação do sistema operacional (Notification API) — a
+//     permissão, uma vez concedida, é lembrada pelo PRÓPRIO NAVEGADOR
+//     para sempre (não é algo nosso que "expira" a cada recarregada) e
+//     funciona mesmo com você em outra aba, outro programa ou o
+//     navegador minimizado — só precisa estar aberto em algum lugar.
+//  2) Bipe tocado na página (Web Audio) — complementa quando a aba já
+//     está em foco. Esse sim depende de o navegador liberar áudio,
+//     e por segurança do próprio navegador precisa de uma interação
+//     naquele carregamento específico da página.
 function getAudioCtx() {
   const Ctx = window.AudioContext || window.webkitAudioContext;
   if (!Ctx) return null;
@@ -294,55 +306,77 @@ function getAudioCtx() {
   return _audioCtx;
 }
 
-// O botão NUNCA fica travado/desabilitado: ele sempre mostra o estado
-// real do áudio (destravado ou não) e pode ser clicado de novo a
-// qualquer momento, mesmo que o destrave automático silencioso não
-// tenha funcionado por algum motivo.
+// O botão NUNCA fica travado/desabilitado: sempre reflete o estado
+// real e pode ser clicado de novo a qualquer momento.
 function atualizarBotaoSom() {
   const btn = document.getElementById('somToggleBtn');
   if (!btn) return;
-  const ativo = _audioCtx && _audioCtx.state === 'running';
-  btn.textContent = ativo ? '🔔 Som ativo' : '🔔 Ativar aviso sonoro';
-  btn.style.opacity = ativo ? '0.7' : '1';
+
+  if (!('Notification' in window)) {
+    btn.textContent = '🔔 Notificações indisponíveis neste navegador';
+    return;
+  }
+  if (Notification.permission === 'granted') {
+    btn.textContent = '🔔 Avisos ativos';
+    btn.style.opacity = '0.7';
+  } else if (Notification.permission === 'denied') {
+    btn.textContent = '🔕 Avisos bloqueados — ative nas permissões do site';
+    btn.style.opacity = '1';
+  } else {
+    btn.textContent = '🔔 Ativar avisos';
+    btn.style.opacity = '1';
+  }
 }
 
 function ativarSom() {
-  const ctx = getAudioCtx();
-  if (!ctx) { showToast('Seu navegador não suporta som', 'error'); return; }
   localStorage.setItem(AZ_SOM_KEY, '1');
 
-  const finish = () => {
+  // Camada 1 (a que garante funcionar em qualquer aba): pede a
+  // permissão de notificação do navegador. Uma vez concedida, fica
+  // valendo para sempre neste navegador, sem precisar repetir.
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission().then(() => {
+      atualizarBotaoSom();
+      if (Notification.permission === 'granted') {
+        mostrarNotificacaoDesktop('Avisos ativados', 'Você vai ser avisado por aqui quando chegar uma nova solicitação.');
+      }
+    });
+  } else {
     atualizarBotaoSom();
-    if (ctx.state === 'running') {
-      playNotificationSound();
-      showToast('Aviso sonoro ativado — fica lembrado para as próximas vezes');
-    } else {
-      showToast('Não foi possível ativar o som neste navegador', 'error');
-    }
-  };
+  }
 
-  if (ctx.state === 'suspended') ctx.resume().then(finish).catch(finish);
-  else finish();
+  // Camada 2 (bônus, só funciona com a aba em foco): destrava o bipe.
+  const ctx = getAudioCtx();
+  if (ctx && ctx.state === 'suspended') ctx.resume().then(() => playNotificationSound());
+  else if (ctx) playNotificationSound();
 }
 
-// Se o usuário já ativou o som antes, tenta destravar de novo a cada
-// interação com a página (clique, tecla, toque) — sem precisar clicar
-// em nenhum botão específico. Continua tentando até dar certo, porque
-// nem toda interação conta como "gesto válido" para o navegador.
+// Tenta destravar o bipe (camada 2) a cada interação com a página,
+// sem precisar clicar em nenhum botão específico — a notificação do
+// sistema (camada 1) já funciona sozinha desde que a permissão tenha
+// sido concedida uma vez, independente disso.
 function tentarDestravarSomAutomaticamente() {
   atualizarBotaoSom();
   if (localStorage.getItem(AZ_SOM_KEY) !== '1') return;
 
   const tentar = () => {
     const ctx = getAudioCtx();
-    if (ctx && ctx.state === 'suspended') {
-      ctx.resume().then(atualizarBotaoSom).catch(atualizarBotaoSom);
-    }
+    if (ctx && ctx.state === 'suspended') ctx.resume();
   };
   tentar();
   ['click', 'keydown', 'touchstart'].forEach(evt =>
     document.addEventListener(evt, tentar)
   );
+}
+
+function mostrarNotificacaoDesktop(titulo, corpo) {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  try {
+    const n = new Notification(titulo, { body: corpo, tag: 'az-solicitacao-' + Date.now() });
+    n.onclick = () => { window.focus(); n.close(); };
+  } catch (e) {
+    // Alguns navegadores/SOs podem restringir — falha silenciosa
+  }
 }
 
 function playNotificationSound() {
