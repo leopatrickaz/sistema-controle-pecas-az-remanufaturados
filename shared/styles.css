@@ -68,7 +68,7 @@ body {
 .logo-text       { line-height: 1.2; }
 .logo-title      { font-weight: 700; font-size: 15px; }
 .logo-sub        { font-size: 11px; opacity: 0.6; }
-.sidebar-footer  { margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); }
+.sidebar-footer  { margin-top: auto; padding: 12px 0 14px; border-top: 1px solid rgba(255,255,255,0.1); }
 .sidebar-user    { font-size: 12px; opacity: 0.7; margin-bottom: 8px; font-weight: 500; }
 
 /* ── Topbar mobile ───────────────────────────────────────── */
