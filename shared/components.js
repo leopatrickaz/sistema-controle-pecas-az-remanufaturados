@@ -157,7 +157,7 @@ function renderSidebarModulos(moduloAtualId) {
           display:flex;align-items:center;gap:12px;padding:12px;
           border-radius:8px;cursor:${m.ativo ? 'pointer' : 'default'};
           color:#fff;margin-bottom:4px;
-          background:${isAtual ? 'rgba(61,90,254,0.35)' : 'transparent'};
+          background:${isAtual ? 'color-mix(in srgb, var(--sidebar-active) 35%, transparent)' : 'transparent'};
           opacity:${m.ativo ? '1' : '0.6'};
         "
       >
