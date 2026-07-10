@@ -594,6 +594,8 @@ input[type=number] { -moz-appearance: textfield; }
   line-height: 1;
 }
 .orc-status-btn:hover { background: #f3f4f6; }
+.orc-status-btn.orc-status-check { color: var(--success); border-color: color-mix(in srgb, var(--success) 45%, transparent); }
+.orc-status-btn.orc-status-x     { color: var(--destructive); border-color: color-mix(in srgb, var(--destructive) 45%, transparent); }
 .orc-status-btn.is-aprovado {
   background: var(--success-light);
   border-color: var(--success);

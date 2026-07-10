@@ -597,8 +597,8 @@ function criarLinhaOrcamento(item, realIdx) {
     </div>
     <div style="display:flex;align-items:center;gap:8px">
       <span style="font-size:12px;color:#6b7280;font-weight:500">Status</span>
-      <button class="orc-status-btn ${item.status === 'aprovado' ? 'is-aprovado' : ''}" onclick="event.stopPropagation();openConfirm('Marcar como aprovado?','O status deste orçamento será alterado.',()=>{definirStatusOrcamento(${realIdx},'aprovado')})" title="Aprovado">✓</button>
-      <button class="orc-status-btn ${item.status === 'recusado' ? 'is-recusado' : ''}" onclick="event.stopPropagation();openConfirm('Marcar como não aprovado?','O status deste orçamento será alterado.',()=>{definirStatusOrcamento(${realIdx},'recusado')})" title="Não aprovado">✕</button>
+      <button class="orc-status-btn orc-status-check ${item.status === 'aprovado' ? 'is-aprovado' : ''}" onclick="event.stopPropagation();openConfirm('Marcar como aprovado?','O status deste orçamento será alterado.',()=>{definirStatusOrcamento(${realIdx},'aprovado')})" title="Aprovado">✓</button>
+      <button class="orc-status-btn orc-status-x ${item.status === 'recusado' ? 'is-recusado' : ''}" onclick="event.stopPropagation();openConfirm('Marcar como não aprovado?','O status deste orçamento será alterado.',()=>{definirStatusOrcamento(${realIdx},'recusado')})" title="Não aprovado">✕</button>
       <button class="btn btn-outline btn-sm" onclick="abrirOrcamento(${realIdx})">↓ Abrir</button>
       <button class="btn btn-danger-ghost btn-sm btn-icon" onclick="event.stopPropagation();openConfirm('Excluir orçamento?','Esta ação não pode ser desfeita.',()=>{excluirOrcamento(${realIdx})})">✕</button>
     </div>`;
