@@ -123,6 +123,7 @@ function applyEmpresaBranding(tituloPagina) {
   root.setProperty('--primary', empresa.tema.primary);
   root.setProperty('--primary-light', empresa.tema.primaryLight);
   root.setProperty('--sidebar-active', empresa.tema.sidebarActive);
+  root.setProperty('--topbar-bg', empresa.tema.topbarBg || '#1c1c1e');
 
   document.querySelectorAll('[data-brand-icon]').forEach(el => el.textContent = empresa.icone);
   document.querySelectorAll('[data-brand-nome]').forEach(el => el.textContent = empresa.nome);
