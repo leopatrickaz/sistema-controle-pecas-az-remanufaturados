@@ -106,8 +106,7 @@ const AZ_CONFIG = {
         primary: '#911e20',
         primaryLight: '#f1e4e4',
         sidebarActive: '#911e20',
-        gradient: 'linear-gradient(135deg,#5c1214 0%,#911e20 55%,#b53638 100%)',
-        pageBg: '#911e20'
+        gradient: 'linear-gradient(135deg,#5c1214 0%,#911e20 55%,#b53638 100%)'
       }
     },
     {
@@ -123,8 +122,7 @@ const AZ_CONFIG = {
         primary: '#6b7280',
         primaryLight: '#e8e9eb',
         sidebarActive: '#6b7280',
-        gradient: 'linear-gradient(135deg,#3f434c 0%,#6b7280 55%,#8b93a1 100%)',
-        pageBg: '#3b3b3c'
+        gradient: 'linear-gradient(135deg,#3f434c 0%,#6b7280 55%,#8b93a1 100%)'
       }
     }
   ]
