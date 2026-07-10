@@ -14,7 +14,7 @@
 :root {
   --bg:               #f4f5f7;
   --surface:          #fff;
-  --sidebar:          #1e2434;
+  --sidebar:          #1c1c1e;
   --sidebar-fg:       #e8eaf0;
   --sidebar-active:   #911e20;
   --sidebar-hover:    rgba(255,255,255,0.08);
@@ -285,7 +285,7 @@ select   { padding: 0 32px 0 12px; appearance: none; -webkit-appearance: none; b
 
 .toast {
   position: fixed; bottom: 20px; right: 20px;
-  background: #1e2434; color: #fff;
+  background: #1c1c1e; color: #fff;
   padding: 12px 18px; border-radius: 10px;
   font-size: 13px; z-index: 9999;
   transform: translateY(100px); transition: transform 0.3s;
