@@ -128,6 +128,10 @@ function applyEmpresaBranding(tituloPagina) {
   document.querySelectorAll('[data-brand-nome]').forEach(el => el.textContent = empresa.nome);
   document.querySelectorAll('[data-brand-curto]').forEach(el => el.textContent = empresa.nomeCurto);
   document.querySelectorAll('[data-brand-sub]').forEach(el => el.textContent = empresa.nomeSub);
+  document.querySelectorAll('[data-brand-logo-img]').forEach(el => {
+    if (empresa.logo) { el.src = empresa.logo; el.alt = empresa.nome; el.style.display = ''; }
+    else { el.style.display = 'none'; }
+  });
 
   if (tituloPagina) document.title = `${tituloPagina} — ${empresa.nome}`;
 }
