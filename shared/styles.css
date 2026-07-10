@@ -479,13 +479,12 @@ select   { padding: 0 32px 0 12px; appearance: none; -webkit-appearance: none; b
 
 /* Logos em imagem costumam ser wordmarks (mais largos que altos) e já
    vêm com suas próprias cores — usamos uma superfície clara e mais
-   larga em vez do quadrado escuro pensado para os emojis. */
+   larga em vez do quadrado escuro pensado para os emojis. Tamanho fixo
+   (não depende da proporção de cada imagem) para todas ficarem iguais. */
 .empresa-card-icon.has-logo {
-  width: auto;
-  min-width: 132px;
-  max-width: 100%;
+  width: 140px;
   height: 76px;
-  padding: 0 18px;
+  padding: 0 16px;
   background: linear-gradient(165deg, #fdfdfd, #f2f2f4);
   border-color: rgba(255,255,255,0.16);
 }
