@@ -62,10 +62,10 @@
 <!-- ═══════════════════════════
      TELA HOME (SELEÇÃO DE MÓDULOS)
 ════════════════════════════ -->
-<div id="homePage" style="display:none;min-height:100vh;background:#fff">
+<div id="homePage" style="display:none;min-height:100vh;background:#f4f5f7">
 
   <!-- Topbar -->
-  <div style="background:#fff;border-bottom:1px solid #e2e5ec;padding:10px 20px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;position:sticky;top:0;z-index:50">
+  <div style="background:#f4f5f7;border-bottom:1px solid #e2e5ec;padding:10px 20px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;position:sticky;top:0;z-index:50">
     <div></div>
     <div style="display:flex;align-items:center;justify-self:center">
       <img data-brand-logo-img alt="" style="height:64px;width:auto;display:none" />
@@ -178,7 +178,7 @@ function bootApp() {
   // usa cor fixa então precisa do ajuste manual aqui).
   const emp = AZ_EMPRESA.atual();
   const pageBg = emp.tema.pageBg;
-  document.getElementById('homePage').style.background = pageBg || '#fff';
+  document.getElementById('homePage').style.background = pageBg || '#f4f5f7';
   document.getElementById('homeWelcome').style.color = pageBg ? 'rgba(255,255,255,0.75)' : '#6b7280';
   document.getElementById('homeTitle').style.color = pageBg ? '#fff' : '#1a1d2e';
 }
