@@ -147,11 +147,11 @@ function showEmpresaSelection(usuario) {
   if (welcomeEl) welcomeEl.textContent = usuario ? `Bem-vindo, ${usuario}` : 'Bem-vindo';
 
   const grid = document.getElementById('empresaGrid');
-  grid.innerHTML = AZ_EMPRESA.listar().map(emp => `
-    <div class="empresa-card" style="--accent:${emp.tema.primary};--accent-soft:${emp.tema.primaryLight}"
+  grid.innerHTML = AZ_EMPRESA.listar().map((emp, i) => `
+    <div class="empresa-card" style="--accent:${emp.tema.primary};--accent-soft:${emp.tema.primaryLight};--delay:${i * 90}ms"
          onclick="selecionarEmpresa('${emp.id}')" tabindex="0"
          onkeydown="if(event.key==='Enter')selecionarEmpresa('${emp.id}')">
-      <div class="empresa-card-icon">${emp.icone}</div>
+      <div class="empresa-card-icon">${emp.logo ? `<img src="${emp.logo}" alt="${emp.nome}" />` : emp.icone}</div>
       <div class="empresa-card-nome">${emp.nome}</div>
       <div class="empresa-card-desc">${emp.descricao}</div>
       <div class="empresa-card-cta">Entrar →</div>
