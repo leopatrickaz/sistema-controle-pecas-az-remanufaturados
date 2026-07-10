@@ -78,14 +78,14 @@
 
   <!-- Conteúdo -->
   <div style="padding:28px 20px;max-width:600px;margin:0 auto">
-    <div style="font-size:13px;color:#6b7280;margin-bottom:4px">Bem-vindo, sistemaaz</div>
+    <div id="homeWelcome" style="font-size:13px;color:#6b7280;margin-bottom:4px">Bem-vindo, sistemaaz</div>
     <div style="font-size:22px;font-weight:700;color:#1a1d2e;margin-bottom:24px">Selecione um módulo</div>
 
     <!-- Grade de módulos (gerada pelo JS) -->
     <div id="modulosGrid" style="display:flex;flex-direction:column;gap:12px"></div>
 
     <!-- Rodapé -->
-    <div style="margin-top:40px;text-align:center;font-size:11px;color:#9ca3af" data-brand-nome>
+    <div id="homeFooter" style="margin-top:40px;text-align:center;font-size:11px;color:#9ca3af" data-brand-nome>
       AZ Remanufaturados · Sistema interno de gestão
     </div>
   </div>
@@ -171,6 +171,16 @@ function bootApp() {
   document.getElementById('homePage').style.display    = 'block';
   applyEmpresaBranding('Início');
   renderModulosGrid();
+
+  // Fundo da home: fora dos quadrados brancos dos módulos, usa a
+  // mesma cor cinza dos outros botões da AZ Pesados (o resto do
+  // sistema já é tematizado via CSS var(--primary), mas essa área
+  // usa cor fixa então precisa do ajuste manual aqui).
+  const emp = AZ_EMPRESA.atual();
+  const pageBg = emp.tema.pageBg;
+  document.getElementById('homePage').style.background = pageBg || '#f4f5f7';
+  document.getElementById('homeWelcome').style.color = pageBg ? 'rgba(255,255,255,0.75)' : '#6b7280';
+  document.getElementById('homeFooter').style.color = pageBg ? 'rgba(255,255,255,0.55)' : '#9ca3af';
 }
 
 // ── Renderiza a grade de módulos na home ─────────────────────
