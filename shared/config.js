@@ -123,7 +123,7 @@ const AZ_CONFIG = {
         primaryLight: '#e8e9eb',
         sidebarActive: '#6b7280',
         gradient: 'linear-gradient(135deg,#3f434c 0%,#6b7280 55%,#8b93a1 100%)',
-        pageBg: '#6b7280'
+        pageBg: '#3b3b3c'
       }
     }
   ]
