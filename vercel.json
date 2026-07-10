@@ -1,8 +1,8 @@
 {
   "version": 2,
   "routes": [
-    { "src": "/modulos/(.*)", "dest": "/modulos/$1" },
-    { "src": "/shared/(.*)",  "dest": "/shared/$1"  },
+    { "src": "/modulos/(.*)", "dest": "/modulos/$1", "headers": { "Cache-Control": "no-cache, no-store, must-revalidate" } },
+    { "src": "/shared/(.*)",  "dest": "/shared/$1",  "headers": { "Cache-Control": "no-cache, no-store, must-revalidate" } },
     { "src": "/assets/(.*)",  "dest": "/assets/$1"  },
     { "src": "/(.*)",         "dest": "/index.html" }
   ]
