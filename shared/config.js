@@ -106,8 +106,7 @@ const AZ_CONFIG = {
         primary: '#911e20',
         primaryLight: '#f1e4e4',
         sidebarActive: '#911e20',
-        gradient: 'linear-gradient(135deg,#5c1214 0%,#911e20 55%,#b53638 100%)',
-        topbarBg: '#3a3a3c'
+        gradient: 'linear-gradient(135deg,#5c1214 0%,#911e20 55%,#b53638 100%)'
       }
     },
     {
