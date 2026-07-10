@@ -3,6 +3,7 @@
   "routes": [
     { "src": "/modulos/(.*)", "dest": "/modulos/$1" },
     { "src": "/shared/(.*)",  "dest": "/shared/$1"  },
+    { "src": "/assets/(.*)",  "dest": "/assets/$1"  },
     { "src": "/(.*)",         "dest": "/index.html" }
   ]
 }
