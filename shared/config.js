@@ -116,7 +116,7 @@ const AZ_CONFIG = {
       nomeSub: 'Pesados',
       descricao: 'Peças e serviços para veículos pesados',
       icone: '🚛',
-      logo: null,
+      logo: '/assets/logos/az-pesados.png',
       tablePrefix: 'azp_',
       tema: {
         primary: '#c2661a',
