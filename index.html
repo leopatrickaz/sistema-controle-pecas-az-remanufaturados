@@ -151,7 +151,7 @@ function showEmpresaSelection(usuario) {
     <div class="empresa-card" style="--accent:${emp.tema.primary};--accent-soft:${emp.tema.primaryLight};--delay:${i * 90}ms"
          onclick="selecionarEmpresa('${emp.id}')" tabindex="0"
          onkeydown="if(event.key==='Enter')selecionarEmpresa('${emp.id}')">
-      <div class="empresa-card-icon">${emp.logo ? `<img src="${emp.logo}" alt="${emp.nome}" />` : emp.icone}</div>
+      <div class="empresa-card-icon${emp.logo ? ' has-logo' : ''}">${emp.logo ? `<img src="${emp.logo}" alt="${emp.nome}" />` : emp.icone}</div>
       <div class="empresa-card-nome">${emp.nome}</div>
       <div class="empresa-card-desc">${emp.descricao}</div>
       <div class="empresa-card-cta">Entrar →</div>

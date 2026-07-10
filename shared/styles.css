@@ -477,12 +477,26 @@ select   { padding: 0 32px 0 12px; appearance: none; -webkit-appearance: none; b
 }
 .empresa-card:hover .empresa-card-icon { transform: scale(1.06); border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
 
+/* Logos em imagem costumam ser wordmarks (mais largos que altos) e já
+   vêm com suas próprias cores — usamos uma superfície clara e mais
+   larga em vez do quadrado escuro pensado para os emojis. */
+.empresa-card-icon.has-logo {
+  width: auto;
+  min-width: 132px;
+  max-width: 100%;
+  height: 76px;
+  padding: 0 18px;
+  background: linear-gradient(165deg, #fdfdfd, #f2f2f4);
+  border-color: rgba(255,255,255,0.16);
+}
+
 .empresa-card-icon img {
   width: 100%;
   height: 100%;
   object-fit: contain;
   padding: 12px;
 }
+.empresa-card-icon.has-logo img { padding: 14px 4px; }
 
 .empresa-card-nome {
   font-size: 18px;

@@ -100,7 +100,7 @@ const AZ_CONFIG = {
       nomeSub: 'Remanufaturados',
       descricao: 'Motores de partida e alternadores',
       icone: '⚙',
-      logo: null,
+      logo: '/assets/logos/az-remanufaturados.png',
       tablePrefix: 'az_',
       tema: {
         primary: '#3d5afe',
