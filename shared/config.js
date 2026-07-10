@@ -103,10 +103,10 @@ const AZ_CONFIG = {
       logo: '/assets/logos/az-remanufaturados.png',
       tablePrefix: 'az_',
       tema: {
-        primary: '#3d5afe',
-        primaryLight: '#e8eeff',
-        sidebarActive: '#3d5afe',
-        gradient: 'linear-gradient(135deg,#2b3a8f 0%,#3d5afe 55%,#5b73ff 100%)'
+        primary: '#911e20',
+        primaryLight: '#f1e4e4',
+        sidebarActive: '#911e20',
+        gradient: 'linear-gradient(135deg,#5c1214 0%,#911e20 55%,#b53638 100%)'
       }
     },
     {
@@ -119,10 +119,10 @@ const AZ_CONFIG = {
       logo: '/assets/logos/az-pesados.png',
       tablePrefix: 'azp_',
       tema: {
-        primary: '#c2661a',
-        primaryLight: '#fbe9d9',
-        sidebarActive: '#c2661a',
-        gradient: 'linear-gradient(135deg,#7c2d12 0%,#c2661a 55%,#e08a3c 100%)'
+        primary: '#6b7280',
+        primaryLight: '#e8e9eb',
+        sidebarActive: '#6b7280',
+        gradient: 'linear-gradient(135deg,#3f434c 0%,#6b7280 55%,#8b93a1 100%)'
       }
     }
   ]
