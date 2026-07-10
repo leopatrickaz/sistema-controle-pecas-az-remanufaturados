@@ -600,7 +600,7 @@ function criarLinhaOrcamento(item, realIdx) {
       <button class="orc-status-btn orc-status-check ${item.status === 'aprovado' ? 'is-aprovado' : ''}" onclick="event.stopPropagation();openConfirm('Marcar como aprovado?','O status deste orçamento será alterado.',()=>{definirStatusOrcamento(${realIdx},'aprovado')})" title="Aprovado">✓</button>
       <button class="orc-status-btn orc-status-x ${item.status === 'recusado' ? 'is-recusado' : ''}" onclick="event.stopPropagation();openConfirm('Marcar como não aprovado?','O status deste orçamento será alterado.',()=>{definirStatusOrcamento(${realIdx},'recusado')})" title="Não aprovado">✕</button>
       <button class="btn btn-outline btn-sm" onclick="abrirOrcamento(${realIdx})">↓ Abrir</button>
-      <button class="btn btn-danger-ghost btn-sm btn-icon" onclick="event.stopPropagation();openConfirm('Excluir orçamento?','Esta ação não pode ser desfeita.',()=>{excluirOrcamento(${realIdx})})">✕</button>
+      <button class="btn btn-danger-ghost btn-sm btn-icon" style="color:#1a1d2e" onclick="event.stopPropagation();openConfirm('Excluir orçamento?','Esta ação não pode ser desfeita.',()=>{excluirOrcamento(${realIdx})})">✕</button>
     </div>`;
   return row;
 }
