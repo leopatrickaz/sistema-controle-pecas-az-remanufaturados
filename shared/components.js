@@ -137,6 +137,28 @@ function applyEmpresaBranding(tituloPagina) {
 }
 
 
+// ── Ícones de contorno (sem preenchimento) usados nos módulos ─
+// Compartilhado entre a grade da home (index.html) e a sidebar de módulos.
+
+const MODULO_ICON_SVG = {
+  vendas: '<path d="M6 2h12v19l-3-2-3 2-3-2-3 2V2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/>',
+  orcamentos: '<rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4V3a1 1 0 011-1h4a1 1 0 011 1v1"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="9" y1="14" x2="15" y2="14"/><line x1="9" y1="18" x2="13" y2="18"/>',
+  estoque: '<path d="M12 2 3 7v10l9 5 9-5V7l-9-5z"/><path d="M3 7l9 5 9-5"/><path d="M12 12v9"/>',
+  financeiro: '<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><circle cx="16" cy="14.5" r="1.4"/>',
+  clientes: '<circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.4 3-6 6.5-6s6.5 2.6 6.5 6"/><circle cx="17" cy="9" r="2.4"/><path d="M17 13.2c2.6 0 4.8 1.9 4.8 5.3"/>',
+  relatorios: '<path d="M4 4v16h16"/><rect x="7.5" y="12" width="2.6" height="6"/><rect x="12.5" y="8" width="2.6" height="10"/><rect x="17.5" y="14" width="2.6" height="4"/>',
+  garantias: '<path d="M12 3l7 3v5.5c0 5-3.2 8.2-7 9.5-3.8-1.3-7-4.5-7-9.5V6l7-3z"/><path d="M9 12l2 2 4-4.5"/>',
+  solicitacoes: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.3 6.5L12 13l8.7-6.5"/><path d="M12 9v6M9.5 12.5L12 15l2.5-2.5"/>'
+};
+
+function moduloIconSvg(m, opts) {
+  const size = (opts && opts.size) || 20;
+  const stroke = (opts && opts.stroke) || 'rgba(255,255,255,0.85)';
+  const paths = MODULO_ICON_SVG[m.id] || '';
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
+}
+
+
 // ── Renderiza sidebar de módulos (lateral deslizante) ────────
 
 function renderSidebarModulos(moduloAtualId) {
@@ -165,7 +187,7 @@ function renderSidebarModulos(moduloAtualId) {
           opacity:${m.ativo ? '1' : '0.6'};
         "
       >
-        <span style="font-size:20px">${m.icone}</span>
+        <span style="flex-shrink:0;display:flex">${moduloIconSvg(m)}</span>
         <div style="flex:1;min-width:0">
           <div style="font-weight:600;font-size:14px;display:flex;align-items:center">
             ${esc(m.nome)}${badge}
