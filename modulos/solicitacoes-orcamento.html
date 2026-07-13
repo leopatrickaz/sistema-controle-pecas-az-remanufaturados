@@ -446,8 +446,8 @@ function renderOrcamentos() {
               <span class="badge" style="cursor:pointer;background:${s.status === 'novo' ? '#dbeafe' : '#dcfce7'};color:${s.status === 'novo' ? '#1d4ed8' : '#166534'};border-color:transparent"
                     onclick="toggleStatusOrc('${s.id}')">${s.status === 'novo' ? '● Novo' : '✓ Respondido'}</span>
             </div>
-            <div class="item-meta">${esc(s.peca)}</div>
             <div class="item-meta">${esc(s.email)}${s.telefone ? ' · ' + esc(s.telefone) : ''} · ${fmtDateTime(s.created_at)}</div>
+            <div class="item-meta">Peça: ${esc(s.peca)}</div>
             ${s.mensagem ? `<div style="font-size:12px;font-style:italic;color:var(--muted);margin-top:2px">${esc(s.mensagem)}</div>` : ''}
           </div>
           <div style="text-align:right;flex-shrink:0">
