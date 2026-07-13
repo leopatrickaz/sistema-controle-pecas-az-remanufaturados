@@ -159,6 +159,7 @@
         <div class="form-field"><label class="form-label">E-mail</label><input type="email" id="personalizadaEmail" placeholder="cliente@email.com" /></div>
         <div class="form-field"><label class="form-label">Telefone</label><input id="personalizadaTelefone" placeholder="(00) 00000-0000" /></div>
       </div>
+      <div class="form-field"><label class="form-label">Peça / código *</label><input id="personalizadaPeca" placeholder="Peça desejada" /></div>
       <div class="form-field"><label class="form-label">Descrição da peça *</label><textarea rows="3" id="personalizadaDescricao" placeholder="Código original, aplicação, modelo do veículo..."></textarea></div>
       <div class="form-actions">
         <button class="btn btn-ghost" onclick="closePersonalizadaModal()">Cancelar</button>
@@ -547,7 +548,7 @@ function renderPersonalizadas() {
   if (_filtroPers !== 'todas') filtered = filtered.filter(s => s.status === _filtroPers);
   if (q) {
     const qq = q.toLowerCase();
-    filtered = filtered.filter(s => [s.nome, s.email, s.telefone, s.descricao].filter(Boolean).join(' ').toLowerCase().includes(qq));
+    filtered = filtered.filter(s => [s.nome, s.email, s.telefone, s.peca, s.descricao].filter(Boolean).join(' ').toLowerCase().includes(qq));
   }
 
   const novas = _personalizadas.filter(s => s.status === 'novo').length;
@@ -563,8 +564,9 @@ function renderPersonalizadas() {
               <span class="badge" style="cursor:pointer;background:${s.status === 'novo' ? '#dbeafe' : '#dcfce7'};color:${s.status === 'novo' ? '#1d4ed8' : '#166534'};border-color:transparent"
                     onclick="toggleStatusPers('${s.id}')">${s.status === 'novo' ? '● Novo' : '✓ Respondido'}</span>
             </div>
-            <div class="item-meta">${esc(s.descricao)}</div>
             <div class="item-meta">${s.email ? esc(s.email) + ' · ' : ''}${s.telefone ? esc(s.telefone) + ' · ' : ''}${fmtDateTime(s.created_at)}</div>
+            <div class="item-meta"><strong>Peça:</strong> ${esc(s.peca)}</div>
+            ${s.descricao ? `<div style="font-size:12px;font-style:italic;color:var(--muted);margin-top:2px">${esc(s.descricao)}</div>` : ''}
           </div>
           <div style="text-align:right;flex-shrink:0">
             <div class="item-actions">
@@ -594,6 +596,7 @@ function openPersonalizadaModal(id) {
   document.getElementById('personalizadaNome').value      = s ? s.nome : '';
   document.getElementById('personalizadaEmail').value     = s ? s.email || '' : '';
   document.getElementById('personalizadaTelefone').value  = s ? s.telefone || '' : '';
+  document.getElementById('personalizadaPeca').value      = s ? s.peca || '' : '';
   document.getElementById('personalizadaDescricao').value = s ? s.descricao : '';
   document.getElementById('personalizadaOverlay').classList.add('open');
 }
@@ -601,12 +604,13 @@ function closePersonalizadaModal() { document.getElementById('personalizadaOverl
 
 async function savePersonalizada() {
   const nome      = document.getElementById('personalizadaNome').value.trim();
+  const peca      = document.getElementById('personalizadaPeca').value.trim();
   const descricao = document.getElementById('personalizadaDescricao').value.trim();
-  if (!nome || !descricao) { showToast('Preencha nome e descrição', 'error'); return; }
+  if (!nome || !peca || !descricao) { showToast('Preencha nome, peça e descrição', 'error'); return; }
 
   const id  = document.getElementById('personalizadaId').value;
   const obj = {
-    nome, descricao,
+    nome, peca, descricao,
     email:    document.getElementById('personalizadaEmail').value.trim() || null,
     telefone: document.getElementById('personalizadaTelefone').value.trim() || null
   };
